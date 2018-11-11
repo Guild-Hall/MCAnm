@@ -63,6 +63,7 @@ artifacts {
     archives sourceJar
 }
 
+
 publishing {
 
     publications {
@@ -71,13 +72,14 @@ publishing {
 
             artifact jar
 
-            artifact javadocJar
+            artifact deobfJar
 
-			archives deobfJar
+            artifact sourceJar
+
+
         }
 
     }
-
 
 
     repositories {
