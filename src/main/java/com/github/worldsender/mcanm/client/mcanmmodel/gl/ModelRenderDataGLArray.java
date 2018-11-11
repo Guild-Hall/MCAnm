@@ -6,8 +6,8 @@ import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
 
 public class ModelRenderDataGLArray extends ModelRenderAbstract<PartDirect> {
 
-	public ModelRenderDataGLArray(IModelVisitable data, ISkeleton skeleton) {
-		super(data, skeleton, PartDirect::new);
-	}
+    public ModelRenderDataGLArray(IModelVisitable data, ISkeleton skeleton) {
+        super(data, skeleton, PartDirect::new);
+    }
 
 }

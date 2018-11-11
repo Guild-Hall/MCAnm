@@ -1,8 +1,8 @@
 package com.github.worldsender.mcanm.common.animation.parts;
 
-import java.io.DataInputStream;
-
 import org.lwjgl.util.vector.Vector2f;
+
+import java.io.DataInputStream;
 
 /**
  * Describes an interpolation between two values at two frames. Let those pairs be (f<SUB>1</SUB>, v<SUB>1</SUB>) and
@@ -11,33 +11,32 @@ import org.lwjgl.util.vector.Vector2f;
  * <code>(1 - t) * v<SUB>1</SUB> + t * v<SUB>2</SUB></code>.
  *
  * @author WorldSEnder
- *
  */
 public class LinearInterpolation extends Spline {
-	public static final IInterpolationSplineFactory factory = new IInterpolationSplineFactory() {
-		@Override
-		public Spline newSpline(Vector2f left, Vector2f right, DataInputStream additionalData) {
-			return new LinearInterpolation(left, right);
-		}
-	};
+    public static final IInterpolationSplineFactory factory = new IInterpolationSplineFactory() {
+        @Override
+        public Spline newSpline(Vector2f left, Vector2f right, DataInputStream additionalData) {
+            return new LinearInterpolation(left, right);
+        }
+    };
 
-	private Vector2f left;
-	private Vector2f right;
+    private Vector2f left;
+    private Vector2f right;
 
-	private LinearInterpolation(Vector2f left, Vector2f right) {
-		this.left = left;
-		this.right = right;
-	}
+    private LinearInterpolation(Vector2f left, Vector2f right) {
+        this.left = left;
+        this.right = right;
+    }
 
-	@Override
-	public boolean isInRange(float frame) {
-		return frame >= this.left.x && frame <= this.right.x;
-	}
+    @Override
+    public boolean isInRange(float frame) {
+        return frame >= this.left.x && frame <= this.right.x;
+    }
 
-	@Override
-	public float getValueAt(float frame) {
-		float split = this.right.x - this.left.x;
-		return (this.right.x - frame) / (split) * this.left.y + //
-				(frame - this.left.x) / (split) * this.right.y;
-	}
+    @Override
+    public float getValueAt(float frame) {
+        float split = this.right.x - this.left.x;
+        return (this.right.x - frame) / (split) * this.left.y + //
+                (frame - this.left.x) / (split) * this.right.y;
+    }
 }

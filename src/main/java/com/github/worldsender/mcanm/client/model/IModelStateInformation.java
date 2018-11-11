@@ -4,10 +4,10 @@ import com.github.worldsender.mcanm.common.animation.IAnimation;
 
 public interface IModelStateInformation {
 
-	IAnimation getAnimation();
+    IAnimation getAnimation();
 
-	float getFrame();
+    float getFrame();
 
-	boolean shouldRenderPart(String part);
+    boolean shouldRenderPart(String part);
 
 }

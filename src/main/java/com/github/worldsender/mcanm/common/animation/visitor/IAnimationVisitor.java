@@ -4,9 +4,9 @@ import com.github.worldsender.mcanm.common.animation.parts.AnimatedTransform;
 
 public interface IAnimationVisitor {
 
-	void visitArtist(String artist);
+    void visitArtist(String artist);
 
-	void visitBone(String name, AnimatedTransform transform);
+    void visitBone(String name, AnimatedTransform transform);
 
-	void visitEnd();
+    void visitEnd();
 }

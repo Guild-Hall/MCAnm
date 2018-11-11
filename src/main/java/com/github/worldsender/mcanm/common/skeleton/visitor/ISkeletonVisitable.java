@@ -1,5 +1,5 @@
 package com.github.worldsender.mcanm.common.skeleton.visitor;
 
 public interface ISkeletonVisitable {
-	void visitBy(ISkeletonVisitor visitor);
+    void visitBy(ISkeletonVisitor visitor);
 }
