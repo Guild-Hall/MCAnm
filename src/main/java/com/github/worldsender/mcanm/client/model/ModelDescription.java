@@ -1,5 +1,15 @@
 package com.github.worldsender.mcanm.client.model;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+
 import com.github.worldsender.mcanm.client.ClientLoader;
 import com.github.worldsender.mcanm.client.mcanmmodel.ModelMCMD;
 import com.github.worldsender.mcanm.common.CommonLoader;
@@ -11,7 +21,14 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MultimapBuilder;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideBridge;
@@ -20,12 +37,6 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ForgeBlockStateV1;
 import net.minecraftforge.common.model.TRSRTransformation;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Contains references to all required file to display the whole model. This includes the mesh-model ({@link ModelMCMD})

@@ -9,12 +9,8 @@ buildscript {
     }
 }
 
-plugins {
 
-    id 'maven-publish'
-
-}
-
+apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply from: 'build.properties'
 
@@ -65,12 +61,16 @@ artifacts {
 
 
 
-
-repositories {
-
-mavenLocal()
-
+publishing.publications {
+     mavenJava(MavenPublication) {
+       artifact jar
+       artifact sourceJar
+        }
 }
+ repositories {
+        mavenLocal()
+    }
+
 
 
 def getShortVersion() {
