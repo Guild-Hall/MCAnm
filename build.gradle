@@ -40,7 +40,7 @@ task deobfJar(type: Jar) {
 tasks["sourceJar"].classifier = 'sources'
 
 tasks.build.dependsOn('deobfJar', 'sourceJar')
-install.dependsOn build
+
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
@@ -64,31 +64,14 @@ artifacts {
 }
 
 
-publishing {
-
-    publications {
-
-        mavenJava(MavenPublication) {
-
-            artifact jar
-
-            artifact deobfJar
-
-            artifact sourceJar
 
 
-        }
+repositories {
 
-    }
-
-
-    repositories {
-
-        mavenLocal()
-
-    }
+mavenLocal()
 
 }
+
 
 def getShortVersion() {
     def stdout = new ByteArrayOutputStream()
