@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
@@ -52,8 +52,7 @@ processResources {
 }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
+   	maven { url 'https://jitpack.io' }
 }
 
 artifacts {
@@ -72,7 +71,7 @@ publishing.publications {
         }
 }
  publishing.repositories {
-        mavenLocal()
+        maven { url 'https://jitpack.io' }
     }
 
 
