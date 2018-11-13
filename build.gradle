@@ -71,9 +71,8 @@ publishing.publications {
        artifact sourceJar
         }
 }
- repositories {
+ publishing.repositories {
         mavenLocal()
-        mavenCentral()
     }
 
 
@@ -112,4 +111,3 @@ def getArtifactID() {
     }
     return "${branch == 'master' ? '' : '-' + branch.replace('/', '.')}"
 }
-
