@@ -53,6 +53,7 @@ processResources {
 
 repositories {
     mavenLocal()
+    mavenCentral()
 }
 
 artifacts {
@@ -66,11 +67,13 @@ artifacts {
 publishing.publications {
      mavenJava(MavenPublication) {
        artifact jar
+       artifact deobfJar
        artifact sourceJar
         }
 }
  repositories {
         mavenLocal()
+        mavenCentral()
     }
 
 
