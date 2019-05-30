@@ -40,7 +40,11 @@ tasks["sourceJar"].classifier = 'sources'
 
 tasks.build.dependsOn('deobfJar', 'sourceJar')
 
-
+// Debug connection for development
+tasks.runClient {
+	args '--username=jayrol_rante2006@yahoo.com', '--password=poring745'
+    jvmArgs += ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006"]
+}
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'

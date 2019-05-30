@@ -1,5 +1,6 @@
 package com.github.worldsender.mcanm;
 
+import com.github.worldsender.mcanm.client.ClientProxy;
 import com.github.worldsender.mcanm.client.config.MCAnmConfiguration;
 import com.github.worldsender.mcanm.test.CubeEntity;
 import com.github.worldsender.mcanm.test.CubeEntityV2;
@@ -32,7 +33,8 @@ public class MCAnm {
             clientSide = "com.github.worldsender.mcanm.client.ClientProxy",
             serverSide = "com.github.worldsender.mcanm.server.ServerProxy")
     public static Proxy proxy;
-
+    public static ClientProxy cp;
+    public static boolean isClientSided = false;
     static {
         Object deobfEnv = Launch.blackboard.get("fml.deobfuscatedEnvironment");
         Boolean isDeobfEnv = deobfEnv instanceof Boolean ? (Boolean) deobfEnv : null;
@@ -54,9 +56,15 @@ public class MCAnm {
     public void preInit(FMLPreInitializationEvent pre) {
         logger = pre.getModLog();
         config = new MCAnmConfiguration(pre.getSuggestedConfigurationFile());
-        proxy.preInit();
         MinecraftForge.EVENT_BUS.register(this);
         logger.info("Successfully loaded MC Animations");
+        if(proxy instanceof ClientProxy) {
+			isClientSided = true;
+			cp = (ClientProxy) proxy;
+			cp.preInit();
+		} else {
+			isClientSided = false;
+		}
     }
 
     @Mod.EventHandler
