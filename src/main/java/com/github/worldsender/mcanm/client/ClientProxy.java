@@ -15,6 +15,7 @@ import com.github.worldsender.mcanm.test.CubeEntityV2;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -30,8 +31,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.GameData;
 
+@SideOnly(Side.CLIENT) //checking if this sustain server issues.
 public class ClientProxy implements Proxy {
     private static <T extends EntityLiving> IEntityAnimator<T> makeAnimator(String textureDir) {
         LoadingCache<String, ResourceLocation> cachedResourceLoc = CacheBuilder.newBuilder().maximumSize(100)
