@@ -1,10 +1,10 @@
 package com.github.worldsender.mcanm.common.animation;
 
 import com.github.worldsender.mcanm.common.Utils;
+import com.github.worldsender.mcanm.common.util.math.Matrix4f;
+import com.github.worldsender.mcanm.common.util.math.Quat4f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
 
 /**
  * An animation to transform the model.

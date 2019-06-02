@@ -1,19 +1,26 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.parts;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.BoneBinding;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
 import com.github.worldsender.mcanm.client.renderer.ITesselator;
 import com.github.worldsender.mcanm.common.skeleton.IBone;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
+import com.github.worldsender.mcanm.common.util.math.Point4f;
+import com.github.worldsender.mcanm.common.util.math.Tuple2f;
+import com.github.worldsender.mcanm.common.util.math.Tuple3f;
+import com.github.worldsender.mcanm.common.util.math.Tuple4f;
+import com.github.worldsender.mcanm.common.util.math.Vector2f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
+import com.github.worldsender.mcanm.common.util.math.Vector4f;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
-
-import javax.vecmath.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class Point {
     protected final Vertex vert;

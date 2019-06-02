@@ -1,8 +1,8 @@
 package com.github.worldsender.mcanm.common.skeleton;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Point4f;
-import javax.vecmath.Vector3f;
+import com.github.worldsender.mcanm.common.util.math.Matrix4f;
+import com.github.worldsender.mcanm.common.util.math.Point4f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
 public interface IBone {
     IBone STATIC_BONE = new IBone() {

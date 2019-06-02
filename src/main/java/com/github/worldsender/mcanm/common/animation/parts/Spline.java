@@ -1,12 +1,12 @@
 package com.github.worldsender.mcanm.common.animation.parts;
 
-import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
-import org.lwjgl.util.vector.Vector2f;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
+import com.github.worldsender.mcanm.common.util.math.Vector2f;
 
 /**
  * A spline is the line between two key-frames k<SUB>1</SUB> and k<SUB>2</SUB>.

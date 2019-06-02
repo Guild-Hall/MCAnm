@@ -1,8 +1,11 @@
 package com.github.worldsender.mcanm.common.animation.parts;
 
-import org.lwjgl.util.vector.Vector2f;
 
 import java.io.DataInputStream;
+
+import com.github.worldsender.mcanm.common.util.math.Vector2f;
+
+
 
 public class ConstantEaseOut extends Spline {
     public static final IEaseOutSplineFactory factory = new IEaseOutSplineFactory() {

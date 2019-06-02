@@ -1,11 +1,11 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.stored.parts;
 
-import com.github.worldsender.mcanm.common.Utils;
-
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
 import java.io.DataInputStream;
 import java.io.IOException;
+
+import com.github.worldsender.mcanm.common.Utils;
+import com.github.worldsender.mcanm.common.util.math.Quat4f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
 public class RawBone {
     public String name;

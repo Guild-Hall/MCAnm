@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.Optional;
-
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -24,7 +23,6 @@ import com.github.worldsender.mcanm.Reference;
 import com.github.worldsender.mcanm.client.mcanmmodel.ModelMCMD;
 import com.github.worldsender.mcanm.client.model.util.ModelStateInformation;
 import com.github.worldsender.mcanm.common.animation.IAnimation;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -408,7 +406,7 @@ public enum ModelLoader implements ICustomModelLoader {
         }
 
         @Override
-        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
+        public Pair<BakedModelWrapper, Matrix4f> handlePerspective(TransformType cameraTransformType) {
             Matrix4f matr = new Matrix4f();
             matr.setIdentity();
             if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND) {

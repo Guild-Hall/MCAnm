@@ -1,5 +1,16 @@
 package com.github.worldsender.mcanm.common.skeleton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.resource.IResource;
 import com.github.worldsender.mcanm.common.resource.IResourceLocation;
@@ -10,14 +21,10 @@ import com.github.worldsender.mcanm.common.skeleton.visitor.IBoneVisitor;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitable;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitor;
 import com.github.worldsender.mcanm.common.util.ReloadableData;
-import net.minecraft.client.renderer.Tessellator;
-import org.apache.commons.lang3.ArrayUtils;
+import com.github.worldsender.mcanm.common.util.math.Quat4f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import net.minecraft.client.renderer.Tessellator;
 
 public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable> implements ISkeleton {
 

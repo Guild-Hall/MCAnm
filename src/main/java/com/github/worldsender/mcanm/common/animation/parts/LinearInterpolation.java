@@ -1,8 +1,11 @@
 package com.github.worldsender.mcanm.common.animation.parts;
 
-import org.lwjgl.util.vector.Vector2f;
 
 import java.io.DataInputStream;
+
+import com.github.worldsender.mcanm.common.util.math.Vector2f;
+
+
 
 /**
  * Describes an interpolation between two values at two frames. Let those pairs be (f<SUB>1</SUB>, v<SUB>1</SUB>) and

@@ -1,14 +1,14 @@
 package com.github.worldsender.mcanm.common.animation.parts;
 
-import com.github.worldsender.mcanm.MCAnm;
-import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
-import org.lwjgl.util.vector.Vector2f;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.github.worldsender.mcanm.MCAnm;
+import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
+import com.github.worldsender.mcanm.common.util.math.Vector2f;
 
 public class AnimatedValue {
 	public static final AnimatedValue CONSTANT_ZERO = new AnimatedValue(0f);
@@ -75,17 +75,19 @@ public class AnimatedValue {
 				}
 			} else {
 				Vector2f left = null;
-				Vector2f right = Spline.readPoint(dis);
-				byte easeIn = dis.readByte();
-				value.splines.add(Spline.easeIn(easeIn, right, dis));
-				for (int i = 1; i < nbrFrames; ++i) {
-					left = right;
-					right = Spline.readPoint(dis);
-					byte interpolation = dis.readByte();
-					value.splines.add(Spline.interpolating(interpolation, left, right, dis));
+				if (MCAnm.isClientSided) {
+					Vector2f right = Spline.readPoint(dis);
+					byte easeIn = dis.readByte();
+					value.splines.add(Spline.easeIn(easeIn, right, dis));
+					for (int i = 1; i < nbrFrames; ++i) {
+						left = right;
+						right = Spline.readPoint(dis);
+						byte interpolation = dis.readByte();
+						value.splines.add(Spline.interpolating(interpolation, left, right, dis));
+					}
+					byte easeOut = dis.readByte();
+					value.splines.add(Spline.easeOut(easeOut, right, dis));
 				}
-				byte easeOut = dis.readByte();
-				value.splines.add(Spline.easeOut(easeOut, right, dis));
 			}
 			return this;
 		}

@@ -1,7 +1,7 @@
 package com.github.worldsender.mcanm.common.skeleton.visitor;
 
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
+import com.github.worldsender.mcanm.common.util.math.Quat4f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
 public interface IBoneVisitor {
     void visitParent(byte parentIndex);

@@ -1,15 +1,15 @@
 package com.github.worldsender.mcanm.common.animation.parts;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
 import com.github.worldsender.mcanm.common.Utils;
 import com.github.worldsender.mcanm.common.animation.IAnimation.BoneTransformation;
 import com.github.worldsender.mcanm.common.animation.StoredAnimation;
 import com.github.worldsender.mcanm.common.animation.parts.AnimatedValue.AnimatedValueBuilder;
 import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
-
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
-import java.io.DataInputStream;
-import java.io.IOException;
+import com.github.worldsender.mcanm.common.util.math.Quat4f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
 /**
  * Represents the animation of one bone from the {@link StoredAnimation}.

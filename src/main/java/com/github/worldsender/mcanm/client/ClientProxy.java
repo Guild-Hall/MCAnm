@@ -1,7 +1,6 @@
 package com.github.worldsender.mcanm.client;
 
 import com.github.worldsender.mcanm.MCAnm;
-import com.github.worldsender.mcanm.Proxy;
 import com.github.worldsender.mcanm.client.mcanmmodel.IModel;
 import com.github.worldsender.mcanm.client.model.IEntityAnimator;
 import com.github.worldsender.mcanm.client.model.ModelLoader;
@@ -10,6 +9,7 @@ import com.github.worldsender.mcanm.common.CommonLoader;
 import com.github.worldsender.mcanm.common.resource.IResourceLocation;
 import com.github.worldsender.mcanm.common.resource.MinecraftResourcePool;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
+import com.github.worldsender.mcanm.server.ServerProxy;
 import com.github.worldsender.mcanm.test.CubeEntity;
 import com.github.worldsender.mcanm.test.CubeEntityV2;
 import com.google.common.cache.CacheBuilder;
@@ -36,7 +36,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.GameData;
 
 //checking if this sustain server issues.
-public class ClientProxy implements Proxy {
+@SideOnly(Side.CLIENT)
+public class ClientProxy extends ServerProxy {
 	private static <T extends EntityLiving> IEntityAnimator<T> makeAnimator(String textureDir) {
 		LoadingCache<String, ResourceLocation> cachedResourceLoc = CacheBuilder.newBuilder().maximumSize(100)
 				.build(new CacheLoader<String, ResourceLocation>() {

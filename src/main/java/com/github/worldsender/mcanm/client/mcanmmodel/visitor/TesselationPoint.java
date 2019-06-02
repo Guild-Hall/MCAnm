@@ -1,12 +1,11 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.visitor;
 
-import com.github.worldsender.mcanm.common.Utils;
-import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
-
-import javax.vecmath.Vector2f;
-import javax.vecmath.Vector3f;
 import java.io.DataInputStream;
 import java.io.IOException;
+import com.github.worldsender.mcanm.common.Utils;
+import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
+import com.github.worldsender.mcanm.common.util.math.Vector2f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
 public class TesselationPoint {
     public Vector3f coords;

@@ -1,12 +1,16 @@
 package com.github.worldsender.mcanm.common.skeleton.parts;
 
+import java.util.Objects;
+
 import com.github.worldsender.mcanm.common.Utils;
 import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.animation.IAnimation.BoneTransformation;
 import com.github.worldsender.mcanm.common.skeleton.IBone;
-
-import javax.vecmath.*;
-import java.util.Objects;
+import com.github.worldsender.mcanm.common.util.math.Matrix4f;
+import com.github.worldsender.mcanm.common.util.math.Point4f;
+import com.github.worldsender.mcanm.common.util.math.Quat4f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
+import com.github.worldsender.mcanm.common.util.math.Vector4f;
 
 public class Bone implements IBone {
     private static final Matrix4f identity = new Matrix4f();

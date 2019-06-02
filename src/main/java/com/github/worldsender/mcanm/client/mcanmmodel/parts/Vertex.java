@@ -1,9 +1,18 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.parts;
 
+
 import com.github.worldsender.mcanm.client.renderer.ITesselator;
+import com.github.worldsender.mcanm.common.util.math.Point2f;
+import com.github.worldsender.mcanm.common.util.math.Point4f;
+import com.github.worldsender.mcanm.common.util.math.Tuple2f;
+import com.github.worldsender.mcanm.common.util.math.Tuple3f;
+import com.github.worldsender.mcanm.common.util.math.Tuple4f;
+import com.github.worldsender.mcanm.common.util.math.Vector2f;
+import com.github.worldsender.mcanm.common.util.math.Vector3f;
+import com.github.worldsender.mcanm.common.util.math.Vector4f;
+
 import net.minecraft.client.renderer.Tessellator;
 
-import javax.vecmath.*;
 
 public class Vertex {
 
@@ -11,10 +20,10 @@ public class Vertex {
     private Vector3f norm;
     private Point2f uv;
 
-    public Vertex(Tuple4f pos, Tuple3f norm, Tuple2f uv) {
+    public Vertex(Tuple4f pos, Vector3f norm2, Vector2f uv2) {
         this.pos = new Point4f(pos);
-        this.norm = new Vector3f(norm);
-        this.uv = new Point2f(uv);
+        this.norm = new Vector3f(norm2);
+        this.uv = new Point2f(uv2);
     }
 
     public Vertex(Vertex copyFrom) {

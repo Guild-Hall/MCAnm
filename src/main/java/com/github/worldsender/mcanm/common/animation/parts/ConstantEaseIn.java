@@ -1,8 +1,11 @@
 package com.github.worldsender.mcanm.common.animation.parts;
 
-import org.lwjgl.util.vector.Vector2f;
 
 import java.io.DataInputStream;
+
+import com.github.worldsender.mcanm.common.util.math.Vector2f;
+
+
 
 /**
  * Constant ease describes a horizontal line that has the value of it's right end point and also ends there, something
