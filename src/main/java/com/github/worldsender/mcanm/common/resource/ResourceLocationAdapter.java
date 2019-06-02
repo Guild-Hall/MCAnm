@@ -11,7 +11,7 @@ public abstract class ResourceLocationAdapter implements IResourceLocation {
      * This method should be called to notify all listeners of a reload of this resource
      */
     @SuppressWarnings("unchecked")
-	protected void triggerReload() {
+    protected void triggerReload() {
         Consumer<IResourceLocation>[] currentListeners;
         synchronized (listeners) {
             currentListeners = listeners.toArray(new Consumer[0]);

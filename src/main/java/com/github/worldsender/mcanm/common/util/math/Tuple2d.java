@@ -8,52 +8,52 @@ public class Tuple2d {
 
     public Tuple2d(double x, double y)
     {
-	this.x = x;
-	this.y = y;
+    this.x = x;
+    this.y = y;
     }
     public Tuple2d(double[] t)
     {
-	this.x = t[0];
-	this.y = t[1];
+    this.x = t[0];
+    this.y = t[1];
     }
 
     public Tuple2d(Tuple2d t1)
     {
-	this.x = t1.x;
-	this.y = t1.y;
+    this.x = t1.x;
+    this.y = t1.y;
     }
     public Tuple2d(Tuple2f t1)
     {
-	this.x = (double) t1.x;
-	this.y = (double) t1.y;
+    this.x = (double) t1.x;
+    this.y = (double) t1.y;
     }
     public Tuple2d()
     {
-	this.x = 0.0;
-	this.y = 0.0;
+    this.x = 0.0;
+    this.y = 0.0;
     }
 
     public final void set(double x, double y)
     {
-	this.x = x;
-	this.y = y;
+    this.x = x;
+    this.y = y;
     }
 
     public final void set(double[] t)
     {
-	this.x = t[0];
-	this.y = t[1];
+    this.x = t[0];
+    this.y = t[1];
     }
     public final void set(Tuple2d t1)
     {
-	this.x = t1.x;
-	this.y = t1.y;
+    this.x = t1.x;
+    this.y = t1.y;
     }
  
     public final void set(Tuple2f t1)
     {
-	this.x = (double) t1.x;
-	this.y = (double) t1.y;
+    this.x = (double) t1.x;
+    this.y = (double) t1.y;
     }
 
    public final void get(double[] t)
@@ -64,8 +64,8 @@ public class Tuple2d {
 
     public final void add(Tuple2d t1, Tuple2d t2)
     {
-	this.x = t1.x + t2.x;
-	this.y = t1.y + t2.y;
+    this.x = t1.x + t2.x;
+    this.y = t1.y + t2.y;
     }
 
     public final void add(Tuple2d t1)
@@ -88,24 +88,24 @@ public class Tuple2d {
 
     public final void negate(Tuple2d t1)
     {
-	this.x = -t1.x;
-	this.y = -t1.y;
+    this.x = -t1.x;
+    this.y = -t1.y;
     }
     public final void negate()
     {
-	this.x = -this.x;
-	this.y = -this.y;
+    this.x = -this.x;
+    this.y = -this.y;
     }
     public final void scale(double s, Tuple2d t1)
     {
-	this.x = s*t1.x;
-	this.y = s*t1.y;
+    this.x = s*t1.x;
+    this.y = s*t1.y;
     }
 
     public final void scale(double s)
     {
-	this.x *= s;
-	this.y *= s;
+    this.x *= s;
+    this.y *= s;
     }
 
     public final void scaleAdd(double s, Tuple2d t1, Tuple2d t2)
@@ -122,10 +122,10 @@ public class Tuple2d {
 
 
     public int hashCode() {
-	long bits = 1L;
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(x);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(y);
-	return (int) (bits ^ (bits >> 32));
+    long bits = 1L;
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(x);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(y);
+    return (int) (bits ^ (bits >> 32));
     }
 
     public boolean equals(Tuple2d t1)
@@ -271,22 +271,22 @@ public class Tuple2d {
 
   } 
 
-	public final double getX() {
-		return x;
-	}
+    public final double getX() {
+        return x;
+    }
 
-	public final void setX(double x) {
-		this.x = x;
-	}
+    public final void setX(double x) {
+        this.x = x;
+    }
 
 
-	public final double getY() {
-		return y;
-	}
+    public final double getY() {
+        return y;
+    }
 
-	public final void setY(double y) {
-		this.y = y;
-	}
+    public final void setY(double y) {
+        this.y = y;
+    }
 
 }
 

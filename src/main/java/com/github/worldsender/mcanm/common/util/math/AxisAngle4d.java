@@ -2,7 +2,7 @@ package com.github.worldsender.mcanm.common.util.math;
 
 
 public class AxisAngle4d {
-	/**
+    /**
      * The x coordinate.
      */
     public	double	x;
@@ -35,10 +35,10 @@ public class AxisAngle4d {
      */
     public AxisAngle4d(double x, double y, double z, double angle)
     {
-	this.x = x;
-	this.y = y;
-	this.z = z;
-	this.angle = angle;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.angle = angle;
     }
 
 
@@ -60,10 +60,10 @@ public class AxisAngle4d {
      */
     public AxisAngle4d(AxisAngle4d a1)
     {
-	this.x = a1.x;
-	this.y = a1.y;
-	this.z = a1.z;
-	this.angle = a1.angle;
+    this.x = a1.x;
+    this.y = a1.y;
+    this.z = a1.z;
+    this.angle = a1.angle;
     }
 
 
@@ -74,10 +74,10 @@ public class AxisAngle4d {
      */
     public AxisAngle4d(AxisAngle4f a1)
     {
-	this.x = a1.x;
-	this.y = a1.y;
-	this.z = a1.z;
-	this.angle = a1.angle;
+    this.x = a1.x;
+    this.y = a1.y;
+    this.z = a1.z;
+    this.angle = a1.angle;
     }
 
 
@@ -90,10 +90,10 @@ public class AxisAngle4d {
      * @since vecmath 1.2
      */
     public AxisAngle4d(Vector3d axis, double angle) {
-	this.x = axis.x;
-	this.y = axis.y;
-	this.z = axis.z;
-	this.angle = angle;
+    this.x = axis.x;
+    this.y = axis.y;
+    this.z = axis.z;
+    this.angle = angle;
     }
 
 
@@ -102,10 +102,10 @@ public class AxisAngle4d {
      */
     public AxisAngle4d()
     {
-	this.x = 0.0;
-	this.y = 0.0;
-	this.z = 1.0;
-	this.angle = 0.0;
+    this.x = 0.0;
+    this.y = 0.0;
+    this.z = 1.0;
+    this.angle = 0.0;
     }
 
 
@@ -118,10 +118,10 @@ public class AxisAngle4d {
      */
     public final void set(double x, double y, double z, double angle)
     {
-	this.x = x;
-	this.y = y;
-	this.z = z;
-	this.angle = angle;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.angle = angle;
     }
 
 
@@ -131,10 +131,10 @@ public class AxisAngle4d {
      */
     public final void set(double[] a)
     {
-	this.x = a[0];
-	this.y = a[1];
-	this.z = a[2];
-	this.angle = a[3];
+    this.x = a[0];
+    this.y = a[1];
+    this.z = a[2];
+    this.angle = a[3];
     }
 
 
@@ -144,10 +144,10 @@ public class AxisAngle4d {
      */
     public final void set(AxisAngle4d a1)
     {
-	this.x = a1.x;
-	this.y = a1.y;
-	this.z = a1.z;
-	this.angle = a1.angle;
+    this.x = a1.x;
+    this.y = a1.y;
+    this.z = a1.z;
+    this.angle = a1.angle;
     }
 
 
@@ -157,10 +157,10 @@ public class AxisAngle4d {
      */
     public final void set(AxisAngle4f a1)
     {
-	this.x = a1.x;
-	this.y = a1.y;
-	this.z = a1.z;
-	this.angle = a1.angle;
+    this.x = a1.x;
+    this.y = a1.y;
+    this.z = a1.z;
+    this.angle = a1.angle;
     }
 
 
@@ -173,10 +173,10 @@ public class AxisAngle4d {
      * @since vecmath 1.2
      */
     public final void set(Vector3d axis, double angle) {
-	this.x = axis.x;
-	this.y = axis.y;
-	this.z = axis.z;
-	this.angle = angle;
+    this.x = axis.x;
+    this.y = axis.y;
+    this.z = axis.z;
+    this.angle = angle;
     }
 
 
@@ -213,23 +213,23 @@ public class AxisAngle4d {
         z = (float)(m3d.m10 - m3d.m01);
         double mag = x*x + y*y + z*z;
 
-	if (mag > EPS ) {
-	    mag = Math.sqrt(mag);
-	    double sin = 0.5*mag;
-	    double cos = 0.5*(m3d.m00 + m3d.m11 + m3d.m22 - 1.0);
-	    
-	    angle = (float)Math.atan2(sin, cos);
-	    
-	    double invMag = 1.0/mag;
-	    x = x*invMag;
-	    y = y*invMag;
-	    z = z*invMag;
-	} else {
-	    x = 0.0f;
-	    y = 1.0f;
-	    z = 0.0f;
-	    angle = 0.0f;
-	}
+    if (mag > EPS ) {
+        mag = Math.sqrt(mag);
+        double sin = 0.5*mag;
+        double cos = 0.5*(m3d.m00 + m3d.m11 + m3d.m22 - 1.0);
+        
+        angle = (float)Math.atan2(sin, cos);
+        
+        double invMag = 1.0/mag;
+        x = x*invMag;
+        y = y*invMag;
+        z = z*invMag;
+    } else {
+        x = 0.0f;
+        y = 1.0f;
+        z = 0.0f;
+        angle = 0.0f;
+    }
     }
 
 
@@ -253,23 +253,23 @@ public class AxisAngle4d {
 
         double mag = x*x + y*y + z*z;
 
-	if (mag > EPS ) {
-	    mag = Math.sqrt(mag);
+    if (mag > EPS ) {
+        mag = Math.sqrt(mag);
 
-	    double sin = 0.5*mag;
-	    double cos = 0.5*(m3d.m00 + m3d.m11 + m3d.m22 - 1.0);
-	    angle = (float)Math.atan2(sin, cos);
+        double sin = 0.5*mag;
+        double cos = 0.5*(m3d.m00 + m3d.m11 + m3d.m22 - 1.0);
+        angle = (float)Math.atan2(sin, cos);
 
-	    double invMag = 1.0/mag;
-	    x = x*invMag;
-	    y = y*invMag;
-	    z = z*invMag;
-	} else {
-	    x = 0.0f;
-	    y = 1.0f;
-	    z = 0.0f;
-	    angle = 0.0f;
-	}
+        double invMag = 1.0/mag;
+        x = x*invMag;
+        y = y*invMag;
+        z = z*invMag;
+    } else {
+        x = 0.0f;
+        y = 1.0f;
+        z = 0.0f;
+        angle = 0.0f;
+    }
     }
 
 
@@ -287,23 +287,23 @@ public class AxisAngle4d {
         z = (float)(m1.m10 - m1.m01);
         double mag = x*x + y*y + z*z;
 
-	if (mag > EPS ) {
-	    mag = Math.sqrt(mag);
+    if (mag > EPS ) {
+        mag = Math.sqrt(mag);
 
-	    double sin = 0.5*mag;
-	    double cos = 0.5*(m1.m00 + m1.m11 + m1.m22 - 1.0);
-	    angle = (float)Math.atan2(sin, cos);
+        double sin = 0.5*mag;
+        double cos = 0.5*(m1.m00 + m1.m11 + m1.m22 - 1.0);
+        angle = (float)Math.atan2(sin, cos);
 
-	    double invMag = 1.0/mag;
-	    x = x*invMag;
-	    y = y*invMag;
-	    z = z*invMag;
-	} else {
-	    x = 0.0f;
-	    y = 1.0f;
-	    z = 0.0f;
-	    angle = 0.0f;
-	}
+        double invMag = 1.0/mag;
+        x = x*invMag;
+        y = y*invMag;
+        z = z*invMag;
+    } else {
+        x = 0.0f;
+        y = 1.0f;
+        z = 0.0f;
+        angle = 0.0f;
+    }
     }
 
 
@@ -322,24 +322,24 @@ public class AxisAngle4d {
 
         double mag = x*x + y*y + z*z;
 
-	if (mag > EPS ) {
-	    mag = Math.sqrt(mag);
-	    
-	    double sin = 0.5*mag;
-	    double cos = 0.5*(m1.m00 + m1.m11 + m1.m22 - 1.0);
-	    
-	    angle = (float)Math.atan2(sin, cos);
+    if (mag > EPS ) {
+        mag = Math.sqrt(mag);
+        
+        double sin = 0.5*mag;
+        double cos = 0.5*(m1.m00 + m1.m11 + m1.m22 - 1.0);
+        
+        angle = (float)Math.atan2(sin, cos);
 
-	    double invMag = 1.0/mag;
-	    x = x*invMag;
-	    y = y*invMag;
-	    z = z*invMag;
-	} else {
-	    x = 0.0f;
-	    y = 1.0f;
-	    z = 0.0f;
-	    angle = 0.0f;
-	}
+        double invMag = 1.0/mag;
+        x = x*invMag;
+        y = y*invMag;
+        z = z*invMag;
+    } else {
+        x = 0.0f;
+        y = 1.0f;
+        z = 0.0f;
+        angle = 0.0f;
+    }
 
     }
 
@@ -357,18 +357,18 @@ public class AxisAngle4d {
         double mag = q1.x*q1.x + q1.y*q1.y + q1.z*q1.z;  
 
         if( mag > EPS ) {
-	    mag = Math.sqrt(mag);
-	    double invMag = 1.0/mag;
+        mag = Math.sqrt(mag);
+        double invMag = 1.0/mag;
 
-	    x = q1.x*invMag;
-	    y = q1.y*invMag;
-	    z = q1.z*invMag;
-	    angle = 2.0*Math.atan2(mag, q1.w); 
-	} else {
+        x = q1.x*invMag;
+        y = q1.y*invMag;
+        z = q1.z*invMag;
+        angle = 2.0*Math.atan2(mag, q1.w); 
+    } else {
            x = 0.0f;
            y = 1.0f;
            z = 0.0f;
-	   angle = 0.0f;
+       angle = 0.0f;
         } 
   }
 
@@ -382,22 +382,22 @@ public class AxisAngle4d {
       */
     public final void set(Quat4d q1)
     {
-	double mag = q1.x*q1.x + q1.y*q1.y + q1.z*q1.z;  
-	
-	if ( mag > EPS ) {
-	    mag = Math.sqrt(mag);
-	    double invMag = 1.0/mag;
-	    
-	    x = q1.x*invMag;
-	    y = q1.y*invMag;
-	    z = q1.z*invMag;
-	    angle = 2.0*Math.atan2(mag, q1.w); 
+    double mag = q1.x*q1.x + q1.y*q1.y + q1.z*q1.z;  
+    
+    if ( mag > EPS ) {
+        mag = Math.sqrt(mag);
+        double invMag = 1.0/mag;
+        
+        x = q1.x*invMag;
+        y = q1.y*invMag;
+        z = q1.z*invMag;
+        angle = 2.0*Math.atan2(mag, q1.w); 
         } else {
-	    x = 0.0f;
-	    y = 1.0f;
-	    z = 0.0f;
-	    angle = 0f;
-	}
+        x = 0.0f;
+        y = 1.0f;
+        z = 0.0f;
+        angle = 0f;
+    }
     }
 
 
@@ -407,7 +407,7 @@ public class AxisAngle4d {
      * @return the String representation
      */  
     public String toString() {
-	return "(" + this.x + ", " + this.y + ", " + this.z + ", " + this.angle + ")";
+    return "(" + this.x + ", " + this.y + ", " + this.z + ", " + this.angle + ")";
     }
 
 
@@ -484,12 +484,12 @@ public class AxisAngle4d {
      * @return the integer hash code value
      */  
     public int hashCode() {
-	long bits = 1L;
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(x);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(y);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(z);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(angle);
-	return (int) (bits ^ (bits >> 32));
+    long bits = 1L;
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(x);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(y);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(z);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(angle);
+    return (int) (bits ^ (bits >> 32));
     }
 
     /**
@@ -501,111 +501,111 @@ public class AxisAngle4d {
      * @since vecmath 1.3
      */
     public Object clone() {
-	// Since there are no arrays we can just use Object.clone()
-	try {
-	    return super.clone();
-	} catch (CloneNotSupportedException e) {
-	    // this shouldn't happen, since we are Cloneable
-	    throw new InternalError();
-	}
+    // Since there are no arrays we can just use Object.clone()
+    try {
+        return super.clone();
+    } catch (CloneNotSupportedException e) {
+        // this shouldn't happen, since we are Cloneable
+        throw new InternalError();
+    }
     }
 
 
-	/**
-	 * Get the axis angle, in radians.<br>
-	 * An axis angle is a rotation angle about the vector (x,y,z).
+    /**
+     * Get the axis angle, in radians.<br>
+     * An axis angle is a rotation angle about the vector (x,y,z).
      * 
-	 * @return the angle, in radians.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getAngle() {
-		return angle;
-	}
+     * @return the angle, in radians.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getAngle() {
+        return angle;
+    }
 
 
-	/**
-	 * Set the axis angle, in radians.<br>
-	 * An axis angle is a rotation angle about the vector (x,y,z).
-	 * 
-	 * @param angle The angle to set, in radians.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setAngle(double angle) {
-		this.angle = angle;
-	}
+    /**
+     * Set the axis angle, in radians.<br>
+     * An axis angle is a rotation angle about the vector (x,y,z).
+     * 
+     * @param angle The angle to set, in radians.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setAngle(double angle) {
+        this.angle = angle;
+    }
 
 
-	/**
-	 * Get value of <i>x</i> coordinate. 
-	 * 
-	 * @return the <i>x</i> coordinate.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public double getX() {
-		return x;
-	}
+    /**
+     * Get value of <i>x</i> coordinate. 
+     * 
+     * @return the <i>x</i> coordinate.
+     * 
+     * @since vecmath 1.5
+     */
+    public double getX() {
+        return x;
+    }
 
 
-	/**
-	 * Set a new value for <i>x</i> coordinate.
-	 * 
-	 * @param x the <i>x</i> coordinate.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setX(double x) {
-		this.x = x;
-	}
+    /**
+     * Set a new value for <i>x</i> coordinate.
+     * 
+     * @param x the <i>x</i> coordinate.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setX(double x) {
+        this.x = x;
+    }
 
 
-	/**
-	 * Get value of <i>y</i> coordinate.
-	 * 
-	 * @return the <i>y</i> coordinate. 
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public  final double getY() {
-		return y;
-	}
+    /**
+     * Get value of <i>y</i> coordinate.
+     * 
+     * @return the <i>y</i> coordinate. 
+     * 
+     * @since vecmath 1.5
+     */
+    public  final double getY() {
+        return y;
+    }
 
 
-	/**
-	 * Set a new value for <i>y</i> coordinate.
-	 * 
-	 * @param y the <i>y</i> coordinate.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setY(double y) {
-		this.y = y;
-	}
+    /**
+     * Set a new value for <i>y</i> coordinate.
+     * 
+     * @param y the <i>y</i> coordinate.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setY(double y) {
+        this.y = y;
+    }
 
 
-	/**
-	 * Get  value of <i>z</i> coordinate.
-	 * 
-	 * @return  the <i>z</i> coordinate.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public double getZ() {
-		return z;
-	}
+    /**
+     * Get  value of <i>z</i> coordinate.
+     * 
+     * @return  the <i>z</i> coordinate.
+     * 
+     * @since vecmath 1.5
+     */
+    public double getZ() {
+        return z;
+    }
 
 
-	/**
-	 * Set a new value for <i>z</i> coordinate.
-	 * 
-	 * @param z the <i>z</i> coordinate.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setZ(double z) {
-		this.z = z;
-	}
+    /**
+     * Set a new value for <i>z</i> coordinate.
+     * 
+     * @param z the <i>z</i> coordinate.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setZ(double z) {
+        this.z = z;
+    }
 
 }

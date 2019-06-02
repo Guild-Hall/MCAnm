@@ -38,81 +38,81 @@ import net.minecraftforge.registries.GameData;
 //checking if this sustain server issues.
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends ServerProxy {
-	private static <T extends EntityLiving> IEntityAnimator<T> makeAnimator(String textureDir) {
-		LoadingCache<String, ResourceLocation> cachedResourceLoc = CacheBuilder.newBuilder().maximumSize(100)
-				.build(new CacheLoader<String, ResourceLocation>() {
-					@Override
-					public ResourceLocation load(String key) {
-						return new ResourceLocation(textureDir + key + ".png");
-					}
-				});
-		IEntityAnimator<T> animator = (entity, buffer, partialTick, _1, _2, _3, _4, _5) -> {
-			return buffer.setTextureTransform(cachedResourceLoc::getUnchecked);
-		};
-		return animator;
-	}
+    private static <T extends EntityLiving> IEntityAnimator<T> makeAnimator(String textureDir) {
+        LoadingCache<String, ResourceLocation> cachedResourceLoc = CacheBuilder.newBuilder().maximumSize(100)
+                .build(new CacheLoader<String, ResourceLocation>() {
+                    @Override
+                    public ResourceLocation load(String key) {
+                        return new ResourceLocation(textureDir + key + ".png");
+                    }
+                });
+        IEntityAnimator<T> animator = (entity, buffer, partialTick, _1, _2, _3, _4, _5) -> {
+            return buffer.setTextureTransform(cachedResourceLoc::getUnchecked);
+        };
+        return animator;
+    }
 
-	private static void reload() {
-		if (!MCAnm.configuration().isReloadEnabled()) {
-			return;
-		}
-		MinecraftResourcePool.instance.onResourceManagerReloaded();
-	}
+    private static void reload() {
+        if (!MCAnm.configuration().isReloadEnabled()) {
+            return;
+        }
+        MinecraftResourcePool.instance.onResourceManagerReloaded();
+    }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void preInit() {
-		ModelLoaderRegistry.registerLoader(ModelLoader.INSTANCE);
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void preInit() {
+        ModelLoaderRegistry.registerLoader(ModelLoader.INSTANCE);
 
-		IResourceManager resManager = Minecraft.getMinecraft().getResourceManager();
-		if (resManager instanceof IReloadableResourceManager) {
-			IReloadableResourceManager registry = (IReloadableResourceManager) resManager;
-			registry.registerReloadListener(new IResourceManagerReloadListener() {
-				@Override
-				public void onResourceManagerReload(IResourceManager p_110549_1_) {
-					ClientProxy.reload();
-				}
-			});
-		} else {
-			MCAnm.logger()
-					.warn("Couldn't register reload managers. Models will not be reloaded on switching resource pack");
-		}
+        IResourceManager resManager = Minecraft.getMinecraft().getResourceManager();
+        if (resManager instanceof IReloadableResourceManager) {
+            IReloadableResourceManager registry = (IReloadableResourceManager) resManager;
+            registry.registerReloadListener(new IResourceManagerReloadListener() {
+                @Override
+                public void onResourceManagerReload(IResourceManager p_110549_1_) {
+                    ClientProxy.reload();
+                }
+            });
+        } else {
+            MCAnm.logger()
+                    .warn("Couldn't register reload managers. Models will not be reloaded on switching resource pack");
+        }
 
-		if (MCAnm.isDebug) {
-			ResourceLocation modelSrc = new ResourceLocation("mcanm:models/Cube/Cube.mcmd");
-			@SuppressWarnings("deprecation")
-			ISkeleton skeleton = CommonLoader.loadLegacySkeleton(modelSrc);
-			IModel model = ClientLoader.loadModel(modelSrc, skeleton);
-			IRenderFactory<CubeEntity> renderer = RenderAnimatedModel.fromModel(model, 1.0f);
+        if (MCAnm.isDebug) {
+            ResourceLocation modelSrc = new ResourceLocation("mcanm:models/Cube/Cube.mcmd");
+            @SuppressWarnings("deprecation")
+            ISkeleton skeleton = CommonLoader.loadLegacySkeleton(modelSrc);
+            IModel model = ClientLoader.loadModel(modelSrc, skeleton);
+            IRenderFactory<CubeEntity> renderer = RenderAnimatedModel.fromModel(model, 1.0f);
 
-			ResourceLocation model2Src = new ResourceLocation("mcanm:models/CubeV2/Cube.mcmd");
-			IModel model2 = ClientLoader.loadModel(model2Src, ISkeleton.EMPTY);
-			IRenderFactory<CubeEntityV2> renderer2 = RenderAnimatedModel
-					.fromModel(makeAnimator("mcanm:textures/models/Cube/Untitled.png"), model2, 1.0f);
+            ResourceLocation model2Src = new ResourceLocation("mcanm:models/CubeV2/Cube.mcmd");
+            IModel model2 = ClientLoader.loadModel(model2Src, ISkeleton.EMPTY);
+            IRenderFactory<CubeEntityV2> renderer2 = RenderAnimatedModel
+                    .fromModel(makeAnimator("mcanm:textures/models/Cube/Untitled.png"), model2, 1.0f);
 
-			RenderingRegistry.registerEntityRenderingHandler(CubeEntity.class, renderer);
-			RenderingRegistry.registerEntityRenderingHandler(CubeEntityV2.class, renderer2);
+            RenderingRegistry.registerEntityRenderingHandler(CubeEntity.class, renderer);
+            RenderingRegistry.registerEntityRenderingHandler(CubeEntityV2.class, renderer2);
 
-			Item debug = new Item();
-			debug.addPropertyOverride(new ResourceLocation("test"), new IItemPropertyGetter() {
-				@Override
-				public float apply(ItemStack stack, World worldIn, EntityLivingBase entityIn) {
-					return (entityIn.ticksExisted / 100f) % 1f;
-				}
-			});
-			GameData.register_impl(debug.setFull3D().setRegistryName("debug_item"));
-			net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation(debug, 0,
-					new ModelResourceLocation("mcanm:models/item/debug_item.mcmdl#inventory"));
-		}
-	}
+            Item debug = new Item();
+            debug.addPropertyOverride(new ResourceLocation("test"), new IItemPropertyGetter() {
+                @Override
+                public float apply(ItemStack stack, World worldIn, EntityLivingBase entityIn) {
+                    return (entityIn.ticksExisted / 100f) % 1f;
+                }
+            });
+            GameData.register_impl(debug.setFull3D().setRegistryName("debug_item"));
+            net.minecraftforge.client.model.ModelLoader.setCustomModelResourceLocation(debug, 0,
+                    new ModelResourceLocation("mcanm:models/item/debug_item.mcmdl#inventory"));
+        }
+    }
 
-	@Override
-	public void init() {
-	}
-	
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IResourceLocation getSidedResource(ResourceLocation resLoc, ClassLoader context) {
-		return MinecraftResourcePool.instance.makeResourceLocation(resLoc);
-	}
+    @Override
+    public void init() {
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IResourceLocation getSidedResource(ResourceLocation resLoc, ClassLoader context) {
+        return MinecraftResourcePool.instance.makeResourceLocation(resLoc);
+    }
 }

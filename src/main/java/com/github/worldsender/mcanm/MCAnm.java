@@ -19,72 +19,64 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Reference.core_modid, name = Reference.core_modname, version = Reference.core_modversion, guiFactory = "com.github.worldsender.mcanm.client.config.MCAnmGuiFactory", useMetadata = true, acceptedMinecraftVersions = "1.12.2")
 public class MCAnm {
-	/**
-	 * Enables various visual outputs, e.g. the bones of models are rendered.
-	 */
-	public static final boolean isDebug;
-	@Mod.Instance(Reference.core_modid)
-	public static MCAnm instance;
-	@SidedProxy(modId = Reference.core_modid, clientSide = "com.github.worldsender.mcanm.client.ClientProxy", serverSide = "com.github.worldsender.mcanm.server.ServerProxy")
-	public static ServerProxy proxy;
-	public static ClientProxy cp;
-	public static boolean isClientSided = false;
-	static {
-		Object deobfEnv = Launch.blackboard.get("fml.deobfuscatedEnvironment");
-		Boolean isDeobfEnv = deobfEnv instanceof Boolean ? (Boolean) deobfEnv : null;
-		isDebug = isDeobfEnv != null && isDeobfEnv.booleanValue();
-	}
+    /**
+     * Enables various visual outputs, e.g. the bones of models are rendered.
+     */
+    public static final boolean isDebug;
+    @Mod.Instance(Reference.core_modid)
+    public static MCAnm instance;
+    @SidedProxy(modId = Reference.core_modid, clientSide = "com.github.worldsender.mcanm.client.ClientProxy", serverSide = "com.github.worldsender.mcanm.server.ServerProxy")
+    public static ServerProxy proxy;
+    static {
+        Object deobfEnv = Launch.blackboard.get("fml.deobfuscatedEnvironment");
+        Boolean isDeobfEnv = deobfEnv instanceof Boolean ? (Boolean) deobfEnv : null;
+        isDebug = isDeobfEnv != null && isDeobfEnv.booleanValue();
+    }
 
-	private MCAnmConfiguration config;
-	private Logger logger;
+    private MCAnmConfiguration config;
+    private Logger logger;
 
-	public static MCAnmConfiguration configuration() {
-		return instance.getConfiguration();
-	}
+    public static MCAnmConfiguration configuration() {
+        return instance.getConfiguration();
+    }
 
-	public static Logger logger() {
-		return instance.getLogger();
-	}
+    public static Logger logger() {
+        return instance.getLogger();
+    }
 
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent pre) {
-		logger = pre.getModLog();
-		config = new MCAnmConfiguration(pre.getSuggestedConfigurationFile());
-		MinecraftForge.EVENT_BUS.register(this);
-		logger.info("Successfully loaded MC Animations");
-		if (proxy instanceof ClientProxy) {
-			isClientSided = true;
-			cp = (ClientProxy) proxy;
-			cp.preInit();
-		} else {
-			isClientSided = false;
-		}
-	}
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent pre) {
+        logger = pre.getModLog();
+        config = new MCAnmConfiguration(pre.getSuggestedConfigurationFile());
+                proxy.preInit();
+        MinecraftForge.EVENT_BUS.register(this);
+        logger.info("Successfully loaded MC Animations");
+    }
 
-	@Mod.EventHandler
-	public void init(@SuppressWarnings("unused") FMLInitializationEvent event) {
-		if (isDebug) {
-			ResourceLocation ID_CUBE = new ResourceLocation("mcanm:cube");
-			ResourceLocation ID_CUBE_V2 = new ResourceLocation("mcanm:cube2");
-			EntityRegistry.registerModEntity(ID_CUBE, CubeEntity.class, "Cube", 0, this, 80, 1, true);
-			EntityRegistry.registerModEntity(ID_CUBE_V2, CubeEntityV2.class, "CubeV2", 1, this, 80, 1, true);
+    @Mod.EventHandler
+    public void init(@SuppressWarnings("unused") FMLInitializationEvent event) {
+        if (isDebug) {
+            ResourceLocation ID_CUBE = new ResourceLocation("mcanm:cube");
+            ResourceLocation ID_CUBE_V2 = new ResourceLocation("mcanm:cube2");
+            EntityRegistry.registerModEntity(ID_CUBE, CubeEntity.class, "Cube", 0, this, 80, 1, true);
+            EntityRegistry.registerModEntity(ID_CUBE_V2, CubeEntityV2.class, "CubeV2", 1, this, 80, 1, true);
 
-		}
-		proxy.init();
-	}
+        }
+        proxy.init();
+    }
 
-	@SubscribeEvent
-	public void onConfigChange(OnConfigChangedEvent occe) {
-		if (!occe.getModID().equals(Reference.core_modid))
-			return;
-		config.onConfigChange(occe);
-	}
+    @SubscribeEvent
+    public void onConfigChange(OnConfigChangedEvent occe) {
+        if (!occe.getModID().equals(Reference.core_modid))
+            return;
+        config.onConfigChange(occe);
+    }
 
-	public MCAnmConfiguration getConfiguration() {
-		return this.config;
-	}
+    public MCAnmConfiguration getConfiguration() {
+        return this.config;
+    }
 
-	public Logger getLogger() {
-		return this.logger;
-	}
+    public Logger getLogger() {
+        return this.logger;
+    }
 }

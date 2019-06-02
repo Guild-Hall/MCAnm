@@ -292,52 +292,52 @@ public final void normalize()
    */
   public final void set(Matrix4f m1) 
   {
-	double ww = 0.25*(m1.m00 + m1.m11 + m1.m22 + m1.m33);
+    double ww = 0.25*(m1.m00 + m1.m11 + m1.m22 + m1.m33);
 
-	if (ww >= 0) {
-	    if (ww >= EPS2) {
-		this.w = Math.sqrt(ww);
-		ww =  0.25/this.w;
-		this.x =  ((m1.m21 - m1.m12)*ww);
-		this.y =  ((m1.m02 - m1.m20)*ww);
-		this.z =  ((m1.m10 - m1.m01)*ww);
-		return;
-	    }
-	} else {
-	    this.w = 0;
-	    this.x = 0;
-	    this.y = 0;
-	    this.z = 1;
-	    return;
-	}
+    if (ww >= 0) {
+        if (ww >= EPS2) {
+        this.w = Math.sqrt(ww);
+        ww =  0.25/this.w;
+        this.x =  ((m1.m21 - m1.m12)*ww);
+        this.y =  ((m1.m02 - m1.m20)*ww);
+        this.z =  ((m1.m10 - m1.m01)*ww);
+        return;
+        }
+    } else {
+        this.w = 0;
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;
+        return;
+    }
 
-	this.w = 0;
-	ww = -0.5*(m1.m11 + m1.m22);
-	if (ww >= 0) {
-	    if (ww >= EPS2) {
-		this.x =  Math.sqrt(ww);
-		ww = 1.0/(2.0*this.x);
-		this.y = (m1.m10*ww);
-		this.z = (m1.m20*ww);
-		return;
-	    }
-	} else {
-	    this.x = 0;
-	    this.y = 0;
-	    this.z = 1;
-	    return;
-	}
+    this.w = 0;
+    ww = -0.5*(m1.m11 + m1.m22);
+    if (ww >= 0) {
+        if (ww >= EPS2) {
+        this.x =  Math.sqrt(ww);
+        ww = 1.0/(2.0*this.x);
+        this.y = (m1.m10*ww);
+        this.z = (m1.m20*ww);
+        return;
+        }
+    } else {
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;
+        return;
+    }
    
-	this.x = 0;
-	ww = 0.5*(1.0 - m1.m22);
-	if (ww >= EPS2) {
-	    this.y = Math.sqrt(ww);
-	    this.z = (m1.m21)/(2.0*this.y);
-	    return;
-	}
+    this.x = 0;
+    ww = 0.5*(1.0 - m1.m22);
+    if (ww >= EPS2) {
+        this.y = Math.sqrt(ww);
+        this.z = (m1.m21)/(2.0*this.y);
+        return;
+    }
 
-	this.y = 0;
-	this.z = 1;
+    this.y = 0;
+    this.z = 1;
   }
 
 
@@ -348,52 +348,52 @@ public final void normalize()
    */
   public final void set(Matrix4d m1)
   {
-	double ww = 0.25*(m1.m00 + m1.m11 + m1.m22 + m1.m33);
+    double ww = 0.25*(m1.m00 + m1.m11 + m1.m22 + m1.m33);
 
-	if (ww >= 0) {
-	    if (ww >= EPS2) {
-		this.w = Math.sqrt(ww);
-		ww = 0.25/this.w;
-		this.x = (m1.m21 - m1.m12)*ww;
-		this.y = (m1.m02 - m1.m20)*ww;
-		this.z = (m1.m10 - m1.m01)*ww;
-		return;
-	    }
-	} else {
-	    this.w = 0;
-	    this.x = 0;
-	    this.y = 0;
-	    this.z = 1;
-	    return;
-	}
+    if (ww >= 0) {
+        if (ww >= EPS2) {
+        this.w = Math.sqrt(ww);
+        ww = 0.25/this.w;
+        this.x = (m1.m21 - m1.m12)*ww;
+        this.y = (m1.m02 - m1.m20)*ww;
+        this.z = (m1.m10 - m1.m01)*ww;
+        return;
+        }
+    } else {
+        this.w = 0;
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;
+        return;
+    }
 
-	this.w = 0;
-	ww = -0.5*(m1.m11 + m1.m22);
-	if (ww >= 0) {
-	    if (ww >= EPS2){
-		this.x =  Math.sqrt(ww);
-		ww = 0.5/this.x;
-		this.y = m1.m10*ww;
-		this.z = m1.m20*ww;
-		return;
-	    }
-	} else {
-	    this.x = 0;
-	    this.y = 0;
-	    this.z = 1;
-	    return;
-	}
+    this.w = 0;
+    ww = -0.5*(m1.m11 + m1.m22);
+    if (ww >= 0) {
+        if (ww >= EPS2){
+        this.x =  Math.sqrt(ww);
+        ww = 0.5/this.x;
+        this.y = m1.m10*ww;
+        this.z = m1.m20*ww;
+        return;
+        }
+    } else {
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;
+        return;
+    }
    
-	this.x = 0.0;
-	ww = 0.5*(1.0 - m1.m22);
-	if (ww >= EPS2) {
-	    this.y =  Math.sqrt(ww);
-	    this.z = m1.m21/(2.0*this.y);
-	    return;
-	}
-	
-	this.y =  0;
-	this.z =  1;
+    this.x = 0.0;
+    ww = 0.5*(1.0 - m1.m22);
+    if (ww >= EPS2) {
+        this.y =  Math.sqrt(ww);
+        this.z = m1.m21/(2.0*this.y);
+        return;
+    }
+    
+    this.y =  0;
+    this.z =  1;
   }
 
 
@@ -404,51 +404,51 @@ public final void normalize()
    */
   public final void set(Matrix3f m1)
   {
-	double ww = 0.25*(m1.m00 + m1.m11 + m1.m22 + 1.0);
+    double ww = 0.25*(m1.m00 + m1.m11 + m1.m22 + 1.0);
 
-	if (ww >= 0) {
-	    if (ww >= EPS2) {
-		this.w = Math.sqrt(ww);
-		ww = 0.25/this.w;
-		this.x = ((m1.m21 - m1.m12)*ww);
-		this.y = ((m1.m02 - m1.m20)*ww);
-		this.z = ((m1.m10 - m1.m01)*ww);
-		return;
-	    }
-	} else {
-	    this.w = 0;
-	    this.x = 0;
-	    this.y = 0;
-	    this.z = 1;
-	    return;
-	}
+    if (ww >= 0) {
+        if (ww >= EPS2) {
+        this.w = Math.sqrt(ww);
+        ww = 0.25/this.w;
+        this.x = ((m1.m21 - m1.m12)*ww);
+        this.y = ((m1.m02 - m1.m20)*ww);
+        this.z = ((m1.m10 - m1.m01)*ww);
+        return;
+        }
+    } else {
+        this.w = 0;
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;
+        return;
+    }
 
-	this.w = 0;
-	ww = -0.5*(m1.m11 + m1.m22);
-	if (ww >= 0) {
-	    if (ww >= EPS2) {
-		this.x = Math.sqrt(ww);
-		ww = 0.5/this.x;
-		this.y = (m1.m10*ww);
-		this.z = (m1.m20*ww);
-		return;
-	    }
-	} else {
-	    this.x = 0;
-	    this.y = 0;
-	    this.z = 1;
-	    return;
-	}
+    this.w = 0;
+    ww = -0.5*(m1.m11 + m1.m22);
+    if (ww >= 0) {
+        if (ww >= EPS2) {
+        this.x = Math.sqrt(ww);
+        ww = 0.5/this.x;
+        this.y = (m1.m10*ww);
+        this.z = (m1.m20*ww);
+        return;
+        }
+    } else {
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;
+        return;
+    }
    
-	this.x = 0;
-	ww =  0.5*(1.0 - m1.m22);
-	if (ww >= EPS2) {
-	    this.y = Math.sqrt(ww);
-	    this.z = (m1.m21/(2.0*this.y));
-	}
+    this.x = 0;
+    ww =  0.5*(1.0 - m1.m22);
+    if (ww >= EPS2) {
+        this.y = Math.sqrt(ww);
+        this.z = (m1.m21/(2.0*this.y));
+    }
    
-	this.y =  0;
-	this.z =  1;
+    this.y =  0;
+    this.z =  1;
   }
 
   
@@ -459,52 +459,52 @@ public final void normalize()
    */
   public final void set(Matrix3d m1)
   {
-	double ww = 0.25*(m1.m00 + m1.m11 + m1.m22 + 1.0);
+    double ww = 0.25*(m1.m00 + m1.m11 + m1.m22 + 1.0);
 
-	if (ww >= 0) {
-	    if (ww >= EPS2) {
-		this.w = Math.sqrt(ww);
-		ww = 0.25/this.w;
-		this.x = (m1.m21 - m1.m12)*ww;
-		this.y = (m1.m02 - m1.m20)*ww;
-		this.z = (m1.m10 - m1.m01)*ww;
-		return;
-	    }
-	} else {
-	    this.w = 0;
-	    this.x = 0;
-	    this.y = 0;
-	    this.z = 1;
-	    return;
-	}
+    if (ww >= 0) {
+        if (ww >= EPS2) {
+        this.w = Math.sqrt(ww);
+        ww = 0.25/this.w;
+        this.x = (m1.m21 - m1.m12)*ww;
+        this.y = (m1.m02 - m1.m20)*ww;
+        this.z = (m1.m10 - m1.m01)*ww;
+        return;
+        }
+    } else {
+        this.w = 0;
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;
+        return;
+    }
 
-	this.w = 0;
-	ww = -0.5*(m1.m11 + m1.m22);
-	if (ww >= 0) {
-	    if (ww >= EPS2) {
-		this.x =  Math.sqrt(ww);
-		ww = 0.5/this.x;
-		this.y = m1.m10*ww;
-		this.z = m1.m20*ww;
-		return;
-	    }
-	} else {
-	    this.x = 0;
-	    this.y = 0;
-	    this.z = 1;		
-	    return;
-	}
+    this.w = 0;
+    ww = -0.5*(m1.m11 + m1.m22);
+    if (ww >= 0) {
+        if (ww >= EPS2) {
+        this.x =  Math.sqrt(ww);
+        ww = 0.5/this.x;
+        this.y = m1.m10*ww;
+        this.z = m1.m20*ww;
+        return;
+        }
+    } else {
+        this.x = 0;
+        this.y = 0;
+        this.z = 1;		
+        return;
+    }
    
-	this.x = 0;
-	ww = 0.5*(1.0 - m1.m22);
-	if (ww >= EPS2) {
-	    this.y =  Math.sqrt(ww);
-	    this.z = m1.m21/(2.0*this.y);
-	    return;
-	}
+    this.x = 0;
+    ww = 0.5*(1.0 - m1.m22);
+    if (ww >= EPS2) {
+        this.y =  Math.sqrt(ww);
+        this.z = m1.m21/(2.0*this.y);
+        return;
+    }
    
-	this.y = 0;
-	this.z = 1;
+    this.y = 0;
+    this.z = 1;
   }
 
   
@@ -515,24 +515,24 @@ public final void normalize()
    */
   public final void set(AxisAngle4f a)
   {
-	double mag,amag;
-	// Quat = cos(theta/2) + sin(theta/2)(roation_axis) 
+    double mag,amag;
+    // Quat = cos(theta/2) + sin(theta/2)(roation_axis) 
 
-	amag = Math.sqrt( a.x*a.x + a.y*a.y + a.z*a.z);
-	if( amag < EPS ) {
-	    w = 0.0;
-	    x = 0.0;
-	    y = 0.0;
-	    z = 0.0;
-	} else {
-	    mag = Math.sin(a.angle/2.0);
-	    amag = 1.0/amag;
-	    w = Math.cos(a.angle/2.0);
-	    x = a.x*amag*mag;
-	    y = a.y*amag*mag;
-	    z = a.z*amag*mag;
-	}
-	
+    amag = Math.sqrt( a.x*a.x + a.y*a.y + a.z*a.z);
+    if( amag < EPS ) {
+        w = 0.0;
+        x = 0.0;
+        y = 0.0;
+        z = 0.0;
+    } else {
+        mag = Math.sin(a.angle/2.0);
+        amag = 1.0/amag;
+        w = Math.cos(a.angle/2.0);
+        x = a.x*amag*mag;
+        y = a.y*amag*mag;
+        z = a.z*amag*mag;
+    }
+    
   }
 
   /**
@@ -542,24 +542,24 @@ public final void normalize()
    */
   public final void set(AxisAngle4d a)
   {
-	double mag,amag;
-	// Quat = cos(theta/2) + sin(theta/2)(roation_axis) 
-	
-	amag = Math.sqrt( a.x*a.x + a.y*a.y + a.z*a.z);
-	if( amag < EPS ) {
-	    w = 0.0;
-	    x = 0.0;
-	    y = 0.0;
-	    z = 0.0;
-	} else {  
-	    amag = 1.0/amag; 
-	    mag = Math.sin(a.angle/2.0);
-	    w = Math.cos(a.angle/2.0);
+    double mag,amag;
+    // Quat = cos(theta/2) + sin(theta/2)(roation_axis) 
+    
+    amag = Math.sqrt( a.x*a.x + a.y*a.y + a.z*a.z);
+    if( amag < EPS ) {
+        w = 0.0;
+        x = 0.0;
+        y = 0.0;
+        z = 0.0;
+    } else {  
+        amag = 1.0/amag; 
+        mag = Math.sin(a.angle/2.0);
+        w = Math.cos(a.angle/2.0);
      x = a.x*amag*mag;
      y = a.y*amag*mag;
      z = a.z*amag*mag;
-	}
-	
+    }
+    
   }
   
 /**

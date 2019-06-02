@@ -2,7 +2,7 @@ package com.github.worldsender.mcanm.common.util.math;
 
 
 public class Matrix4d {
-	 /**
+     /**
      *  The first element of the first row.
      */
     public	double	m00;
@@ -109,29 +109,29 @@ public class Matrix4d {
      * @param m33 the [3][3] element
      */
     public Matrix4d(double m00, double m01, double m02, double m03,
-		    double m10, double m11, double m12, double m13,
-		    double m20, double m21, double m22, double m23,
-		    double m30, double m31, double m32, double m33)
+            double m10, double m11, double m12, double m13,
+            double m20, double m21, double m22, double m23,
+            double m30, double m31, double m32, double m33)
     {
-	this.m00 = m00;
-	this.m01 = m01;
-	this.m02 = m02;
-	this.m03 = m03;
+    this.m00 = m00;
+    this.m01 = m01;
+    this.m02 = m02;
+    this.m03 = m03;
 
-	this.m10 = m10;
-	this.m11 = m11;
-	this.m12 = m12;
-	this.m13 = m13;
+    this.m10 = m10;
+    this.m11 = m11;
+    this.m12 = m12;
+    this.m13 = m13;
 
-	this.m20 = m20;
-	this.m21 = m21;
-	this.m22 = m22;
-	this.m23 = m23;
+    this.m20 = m20;
+    this.m21 = m21;
+    this.m22 = m22;
+    this.m23 = m23;
 
-	this.m30 = m30;
-	this.m31 = m31;
-	this.m32 = m32;
-	this.m33 = m33;
+    this.m30 = m30;
+    this.m31 = m31;
+    this.m32 = m32;
+    this.m33 = m33;
 
     }
 
@@ -142,25 +142,25 @@ public class Matrix4d {
      */
     public Matrix4d(double[] v)
     {
-	this.m00 = v[ 0];
-	this.m01 = v[ 1];
-	this.m02 = v[ 2];
-	this.m03 = v[ 3];
+    this.m00 = v[ 0];
+    this.m01 = v[ 1];
+    this.m02 = v[ 2];
+    this.m03 = v[ 3];
 
-	this.m10 = v[ 4];
-	this.m11 = v[ 5];
-	this.m12 = v[ 6];
-	this.m13 = v[ 7];
+    this.m10 = v[ 4];
+    this.m11 = v[ 5];
+    this.m12 = v[ 6];
+    this.m13 = v[ 7];
 
-	this.m20 = v[ 8];
-	this.m21 = v[ 9];
-	this.m22 = v[10];
-	this.m23 = v[11];
+    this.m20 = v[ 8];
+    this.m21 = v[ 9];
+    this.m22 = v[10];
+    this.m23 = v[11];
 
-	this.m30 = v[12];
-	this.m31 = v[13];
-	this.m32 = v[14];
-	this.m33 = v[15];
+    this.m30 = v[12];
+    this.m31 = v[13];
+    this.m32 = v[14];
+    this.m33 = v[15];
 
     }
 
@@ -361,25 +361,25 @@ public class Matrix4d {
      */
     public Matrix4d()
     {
-	this.m00 = 0.0;
-	this.m01 = 0.0;
-	this.m02 = 0.0;
-	this.m03 = 0.0;
+    this.m00 = 0.0;
+    this.m01 = 0.0;
+    this.m02 = 0.0;
+    this.m03 = 0.0;
 
-	this.m10 = 0.0;
-	this.m11 = 0.0;
-	this.m12 = 0.0;
-	this.m13 = 0.0;
+    this.m10 = 0.0;
+    this.m11 = 0.0;
+    this.m12 = 0.0;
+    this.m13 = 0.0;
 
-	this.m20 = 0.0;
-	this.m21 = 0.0;
-	this.m22 = 0.0;
-	this.m23 = 0.0;
+    this.m20 = 0.0;
+    this.m21 = 0.0;
+    this.m22 = 0.0;
+    this.m23 = 0.0;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 0.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 0.0;
 
     }
 
@@ -389,10 +389,10 @@ public class Matrix4d {
      */ 
     public String toString() {
       return
-	this.m00 + ", " + this.m01 + ", " + this.m02 + ", " + this.m03 + "\n" +
-	this.m10 + ", " + this.m11 + ", " + this.m12 + ", " + this.m13 + "\n" +
-	this.m20 + ", " + this.m21 + ", " + this.m22 + ", " + this.m23 + "\n" +
-	this.m30 + ", " + this.m31 + ", " + this.m32 + ", " + this.m33 + "\n";
+    this.m00 + ", " + this.m01 + ", " + this.m02 + ", " + this.m03 + "\n" +
+    this.m10 + ", " + this.m11 + ", " + this.m12 + ", " + this.m13 + "\n" +
+    this.m20 + ", " + this.m21 + ", " + this.m22 + ", " + this.m23 + "\n" +
+    this.m30 + ", " + this.m31 + ", " + this.m32 + ", " + this.m33 + "\n";
     }
 
     /**
@@ -400,25 +400,25 @@ public class Matrix4d {
      */
     public final void setIdentity()
     {
-	this.m00 = 1.0;
-	this.m01 = 0.0;
-	this.m02 = 0.0;
-	this.m03 = 0.0;
+    this.m00 = 1.0;
+    this.m01 = 0.0;
+    this.m02 = 0.0;
+    this.m03 = 0.0;
 
-	this.m10 = 0.0;
-	this.m11 = 1.0;
-	this.m12 = 0.0;
-	this.m13 = 0.0;
+    this.m10 = 0.0;
+    this.m11 = 1.0;
+    this.m12 = 0.0;
+    this.m13 = 0.0;
 
-	this.m20 = 0.0;
-	this.m21 = 0.0;
-	this.m22 = 1.0;
-	this.m23 = 0.0;
+    this.m20 = 0.0;
+    this.m21 = 0.0;
+    this.m22 = 1.0;
+    this.m23 = 0.0;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
     /**
@@ -429,91 +429,91 @@ public class Matrix4d {
      */
     public final void setElement(int row, int column, double value)
     {
-	switch (row) 
-	  {
-	  case 0:
-	    switch(column)
-	      {
-	      case 0:
-		this.m00 = value;
-		break;
-	      case 1:
-		this.m01 = value;
-		break;
-	      case 2:
-		this.m02 = value;
-		break;
-	      case 3:
-		this.m03 = value;
-		break;
-	      default:
-		throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
-	      }
-	    break;
+    switch (row) 
+      {
+      case 0:
+        switch(column)
+          {
+          case 0:
+        this.m00 = value;
+        break;
+          case 1:
+        this.m01 = value;
+        break;
+          case 2:
+        this.m02 = value;
+        break;
+          case 3:
+        this.m03 = value;
+        break;
+          default:
+        throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
+          }
+        break;
 
-	  case 1:
-	    switch(column) 
-	      {
-	      case 0:
-		this.m10 = value;
-		break;
-	      case 1:
-		this.m11 = value;
-		break;
-	      case 2:
-		this.m12 = value;
-		break;
-	      case 3:
-		this.m13 = value;
-		break;
-	      default:
-		throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
-	      }
-	    break;
+      case 1:
+        switch(column) 
+          {
+          case 0:
+        this.m10 = value;
+        break;
+          case 1:
+        this.m11 = value;
+        break;
+          case 2:
+        this.m12 = value;
+        break;
+          case 3:
+        this.m13 = value;
+        break;
+          default:
+        throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
+          }
+        break;
 
-	  case 2:
-	    switch(column) 
-	      {
-	      case 0:
-		this.m20 = value;
-		break;
-	      case 1:
-		this.m21 = value;
-		break;
-	      case 2:
-		this.m22 = value;
-		break;
-	      case 3:
-		this.m23 = value;
-		break;
-	      default:
-		throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
-	      }
-	    break;
+      case 2:
+        switch(column) 
+          {
+          case 0:
+        this.m20 = value;
+        break;
+          case 1:
+        this.m21 = value;
+        break;
+          case 2:
+        this.m22 = value;
+        break;
+          case 3:
+        this.m23 = value;
+        break;
+          default:
+        throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
+          }
+        break;
 
-	  case 3:
-	    switch(column) 
-	      {
-	      case 0:
-		this.m30 = value;
-		break;
-	      case 1:
-		this.m31 = value;
-		break;
-	      case 2:
-		this.m32 = value;
-		break;
-	      case 3:
-		this.m33 = value;
-		break;
-	      default:
-		throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
-	      }
-	    break;
+      case 3:
+        switch(column) 
+          {
+          case 0:
+        this.m30 = value;
+        break;
+          case 1:
+        this.m31 = value;
+        break;
+          case 2:
+        this.m32 = value;
+        break;
+          case 3:
+        this.m33 = value;
+        break;
+          default:
+        throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
+          }
+        break;
 
-	  default:
-		throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
-	  }
+      default:
+        throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d0"));
+      }
     }
 
     /**
@@ -524,75 +524,75 @@ public class Matrix4d {
      */
     public final double getElement(int row, int column)
     {
-	switch (row) 
-	  {
-	  case 0:
-	    switch(column)
-	      {
-	      case 0:
-		return(this.m00);
-	      case 1:
-		return(this.m01);
-	      case 2:
-		return(this.m02);
-	      case 3:
-		return(this.m03);
-	      default:
-		break;
-	      }
-	    break;
-	  case 1:
-	    switch(column) 
-	      {
-	      case 0:
-		return(this.m10);
-	      case 1:
-		return(this.m11);
-	      case 2:
-		return(this.m12);
-	      case 3:
-		return(this.m13);
-	      default:
-		break;
-	      }
-	    break;
-	  
-	  case 2:
-	    switch(column) 
-	      {
-	      case 0:
-		return(this.m20);
-	      case 1:
-		return(this.m21);
-	      case 2:
-		return(this.m22);
-	      case 3:
-		return(this.m23);
-	      default:
-		break;
-	      }
-	    break;
-	    
-	  case 3:
-	    switch(column) 
-	      {
-	      case 0:
-		return(this.m30);
-	      case 1:
-		return(this.m31);
-	      case 2:
-		return(this.m32);
-	      case 3:
-		return(this.m33);
-	      default:
-		break;
-	      }
-	    break;
-	    
-	  default:
-	    break;
-	  }
-	throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d1"));
+    switch (row) 
+      {
+      case 0:
+        switch(column)
+          {
+          case 0:
+        return(this.m00);
+          case 1:
+        return(this.m01);
+          case 2:
+        return(this.m02);
+          case 3:
+        return(this.m03);
+          default:
+        break;
+          }
+        break;
+      case 1:
+        switch(column) 
+          {
+          case 0:
+        return(this.m10);
+          case 1:
+        return(this.m11);
+          case 2:
+        return(this.m12);
+          case 3:
+        return(this.m13);
+          default:
+        break;
+          }
+        break;
+      
+      case 2:
+        switch(column) 
+          {
+          case 0:
+        return(this.m20);
+          case 1:
+        return(this.m21);
+          case 2:
+        return(this.m22);
+          case 3:
+        return(this.m23);
+          default:
+        break;
+          }
+        break;
+        
+      case 3:
+        switch(column) 
+          {
+          case 0:
+        return(this.m30);
+          case 1:
+        return(this.m31);
+          case 2:
+        return(this.m32);
+          case 3:
+        return(this.m33);
+          default:
+        break;
+          }
+        break;
+        
+      default:
+        break;
+      }
+    throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d1"));
     }
 
     /** 
@@ -634,25 +634,25 @@ public class Matrix4d {
      */   
     public final void getRow(int row, double v[]) { 
         if( row == 0 ) {
-		v[0] = m00;
-		v[1] = m01;
-		v[2] = m02;
-		v[3] = m03;
+        v[0] = m00;
+        v[1] = m01;
+        v[2] = m02;
+        v[3] = m03;
         } else if(row == 1) {
-		v[0] = m10;
-		v[1] = m11;
-		v[2] = m12;
-		v[3] = m13;
+        v[0] = m10;
+        v[1] = m11;
+        v[2] = m12;
+        v[3] = m13;
         } else if(row == 2) {
-		v[0] = m20;
-		v[1] = m21;
-		v[2] = m22;
-		v[3] = m23;
+        v[0] = m20;
+        v[1] = m21;
+        v[2] = m22;
+        v[3] = m23;
         } else if(row == 3) {
-		v[0] = m30;
-		v[1] = m31;
-		v[2] = m32;
-		v[3] = m33;
+        v[0] = m30;
+        v[1] = m31;
+        v[2] = m32;
+        v[3] = m33;
         } else {
 
           throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d2"));
@@ -741,9 +741,9 @@ public class Matrix4d {
     public final void get(Matrix3d m1)
     {
  
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
-	getScaleRotate( tmp_scale, tmp_rot );
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
+    getScaleRotate( tmp_scale, tmp_rot );
 
         m1.m00 = tmp_rot[0];
         m1.m01 = tmp_rot[1];
@@ -768,10 +768,10 @@ public class Matrix4d {
      */   
     public final void get(Matrix3f m1) 
     {
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
-	
-	getScaleRotate( tmp_scale, tmp_rot );
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
+    
+    getScaleRotate( tmp_scale, tmp_rot );
 
         m1.m00 = (float)tmp_rot[0];
         m1.m01 = (float)tmp_rot[1];
@@ -796,10 +796,10 @@ public class Matrix4d {
      */  
     public final double get(Matrix3d m1, Vector3d t1)
     {    
-	
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
-	getScaleRotate( tmp_scale, tmp_rot );
+    
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
+    getScaleRotate( tmp_scale, tmp_rot );
 
         m1.m00 = tmp_rot[0];
         m1.m01 = tmp_rot[1];
@@ -830,9 +830,9 @@ public class Matrix4d {
      * @return  the scale component of this transform
      */  
     public final double get(Matrix3f m1, Vector3d t1){
-	
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
+    
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
         getScaleRotate( tmp_scale, tmp_rot );
 
         m1.m00 = (float)tmp_rot[0];
@@ -864,8 +864,8 @@ public class Matrix4d {
     public final void get(Quat4f q1)
     {
 
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
         getScaleRotate( tmp_scale, tmp_rot );
 
         double ww;   
@@ -911,10 +911,10 @@ public class Matrix4d {
      */   
     public final void get(Quat4d q1) 
     { 
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
-	
-	getScaleRotate( tmp_scale, tmp_rot );
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
+    
+    getScaleRotate( tmp_scale, tmp_rot );
 
         double ww;   
 
@@ -994,10 +994,10 @@ public class Matrix4d {
      */  
     public final double getScale()
     {
-	
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
-	getScaleRotate( tmp_scale, tmp_rot );
+    
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
+    getScaleRotate( tmp_scale, tmp_rot );
 
         return( Matrix3d.max3( tmp_scale ));
 
@@ -1035,10 +1035,10 @@ public class Matrix4d {
      */
     public final void setScale(double scale)
     {
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
-	
-	getScaleRotate( tmp_scale, tmp_rot );
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
+    
+    getScaleRotate( tmp_scale, tmp_rot );
 
         m00 = tmp_rot[0]*scale;
         m01 = tmp_rot[1]*scale;
@@ -1064,39 +1064,39 @@ public class Matrix4d {
      */
     public final void setRow(int row, double x, double y, double z, double w)
     {
-	switch (row) {
-	case 0:
-	    this.m00 = x;
-	    this.m01 = y;
-	    this.m02 = z;
-	    this.m03 = w;
-	    break;
+    switch (row) {
+    case 0:
+        this.m00 = x;
+        this.m01 = y;
+        this.m02 = z;
+        this.m03 = w;
+        break;
 
-	case 1:
-	    this.m10 = x;
-	    this.m11 = y;
-	    this.m12 = z;
-	    this.m13 = w;
-	    break;
+    case 1:
+        this.m10 = x;
+        this.m11 = y;
+        this.m12 = z;
+        this.m13 = w;
+        break;
 
-	case 2:
-	    this.m20 = x;
-	    this.m21 = y;
-	    this.m22 = z;
-	    this.m23 = w;
-	    break;
+    case 2:
+        this.m20 = x;
+        this.m21 = y;
+        this.m22 = z;
+        this.m23 = w;
+        break;
 
-	case 3:
-	    this.m30 = x;
-	    this.m31 = y;
-	    this.m32 = z;
-	    this.m33 = w;
-	    break;
+    case 3:
+        this.m30 = x;
+        this.m31 = y;
+        this.m32 = z;
+        this.m33 = w;
+        break;
 
-	default: 
+    default: 
             throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d4"));
 
-	}
+    }
     }
 
     /**
@@ -1106,38 +1106,38 @@ public class Matrix4d {
      */
     public final void setRow(int row, Vector4d v)
     {
-	switch (row) {
-	case 0:
-	    this.m00 = v.x;
-	    this.m01 = v.y;
-	    this.m02 = v.z;
-	    this.m03 = v.w;
-	    break;
+    switch (row) {
+    case 0:
+        this.m00 = v.x;
+        this.m01 = v.y;
+        this.m02 = v.z;
+        this.m03 = v.w;
+        break;
 
-	case 1:
-	    this.m10 = v.x;
-	    this.m11 = v.y;
-	    this.m12 = v.z;
-	    this.m13 = v.w;
-	    break;
+    case 1:
+        this.m10 = v.x;
+        this.m11 = v.y;
+        this.m12 = v.z;
+        this.m13 = v.w;
+        break;
 
-	case 2:
-	    this.m20 = v.x;
-	    this.m21 = v.y;
-	    this.m22 = v.z;
-	    this.m23 = v.w;
-	    break;
+    case 2:
+        this.m20 = v.x;
+        this.m21 = v.y;
+        this.m22 = v.z;
+        this.m23 = v.w;
+        break;
 
-	case 3:
-	    this.m30 = v.x;
-	    this.m31 = v.y;
-	    this.m32 = v.z;
-	    this.m33 = v.w;
-	    break;
+    case 3:
+        this.m30 = v.x;
+        this.m31 = v.y;
+        this.m32 = v.z;
+        this.m33 = v.w;
+        break;
 
-	default:
+    default:
             throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d4"));
-	}
+    }
     }
 
     /**
@@ -1147,38 +1147,38 @@ public class Matrix4d {
      */
     public final void setRow(int row, double v[])
     {
-	switch (row) {
-	case 0:
-	    this.m00 = v[0];
-	    this.m01 = v[1];
-	    this.m02 = v[2];
-	    this.m03 = v[3];
-	    break;
+    switch (row) {
+    case 0:
+        this.m00 = v[0];
+        this.m01 = v[1];
+        this.m02 = v[2];
+        this.m03 = v[3];
+        break;
 
-	case 1:
-	    this.m10 = v[0];
-	    this.m11 = v[1];
-	    this.m12 = v[2];
-	    this.m13 = v[3];
-	    break;
+    case 1:
+        this.m10 = v[0];
+        this.m11 = v[1];
+        this.m12 = v[2];
+        this.m13 = v[3];
+        break;
 
-	case 2:
-	    this.m20 = v[0];
-	    this.m21 = v[1];
-	    this.m22 = v[2];
-	    this.m23 = v[3];
-	    break;
+    case 2:
+        this.m20 = v[0];
+        this.m21 = v[1];
+        this.m22 = v[2];
+        this.m23 = v[3];
+        break;
 
-	case 3:
-	    this.m30 = v[0];
-	    this.m31 = v[1];
-	    this.m32 = v[2];
-	    this.m33 = v[3];
-	    break;
+    case 3:
+        this.m30 = v[0];
+        this.m31 = v[1];
+        this.m32 = v[2];
+        this.m33 = v[3];
+        break;
 
-	default:
+    default:
             throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d4"));
-	}
+    }
     }
 
     /**
@@ -1191,38 +1191,38 @@ public class Matrix4d {
      */
     public final void setColumn(int column, double x, double y, double z, double w)
     {
-	switch (column) {
-	case 0:
-	    this.m00 = x;
-	    this.m10 = y;
-	    this.m20 = z;
-	    this.m30 = w;
-	    break;
+    switch (column) {
+    case 0:
+        this.m00 = x;
+        this.m10 = y;
+        this.m20 = z;
+        this.m30 = w;
+        break;
 
-	case 1:
-	    this.m01 = x;
-	    this.m11 = y;
-	    this.m21 = z;
-	    this.m31 = w;
-	    break;
+    case 1:
+        this.m01 = x;
+        this.m11 = y;
+        this.m21 = z;
+        this.m31 = w;
+        break;
 
-	case 2:
-	    this.m02 = x;
-	    this.m12 = y;
-	    this.m22 = z;
-	    this.m32 = w;
-	    break;
+    case 2:
+        this.m02 = x;
+        this.m12 = y;
+        this.m22 = z;
+        this.m32 = w;
+        break;
 
-	case 3:
-	    this.m03 = x;
-	    this.m13 = y;
-	    this.m23 = z;
-	    this.m33 = w;
-	    break;
+    case 3:
+        this.m03 = x;
+        this.m13 = y;
+        this.m23 = z;
+        this.m33 = w;
+        break;
 
-	default:
+    default:
             throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d7"));
-	}
+    }
     }
 
     /**
@@ -1232,38 +1232,38 @@ public class Matrix4d {
      */
     public final void setColumn(int column, Vector4d v)
     {
-	switch (column) {
-	case 0:
-	    this.m00 = v.x;
-	    this.m10 = v.y;
-	    this.m20 = v.z;
-	    this.m30 = v.w;
-	    break;
+    switch (column) {
+    case 0:
+        this.m00 = v.x;
+        this.m10 = v.y;
+        this.m20 = v.z;
+        this.m30 = v.w;
+        break;
 
-	case 1:
-	    this.m01 = v.x;
-	    this.m11 = v.y;
-	    this.m21 = v.z;
-	    this.m31 = v.w;
-	    break;
+    case 1:
+        this.m01 = v.x;
+        this.m11 = v.y;
+        this.m21 = v.z;
+        this.m31 = v.w;
+        break;
 
-	case 2:
-	    this.m02 = v.x;
-	    this.m12 = v.y;
-	    this.m22 = v.z;
-	    this.m32 = v.w;
-	    break;
+    case 2:
+        this.m02 = v.x;
+        this.m12 = v.y;
+        this.m22 = v.z;
+        this.m32 = v.w;
+        break;
 
-	case 3:
-	    this.m03 = v.x;
-	    this.m13 = v.y;
-	    this.m23 = v.z;
-	    this.m33 = v.w;
-	    break;
+    case 3:
+        this.m03 = v.x;
+        this.m13 = v.y;
+        this.m23 = v.z;
+        this.m33 = v.w;
+        break;
 
-	default:
+    default:
             throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d7"));
-	}
+    }
     }
 
     /**
@@ -1273,38 +1273,38 @@ public class Matrix4d {
      */
     public final void setColumn(int column, double v[])
     {
-	switch (column) {
-	case 0:
-	    this.m00 = v[0];
-	    this.m10 = v[1];
-	    this.m20 = v[2];
-	    this.m30 = v[3];
-	    break;
+    switch (column) {
+    case 0:
+        this.m00 = v[0];
+        this.m10 = v[1];
+        this.m20 = v[2];
+        this.m30 = v[3];
+        break;
 
-	case 1:
-	    this.m01 = v[0];
-	    this.m11 = v[1];
-	    this.m21 = v[2];
-	    this.m31 = v[3];
-	    break;
+    case 1:
+        this.m01 = v[0];
+        this.m11 = v[1];
+        this.m21 = v[2];
+        this.m31 = v[3];
+        break;
 
-	case 2:
-	    this.m02 = v[0];
-	    this.m12 = v[1];
-	    this.m22 = v[2];
-	    this.m32 = v[3];
-	    break;
+    case 2:
+        this.m02 = v[0];
+        this.m12 = v[1];
+        this.m22 = v[2];
+        this.m32 = v[3];
+        break;
 
-	case 3:
-	    this.m03 = v[0];
-	    this.m13 = v[1];
-	    this.m23 = v[2];
-	    this.m33 = v[3];
-	    break;
+    case 3:
+        this.m03 = v[0];
+        this.m13 = v[1];
+        this.m23 = v[2];
+        this.m33 = v[3];
+        break;
 
-	default:
+    default:
             throw new ArrayIndexOutOfBoundsException(VecMathI18N.getString("Matrix4d7"));
-	}
+    }
     }
 
    /**
@@ -1364,25 +1364,25 @@ public class Matrix4d {
      */
     public final void add(Matrix4d m1, Matrix4d m2)
     {
-	this.m00 = m1.m00 + m2.m00;
-	this.m01 = m1.m01 + m2.m01;
-	this.m02 = m1.m02 + m2.m02;
-	this.m03 = m1.m03 + m2.m03;
+    this.m00 = m1.m00 + m2.m00;
+    this.m01 = m1.m01 + m2.m01;
+    this.m02 = m1.m02 + m2.m02;
+    this.m03 = m1.m03 + m2.m03;
 
-	this.m10 = m1.m10 + m2.m10;
-	this.m11 = m1.m11 + m2.m11;
-	this.m12 = m1.m12 + m2.m12;
-	this.m13 = m1.m13 + m2.m13;
+    this.m10 = m1.m10 + m2.m10;
+    this.m11 = m1.m11 + m2.m11;
+    this.m12 = m1.m12 + m2.m12;
+    this.m13 = m1.m13 + m2.m13;
 
-	this.m20 = m1.m20 + m2.m20;
-	this.m21 = m1.m21 + m2.m21;
-	this.m22 = m1.m22 + m2.m22;
-	this.m23 = m1.m23 + m2.m23;
+    this.m20 = m1.m20 + m2.m20;
+    this.m21 = m1.m21 + m2.m21;
+    this.m22 = m1.m22 + m2.m22;
+    this.m23 = m1.m23 + m2.m23;
 
-	this.m30 = m1.m30 + m2.m30;
-	this.m31 = m1.m31 + m2.m31;
-	this.m32 = m1.m32 + m2.m32;
-	this.m33 = m1.m33 + m2.m33;
+    this.m30 = m1.m30 + m2.m30;
+    this.m31 = m1.m31 + m2.m31;
+    this.m32 = m1.m32 + m2.m32;
+    this.m33 = m1.m33 + m2.m33;
     }
 
     /**
@@ -1420,25 +1420,25 @@ public class Matrix4d {
      */
     public final void sub(Matrix4d m1, Matrix4d m2)
     {
-	this.m00 = m1.m00 - m2.m00;
-	this.m01 = m1.m01 - m2.m01;
-	this.m02 = m1.m02 - m2.m02;
-	this.m03 = m1.m03 - m2.m03;
+    this.m00 = m1.m00 - m2.m00;
+    this.m01 = m1.m01 - m2.m01;
+    this.m02 = m1.m02 - m2.m02;
+    this.m03 = m1.m03 - m2.m03;
 
-	this.m10 = m1.m10 - m2.m10;
-	this.m11 = m1.m11 - m2.m11;
-	this.m12 = m1.m12 - m2.m12;
-	this.m13 = m1.m13 - m2.m13;
+    this.m10 = m1.m10 - m2.m10;
+    this.m11 = m1.m11 - m2.m11;
+    this.m12 = m1.m12 - m2.m12;
+    this.m13 = m1.m13 - m2.m13;
 
-	this.m20 = m1.m20 - m2.m20;
-	this.m21 = m1.m21 - m2.m21;
-	this.m22 = m1.m22 - m2.m22;
-	this.m23 = m1.m23 - m2.m23;
+    this.m20 = m1.m20 - m2.m20;
+    this.m21 = m1.m21 - m2.m21;
+    this.m22 = m1.m22 - m2.m22;
+    this.m23 = m1.m23 - m2.m23;
 
-	this.m30 = m1.m30 - m2.m30;
-	this.m31 = m1.m31 - m2.m31;
-	this.m32 = m1.m32 - m2.m32;
-	this.m33 = m1.m33 - m2.m33;
+    this.m30 = m1.m30 - m2.m30;
+    this.m31 = m1.m31 - m2.m31;
+    this.m32 = m1.m32 - m2.m32;
+    this.m33 = m1.m33 - m2.m33;
     }
 
  
@@ -1475,31 +1475,31 @@ public class Matrix4d {
      */
     public final void transpose()
     {
-	double temp;
+    double temp;
 
-	temp = this.m10;
-	this.m10 = this.m01;
-	this.m01 = temp;
+    temp = this.m10;
+    this.m10 = this.m01;
+    this.m01 = temp;
 
-	temp = this.m20;
-	this.m20 = this.m02;
-	this.m02 = temp;
+    temp = this.m20;
+    this.m20 = this.m02;
+    this.m02 = temp;
 
-	temp = this.m30;
-	this.m30 = this.m03;
-	this.m03 = temp;
+    temp = this.m30;
+    this.m30 = this.m03;
+    this.m03 = temp;
 
-	temp = this.m21;
-	this.m21 = this.m12;
-	this.m12 = temp;
+    temp = this.m21;
+    this.m21 = this.m12;
+    this.m12 = temp;
 
-	temp = this.m31;
-	this.m31 = this.m13;
-	this.m13 = temp;
+    temp = this.m31;
+    this.m31 = this.m13;
+    this.m13 = temp;
 
-	temp = this.m32;
-	this.m32 = this.m23;
-	this.m23 = temp;
+    temp = this.m32;
+    this.m32 = this.m23;
+    this.m23 = temp;
     }
 
     /**
@@ -1508,28 +1508,28 @@ public class Matrix4d {
      */
     public final void transpose(Matrix4d m1)
     {
-	if (this != m1) {
-	    this.m00 = m1.m00;
-	    this.m01 = m1.m10;
-	    this.m02 = m1.m20;
-	    this.m03 = m1.m30;
+    if (this != m1) {
+        this.m00 = m1.m00;
+        this.m01 = m1.m10;
+        this.m02 = m1.m20;
+        this.m03 = m1.m30;
 
-	    this.m10 = m1.m01;
-	    this.m11 = m1.m11;
-	    this.m12 = m1.m21;
-	    this.m13 = m1.m31;
+        this.m10 = m1.m01;
+        this.m11 = m1.m11;
+        this.m12 = m1.m21;
+        this.m13 = m1.m31;
 
-	    this.m20 = m1.m02;
-	    this.m21 = m1.m12;
-	    this.m22 = m1.m22;
-	    this.m23 = m1.m32;
+        this.m20 = m1.m02;
+        this.m21 = m1.m12;
+        this.m22 = m1.m22;
+        this.m23 = m1.m32;
 
-	    this.m30 = m1.m03;
-	    this.m31 = m1.m13;
-	    this.m32 = m1.m23;
-	    this.m33 = m1.m33;
-	} else
-	    this.transpose();
+        this.m30 = m1.m03;
+        this.m31 = m1.m13;
+        this.m32 = m1.m23;
+        this.m33 = m1.m33;
+    } else
+        this.transpose();
     }
 
     /**
@@ -1595,26 +1595,26 @@ public class Matrix4d {
      */
     public final void set(Quat4d q1)
     {
-	this.m00 = (1.0 - 2.0*q1.y*q1.y - 2.0*q1.z*q1.z);
-	this.m10 = (2.0*(q1.x*q1.y + q1.w*q1.z));
-	this.m20 = (2.0*(q1.x*q1.z - q1.w*q1.y));
+    this.m00 = (1.0 - 2.0*q1.y*q1.y - 2.0*q1.z*q1.z);
+    this.m10 = (2.0*(q1.x*q1.y + q1.w*q1.z));
+    this.m20 = (2.0*(q1.x*q1.z - q1.w*q1.y));
 
-	this.m01 = (2.0*(q1.x*q1.y - q1.w*q1.z));
-	this.m11 = (1.0 - 2.0*q1.x*q1.x - 2.0*q1.z*q1.z);
-	this.m21 = (2.0*(q1.y*q1.z + q1.w*q1.x));
+    this.m01 = (2.0*(q1.x*q1.y - q1.w*q1.z));
+    this.m11 = (1.0 - 2.0*q1.x*q1.x - 2.0*q1.z*q1.z);
+    this.m21 = (2.0*(q1.y*q1.z + q1.w*q1.x));
 
-	this.m02 = (2.0*(q1.x*q1.z + q1.w*q1.y));
-	this.m12 = (2.0*(q1.y*q1.z - q1.w*q1.x));
-	this.m22 = (1.0 - 2.0*q1.x*q1.x - 2.0*q1.y*q1.y);
+    this.m02 = (2.0*(q1.x*q1.z + q1.w*q1.y));
+    this.m12 = (2.0*(q1.y*q1.z - q1.w*q1.x));
+    this.m22 = (1.0 - 2.0*q1.x*q1.x - 2.0*q1.y*q1.y);
 
-	this.m03 = 0.0;
-	this.m13 = 0.0;
-	this.m23 = 0.0;
+    this.m03 = 0.0;
+    this.m13 = 0.0;
+    this.m23 = 0.0;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
     /**
@@ -1627,19 +1627,19 @@ public class Matrix4d {
       double mag = Math.sqrt( a1.x*a1.x + a1.y*a1.y + a1.z*a1.z);
 
       if( mag < EPS ) {
-	 m00 = 1.0;
-	 m01 = 0.0;
-	 m02 = 0.0;
+     m00 = 1.0;
+     m01 = 0.0;
+     m02 = 0.0;
 
-	 m10 = 0.0;
-	 m11 = 1.0;
-	 m12 = 0.0;
+     m10 = 0.0;
+     m11 = 1.0;
+     m12 = 0.0;
 
-	 m20 = 0.0;
-	 m21 = 0.0;
-	 m22 = 1.0;
+     m20 = 0.0;
+     m21 = 0.0;
+     m22 = 1.0;
       } else {
- 	 mag = 1.0/mag;
+     mag = 1.0/mag;
          double ax = a1.x*mag;
          double ay = a1.y*mag;
          double az = a1.z*mag;
@@ -1682,26 +1682,26 @@ public class Matrix4d {
      */
     public final void set(Quat4f q1)
     {
-	this.m00 = (1.0 - 2.0*q1.y*q1.y - 2.0*q1.z*q1.z);
-	this.m10 = (2.0*(q1.x*q1.y + q1.w*q1.z));
-	this.m20 = (2.0*(q1.x*q1.z - q1.w*q1.y));
+    this.m00 = (1.0 - 2.0*q1.y*q1.y - 2.0*q1.z*q1.z);
+    this.m10 = (2.0*(q1.x*q1.y + q1.w*q1.z));
+    this.m20 = (2.0*(q1.x*q1.z - q1.w*q1.y));
 
-	this.m01 = (2.0*(q1.x*q1.y - q1.w*q1.z));
-	this.m11 = (1.0 - 2.0*q1.x*q1.x - 2.0*q1.z*q1.z);
-	this.m21 = (2.0*(q1.y*q1.z + q1.w*q1.x));
+    this.m01 = (2.0*(q1.x*q1.y - q1.w*q1.z));
+    this.m11 = (1.0 - 2.0*q1.x*q1.x - 2.0*q1.z*q1.z);
+    this.m21 = (2.0*(q1.y*q1.z + q1.w*q1.x));
 
-	this.m02 = (2.0*(q1.x*q1.z + q1.w*q1.y));
-	this.m12 = (2.0*(q1.y*q1.z - q1.w*q1.x));
-	this.m22 = (1.0 - 2.0*q1.x*q1.x - 2.0*q1.y*q1.y);
+    this.m02 = (2.0*(q1.x*q1.z + q1.w*q1.y));
+    this.m12 = (2.0*(q1.y*q1.z - q1.w*q1.x));
+    this.m22 = (1.0 - 2.0*q1.x*q1.x - 2.0*q1.y*q1.y);
 
-	this.m03 = 0.0;
-	this.m13 = 0.0;
-	this.m23 = 0.0;
+    this.m03 = 0.0;
+    this.m13 = 0.0;
+    this.m23 = 0.0;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
     /**
@@ -1714,19 +1714,19 @@ public class Matrix4d {
       double mag = Math.sqrt( a1.x*a1.x + a1.y*a1.y + a1.z*a1.z);
 
       if( mag < EPS ) {
- 	 m00 = 1.0;
-	 m01 = 0.0;
-	 m02 = 0.0;
+     m00 = 1.0;
+     m01 = 0.0;
+     m02 = 0.0;
 
-	 m10 = 0.0;
-	 m11 = 1.0;
-	 m12 = 0.0;
+     m10 = 0.0;
+     m11 = 1.0;
+     m12 = 0.0;
 
-	 m20 = 0.0;
-	 m21 = 0.0;
-	 m22 = 1.0;
+     m20 = 0.0;
+     m21 = 0.0;
+     m22 = 1.0;
       } else {
-	 mag = 1.0/mag;
+     mag = 1.0/mag;
          double ax = a1.x*mag;
          double ay = a1.y*mag;
          double az = a1.z*mag;
@@ -1801,26 +1801,26 @@ public class Matrix4d {
      */  
     public final void set(Quat4f q1, Vector3d t1, double s)
     {
-	this.m00 = s*(1.0 - 2.0*q1.y*q1.y - 2.0*q1.z*q1.z);
-	this.m10 = s*(2.0*(q1.x*q1.y + q1.w*q1.z));
-	this.m20 = s*(2.0*(q1.x*q1.z - q1.w*q1.y));
+    this.m00 = s*(1.0 - 2.0*q1.y*q1.y - 2.0*q1.z*q1.z);
+    this.m10 = s*(2.0*(q1.x*q1.y + q1.w*q1.z));
+    this.m20 = s*(2.0*(q1.x*q1.z - q1.w*q1.y));
 
-	this.m01 = s*(2.0*(q1.x*q1.y - q1.w*q1.z));
-	this.m11 = s*(1.0 - 2.0*q1.x*q1.x - 2.0*q1.z*q1.z);
-	this.m21 = s*(2.0*(q1.y*q1.z + q1.w*q1.x));
+    this.m01 = s*(2.0*(q1.x*q1.y - q1.w*q1.z));
+    this.m11 = s*(1.0 - 2.0*q1.x*q1.x - 2.0*q1.z*q1.z);
+    this.m21 = s*(2.0*(q1.y*q1.z + q1.w*q1.x));
 
-	this.m02 = s*(2.0*(q1.x*q1.z + q1.w*q1.y));
-	this.m12 = s*(2.0*(q1.y*q1.z - q1.w*q1.x));
-	this.m22 = s*(1.0 - 2.0*q1.x*q1.x - 2.0*q1.y*q1.y);
+    this.m02 = s*(2.0*(q1.x*q1.z + q1.w*q1.y));
+    this.m12 = s*(2.0*(q1.y*q1.z - q1.w*q1.x));
+    this.m22 = s*(1.0 - 2.0*q1.x*q1.x - 2.0*q1.y*q1.y);
 
-	this.m03 = t1.x;
-	this.m13 = t1.y;
-	this.m23 = t1.z;
+    this.m03 = t1.x;
+    this.m13 = t1.y;
+    this.m23 = t1.z;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
     /**
@@ -1832,26 +1832,26 @@ public class Matrix4d {
      */  
     public final void set(Quat4f q1, Vector3f t1, float s)
    {
-	this.m00 = s*(1.0 - 2.0*q1.y*q1.y - 2.0*q1.z*q1.z);
-	this.m10 = s*(2.0*(q1.x*q1.y + q1.w*q1.z));
-	this.m20 = s*(2.0*(q1.x*q1.z - q1.w*q1.y));
+    this.m00 = s*(1.0 - 2.0*q1.y*q1.y - 2.0*q1.z*q1.z);
+    this.m10 = s*(2.0*(q1.x*q1.y + q1.w*q1.z));
+    this.m20 = s*(2.0*(q1.x*q1.z - q1.w*q1.y));
 
-	this.m01 = s*(2.0*(q1.x*q1.y - q1.w*q1.z));
-	this.m11 = s*(1.0 - 2.0*q1.x*q1.x - 2.0*q1.z*q1.z);
-	this.m21 = s*(2.0*(q1.y*q1.z + q1.w*q1.x));
+    this.m01 = s*(2.0*(q1.x*q1.y - q1.w*q1.z));
+    this.m11 = s*(1.0 - 2.0*q1.x*q1.x - 2.0*q1.z*q1.z);
+    this.m21 = s*(2.0*(q1.y*q1.z + q1.w*q1.x));
 
-	this.m02 = s*(2.0*(q1.x*q1.z + q1.w*q1.y));
+    this.m02 = s*(2.0*(q1.x*q1.z + q1.w*q1.y));
         this.m12 = s*(2.0*(q1.y*q1.z - q1.w*q1.x));
-	this.m22 = s*(1.0 - 2.0*q1.x*q1.x - 2.0*q1.y*q1.y);
+    this.m22 = s*(1.0 - 2.0*q1.x*q1.x - 2.0*q1.y*q1.y);
 
-	this.m03 = t1.x;
-	this.m13 = t1.y;
-	this.m23 = t1.z;
+    this.m03 = t1.x;
+    this.m13 = t1.y;
+    this.m23 = t1.z;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
    }
 
     /**
@@ -1861,25 +1861,25 @@ public class Matrix4d {
      */
     public final void set(Matrix4f m1)
     {
-	this.m00 = m1.m00;
-	this.m01 = m1.m01;
-	this.m02 = m1.m02;
-	this.m03 = m1.m03;
+    this.m00 = m1.m00;
+    this.m01 = m1.m01;
+    this.m02 = m1.m02;
+    this.m03 = m1.m03;
 
-	this.m10 = m1.m10;
-	this.m11 = m1.m11;
-	this.m12 = m1.m12;
-	this.m13 = m1.m13;
+    this.m10 = m1.m10;
+    this.m11 = m1.m11;
+    this.m12 = m1.m12;
+    this.m13 = m1.m13;
 
-	this.m20 = m1.m20;
-	this.m21 = m1.m21;
-	this.m22 = m1.m22;
-	this.m23 = m1.m23;
+    this.m20 = m1.m20;
+    this.m21 = m1.m21;
+    this.m22 = m1.m22;
+    this.m23 = m1.m23;
 
-	this.m30 = m1.m30;
-	this.m31 = m1.m31;
-	this.m32 = m1.m32;
-	this.m33 = m1.m33;
+    this.m30 = m1.m30;
+    this.m31 = m1.m31;
+    this.m32 = m1.m32;
+    this.m33 = m1.m33;
     }
 
     /**
@@ -1889,25 +1889,25 @@ public class Matrix4d {
      */
     public final void set(Matrix4d m1)
     {
-	this.m00 = m1.m00;
-	this.m01 = m1.m01;
-	this.m02 = m1.m02;
-	this.m03 = m1.m03;
+    this.m00 = m1.m00;
+    this.m01 = m1.m01;
+    this.m02 = m1.m02;
+    this.m03 = m1.m03;
 
-	this.m10 = m1.m10;
-	this.m11 = m1.m11;
-	this.m12 = m1.m12;
-	this.m13 = m1.m13;
+    this.m10 = m1.m10;
+    this.m11 = m1.m11;
+    this.m12 = m1.m12;
+    this.m13 = m1.m13;
 
-	this.m20 = m1.m20;
-	this.m21 = m1.m21;
-	this.m22 = m1.m22;
-	this.m23 = m1.m23;
+    this.m20 = m1.m20;
+    this.m21 = m1.m21;
+    this.m22 = m1.m22;
+    this.m23 = m1.m23;
 
-	this.m30 = m1.m30;
-	this.m31 = m1.m31;
-	this.m32 = m1.m32;
-	this.m33 = m1.m33;
+    this.m30 = m1.m30;
+    this.m31 = m1.m31;
+    this.m32 = m1.m32;
+    this.m33 = m1.m33;
     }
 
   /**
@@ -1938,14 +1938,14 @@ public class Matrix4d {
      * about allocating a little bit of garbage.
      */
     final void invertGeneral(Matrix4d  m1) {
-	double result[] = new double[16];
-	int row_perm[] = new int[4];
-	int i;
+    double result[] = new double[16];
+    int row_perm[] = new int[4];
+    int i;
 
-	// Use LU decomposition and backsubstitution code specifically
-	// for floating-point 4x4 matrices.
-	double[]    tmp = new double[16];  // scratch matrix
-	// Copy source matrix to t1tmp 
+    // Use LU decomposition and backsubstitution code specifically
+    // for floating-point 4x4 matrices.
+    double[]    tmp = new double[16];  // scratch matrix
+    // Copy source matrix to t1tmp 
         tmp[0] = m1.m00;
         tmp[1] = m1.m01;
         tmp[2] = m1.m02;
@@ -1966,16 +1966,16 @@ public class Matrix4d {
         tmp[14] = m1.m32;
         tmp[15] = m1.m33;
 
-	// Calculate LU decomposition: Is the matrix singular? 
-	if (!luDecomposition(tmp, row_perm)) {
-	    // Matrix has no inverse 
-	    throw new SingularMatrixException(VecMathI18N.getString("Matrix4d10"));
-	}
+    // Calculate LU decomposition: Is the matrix singular? 
+    if (!luDecomposition(tmp, row_perm)) {
+        // Matrix has no inverse 
+        throw new SingularMatrixException(VecMathI18N.getString("Matrix4d10"));
+    }
 
-	// Perform back substitution on the identity matrix 
+    // Perform back substitution on the identity matrix 
         for(i=0;i<16;i++) result[i] = 0.0;
         result[0] = 1.0; result[5] = 1.0; result[10] = 1.0; result[15] = 1.0;
-	luBacksubstitution(tmp, row_perm, result);
+    luBacksubstitution(tmp, row_perm, result);
 
         this.m00 = result[0];
         this.m01 = result[1];
@@ -2020,135 +2020,135 @@ public class Matrix4d {
     //	      1988, pp 40-45.
     //
     static boolean luDecomposition(double[] matrix0,
-				   int[] row_perm) {
+                   int[] row_perm) {
 
-	double row_scale[] = new double[4];
+    double row_scale[] = new double[4];
 
-	// Determine implicit scaling information by looping over rows 
-	{
-	    int i, j;
-	    int ptr, rs;
-	    double big, temp;
+    // Determine implicit scaling information by looping over rows 
+    {
+        int i, j;
+        int ptr, rs;
+        double big, temp;
 
-	    ptr = 0;
-	    rs = 0;
+        ptr = 0;
+        rs = 0;
 
-	    // For each row ... 
-	    i = 4;
-	    while (i-- != 0) {
-		big = 0.0;
+        // For each row ... 
+        i = 4;
+        while (i-- != 0) {
+        big = 0.0;
 
-		// For each column, find the largest element in the row 
-		j = 4;
-		while (j-- != 0) {
-		    temp = matrix0[ptr++];
-		    temp = Math.abs(temp);
-		    if (temp > big) {
-			big = temp;
-		    }
-		}
+        // For each column, find the largest element in the row 
+        j = 4;
+        while (j-- != 0) {
+            temp = matrix0[ptr++];
+            temp = Math.abs(temp);
+            if (temp > big) {
+            big = temp;
+            }
+        }
 
-		// Is the matrix singular? 
-		if (big == 0.0) {
-		    return false;
-		}
-		row_scale[rs++] = 1.0 / big;
-	    }
-	}
+        // Is the matrix singular? 
+        if (big == 0.0) {
+            return false;
+        }
+        row_scale[rs++] = 1.0 / big;
+        }
+    }
 
-	{
-	    int j;
-	    int mtx;
+    {
+        int j;
+        int mtx;
 
-	    mtx = 0;
+        mtx = 0;
 
-	    // For all columns, execute Crout's method 
-	    for (j = 0; j < 4; j++) {
-		int i, imax, k;
-		int target, p1, p2;
-		double sum, big, temp;
+        // For all columns, execute Crout's method 
+        for (j = 0; j < 4; j++) {
+        int i, imax, k;
+        int target, p1, p2;
+        double sum, big, temp;
 
-		// Determine elements of upper diagonal matrix U 
-		for (i = 0; i < j; i++) {
-		    target = mtx + (4*i) + j;
-		    sum = matrix0[target];
-		    k = i;
-		    p1 = mtx + (4*i);
-		    p2 = mtx + j;
-		    while (k-- != 0) {
-			sum -= matrix0[p1] * matrix0[p2];
-			p1++;
-			p2 += 4;
-		    }
-		    matrix0[target] = sum;
-		}
+        // Determine elements of upper diagonal matrix U 
+        for (i = 0; i < j; i++) {
+            target = mtx + (4*i) + j;
+            sum = matrix0[target];
+            k = i;
+            p1 = mtx + (4*i);
+            p2 = mtx + j;
+            while (k-- != 0) {
+            sum -= matrix0[p1] * matrix0[p2];
+            p1++;
+            p2 += 4;
+            }
+            matrix0[target] = sum;
+        }
 
-		// Search for largest pivot element and calculate
-		// intermediate elements of lower diagonal matrix L.
-		big = 0.0;
-		imax = -1;
-		for (i = j; i < 4; i++) {
-		    target = mtx + (4*i) + j;
-		    sum = matrix0[target];
-		    k = j;
-		    p1 = mtx + (4*i);
-		    p2 = mtx + j;
-		    while (k-- != 0) {
-			sum -= matrix0[p1] * matrix0[p2];
-			p1++;
-			p2 += 4;
-		    }
-		    matrix0[target] = sum;
+        // Search for largest pivot element and calculate
+        // intermediate elements of lower diagonal matrix L.
+        big = 0.0;
+        imax = -1;
+        for (i = j; i < 4; i++) {
+            target = mtx + (4*i) + j;
+            sum = matrix0[target];
+            k = j;
+            p1 = mtx + (4*i);
+            p2 = mtx + j;
+            while (k-- != 0) {
+            sum -= matrix0[p1] * matrix0[p2];
+            p1++;
+            p2 += 4;
+            }
+            matrix0[target] = sum;
 
-		    // Is this the best pivot so far? 
-		    if ((temp = row_scale[i] * Math.abs(sum)) >= big) {
-			big = temp;
-			imax = i;
-		    }
-		}
+            // Is this the best pivot so far? 
+            if ((temp = row_scale[i] * Math.abs(sum)) >= big) {
+            big = temp;
+            imax = i;
+            }
+        }
 
-		if (imax < 0) {
-		    throw new RuntimeException(VecMathI18N.getString("Matrix4d11"));
-		}
+        if (imax < 0) {
+            throw new RuntimeException(VecMathI18N.getString("Matrix4d11"));
+        }
 
-		// Is a row exchange necessary? 
-		if (j != imax) {
-		    // Yes: exchange rows 
-		    k = 4;
-		    p1 = mtx + (4*imax);
-		    p2 = mtx + (4*j);
-		    while (k-- != 0) {
-			temp = matrix0[p1];
-			matrix0[p1++] = matrix0[p2];
-			matrix0[p2++] = temp;
-		    }
+        // Is a row exchange necessary? 
+        if (j != imax) {
+            // Yes: exchange rows 
+            k = 4;
+            p1 = mtx + (4*imax);
+            p2 = mtx + (4*j);
+            while (k-- != 0) {
+            temp = matrix0[p1];
+            matrix0[p1++] = matrix0[p2];
+            matrix0[p2++] = temp;
+            }
 
-		    // Record change in scale factor 
-		    row_scale[imax] = row_scale[j];
-		}
+            // Record change in scale factor 
+            row_scale[imax] = row_scale[j];
+        }
 
-		// Record row permutation 
-		row_perm[j] = imax;
+        // Record row permutation 
+        row_perm[j] = imax;
 
-		// Is the matrix singular 
-		if (matrix0[(mtx + (4*j) + j)] == 0.0) {
-		    return false;
-		}
+        // Is the matrix singular 
+        if (matrix0[(mtx + (4*j) + j)] == 0.0) {
+            return false;
+        }
 
-		// Divide elements of lower diagonal matrix L by pivot 
-		if (j != (4-1)) {
-		    temp = 1.0 / (matrix0[(mtx + (4*j) + j)]);
-		    target = mtx + (4*(j+1)) + j;
-		    i = 3 - j;
-		    while (i-- != 0) {
-			matrix0[target] *= temp;
-			target += 4;
-		    }
-		}
-	    }
-	}
+        // Divide elements of lower diagonal matrix L by pivot 
+        if (j != (4-1)) {
+            temp = 1.0 / (matrix0[(mtx + (4*j) + j)]);
+            target = mtx + (4*(j+1)) + j;
+            i = 3 - j;
+            while (i-- != 0) {
+            matrix0[target] *= temp;
+            target += 4;
+            }
+        }
+        }
+    }
 
-	return true;
+    return true;
     }
 
     /**
@@ -2170,62 +2170,62 @@ public class Matrix4d {
     //	      1988, pp 44-45.
     //
     static void luBacksubstitution(double[] matrix1,
-				   int[] row_perm,
-				   double[] matrix2) {
+                   int[] row_perm,
+                   double[] matrix2) {
 
-	int i, ii, ip, j, k;
-	int rp;
-	int cv, rv;
-	
-	//	rp = row_perm;
-	rp = 0;
+    int i, ii, ip, j, k;
+    int rp;
+    int cv, rv;
+    
+    //	rp = row_perm;
+    rp = 0;
 
-	// For each column vector of matrix2 ... 
-	for (k = 0; k < 4; k++) {
-	    //	    cv = &(matrix2[0][k]);
-	    cv = k;
-	    ii = -1;
+    // For each column vector of matrix2 ... 
+    for (k = 0; k < 4; k++) {
+        //	    cv = &(matrix2[0][k]);
+        cv = k;
+        ii = -1;
 
-	    // Forward substitution 
-	    for (i = 0; i < 4; i++) {
-		double sum;
+        // Forward substitution 
+        for (i = 0; i < 4; i++) {
+        double sum;
 
-		ip = row_perm[rp+i];
-		sum = matrix2[cv+4*ip];
-		matrix2[cv+4*ip] = matrix2[cv+4*i];
-		if (ii >= 0) {
-		    //		    rv = &(matrix1[i][0]);
-		    rv = i*4;
-		    for (j = ii; j <= i-1; j++) {
-			sum -= matrix1[rv+j] * matrix2[cv+4*j];
-		    }
-		}
-		else if (sum != 0.0) {
-		    ii = i;
-		}
-		matrix2[cv+4*i] = sum;
-	    }
+        ip = row_perm[rp+i];
+        sum = matrix2[cv+4*ip];
+        matrix2[cv+4*ip] = matrix2[cv+4*i];
+        if (ii >= 0) {
+            //		    rv = &(matrix1[i][0]);
+            rv = i*4;
+            for (j = ii; j <= i-1; j++) {
+            sum -= matrix1[rv+j] * matrix2[cv+4*j];
+            }
+        }
+        else if (sum != 0.0) {
+            ii = i;
+        }
+        matrix2[cv+4*i] = sum;
+        }
 
-	    // Backsubstitution 
-	    //	    rv = &(matrix1[3][0]);
-	    rv = 3*4;
-	    matrix2[cv+4*3] /= matrix1[rv+3];
+        // Backsubstitution 
+        //	    rv = &(matrix1[3][0]);
+        rv = 3*4;
+        matrix2[cv+4*3] /= matrix1[rv+3];
 
-	    rv -= 4;
-	    matrix2[cv+4*2] = (matrix2[cv+4*2] -
-			    matrix1[rv+3] * matrix2[cv+4*3]) / matrix1[rv+2];
+        rv -= 4;
+        matrix2[cv+4*2] = (matrix2[cv+4*2] -
+                matrix1[rv+3] * matrix2[cv+4*3]) / matrix1[rv+2];
 
-	    rv -= 4;
-	    matrix2[cv+4*1] = (matrix2[cv+4*1] -
-			    matrix1[rv+2] * matrix2[cv+4*2] -
-			    matrix1[rv+3] * matrix2[cv+4*3]) / matrix1[rv+1];
+        rv -= 4;
+        matrix2[cv+4*1] = (matrix2[cv+4*1] -
+                matrix1[rv+2] * matrix2[cv+4*2] -
+                matrix1[rv+3] * matrix2[cv+4*3]) / matrix1[rv+1];
 
-	    rv -= 4;
-	    matrix2[cv+4*0] = (matrix2[cv+4*0] -
-			    matrix1[rv+1] * matrix2[cv+4*1] -
-			    matrix1[rv+2] * matrix2[cv+4*2] -
-			    matrix1[rv+3] * matrix2[cv+4*3]) / matrix1[rv+0];
-	}
+        rv -= 4;
+        matrix2[cv+4*0] = (matrix2[cv+4*0] -
+                matrix1[rv+1] * matrix2[cv+4*1] -
+                matrix1[rv+2] * matrix2[cv+4*2] -
+                matrix1[rv+3] * matrix2[cv+4*3]) / matrix1[rv+0];
+    }
     }
 
     /**
@@ -2238,14 +2238,14 @@ public class Matrix4d {
 
        // cofactor exapainsion along first row 
 
-	det = m00*(m11*m22*m33+ m12*m23*m31 + m13*m21*m32 
-		 - m13*m22*m31 -m11*m23*m32 - m12*m21*m33);
-	det -= m01*(m10*m22*m33+ m12*m23*m30 + m13*m20*m32 
- 		  - m13*m22*m30 -m10*m23*m32 - m12*m20*m33);
-	det += m02*(m10*m21*m33+ m11*m23*m30 + m13*m20*m31 
- 		  - m13*m21*m30 -m10*m23*m31 - m11*m20*m33);
-	det -= m03*(m10*m21*m32+ m11*m22*m30 + m12*m20*m31 
-		  - m12*m21*m30 -m10*m22*m31 - m11*m20*m32);
+    det = m00*(m11*m22*m33+ m12*m23*m31 + m13*m21*m32 
+         - m13*m22*m31 -m11*m23*m32 - m12*m21*m33);
+    det -= m01*(m10*m22*m33+ m12*m23*m30 + m13*m20*m32 
+          - m13*m22*m30 -m10*m23*m32 - m12*m20*m33);
+    det += m02*(m10*m21*m33+ m11*m23*m30 + m13*m20*m31 
+          - m13*m21*m30 -m10*m23*m31 - m11*m20*m33);
+    det -= m03*(m10*m21*m32+ m11*m22*m30 + m12*m20*m31 
+          - m12*m21*m30 -m10*m22*m31 - m11*m20*m32);
 
         return( det );
     }
@@ -2257,25 +2257,25 @@ public class Matrix4d {
      */
     public final void set(double scale)
     {
-	this.m00 = scale;
-	this.m01 = 0.0;
-	this.m02 = 0.0;
-	this.m03 = 0.0;
+    this.m00 = scale;
+    this.m01 = 0.0;
+    this.m02 = 0.0;
+    this.m03 = 0.0;
 
-	this.m10 = 0.0;
-	this.m11 = scale;
-	this.m12 = 0.0;
-	this.m13 = 0.0;
+    this.m10 = 0.0;
+    this.m11 = scale;
+    this.m12 = 0.0;
+    this.m13 = 0.0;
 
-	this.m20 = 0.0;
-	this.m21 = 0.0;
-	this.m22 = scale;
-	this.m23 = 0.0;
+    this.m20 = 0.0;
+    this.m21 = 0.0;
+    this.m22 = scale;
+    this.m23 = 0.0;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
     /**
@@ -2285,25 +2285,25 @@ public class Matrix4d {
      */
     public final void set(Vector3d v1)
     {
-	this.m00 = 1.0;
-	this.m01 = 0.0;
-	this.m02 = 0.0;
-	this.m03 = v1.x;
+    this.m00 = 1.0;
+    this.m01 = 0.0;
+    this.m02 = 0.0;
+    this.m03 = v1.x;
 
-	this.m10 = 0.0;
-	this.m11 = 1.0;
-	this.m12 = 0.0;
-	this.m13 = v1.y;
+    this.m10 = 0.0;
+    this.m11 = 1.0;
+    this.m12 = 0.0;
+    this.m13 = v1.y;
 
-	this.m20 = 0.0;
-	this.m21 = 0.0;
-	this.m22 = 1.0;
-	this.m23 = v1.z;
+    this.m20 = 0.0;
+    this.m21 = 0.0;
+    this.m22 = 1.0;
+    this.m23 = v1.z;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
     /**
@@ -2315,25 +2315,25 @@ public class Matrix4d {
      */
     public final void set(double scale, Vector3d v1)
     {
-	this.m00 = scale;
-	this.m01 = 0.0;
-	this.m02 = 0.0;
-	this.m03 = v1.x;
+    this.m00 = scale;
+    this.m01 = 0.0;
+    this.m02 = 0.0;
+    this.m03 = v1.x;
 
-	this.m10 = 0.0;
-	this.m11 = scale;
-	this.m12 = 0.0;
-	this.m13 = v1.y;
+    this.m10 = 0.0;
+    this.m11 = scale;
+    this.m12 = 0.0;
+    this.m13 = v1.y;
 
-	this.m20 = 0.0;
-	this.m21 = 0.0;
-	this.m22 = scale;
-	this.m23 = v1.z;
+    this.m20 = 0.0;
+    this.m21 = 0.0;
+    this.m22 = scale;
+    this.m23 = v1.z;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
    /**
@@ -2345,25 +2345,25 @@ public class Matrix4d {
      */
     public final void set(Vector3d v1, double scale)
     {
-	this.m00 = scale;
-	this.m01 = 0.0;
-	this.m02 = 0.0;
-	this.m03 = scale*v1.x;
+    this.m00 = scale;
+    this.m01 = 0.0;
+    this.m02 = 0.0;
+    this.m03 = scale*v1.x;
 
-	this.m10 = 0.0;
-	this.m11 = scale;
-	this.m12 = 0.0;
-	this.m13 = scale*v1.y;
+    this.m10 = 0.0;
+    this.m11 = scale;
+    this.m12 = 0.0;
+    this.m13 = scale*v1.y;
 
-	this.m20 = 0.0;
-	this.m21 = 0.0;
-	this.m22 = scale;
-	this.m23 = scale*v1.z;
+    this.m20 = 0.0;
+    this.m21 = 0.0;
+    this.m22 = scale;
+    this.m23 = scale*v1.z;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
    /**
@@ -2449,30 +2449,30 @@ public class Matrix4d {
      */
     public final void rotX(double angle)
     {
-	double	sinAngle, cosAngle;
+    double	sinAngle, cosAngle;
 
-	sinAngle = Math.sin(angle);
-	cosAngle = Math.cos(angle);
+    sinAngle = Math.sin(angle);
+    cosAngle = Math.cos(angle);
 
-	this.m00 = 1.0;
-	this.m01 = 0.0;
-	this.m02 = 0.0;
-	this.m03 = 0.0;
+    this.m00 = 1.0;
+    this.m01 = 0.0;
+    this.m02 = 0.0;
+    this.m03 = 0.0;
 
-	this.m10 = 0.0;
-	this.m11 = cosAngle;
-	this.m12 = -sinAngle;
-	this.m13 = 0.0;
+    this.m10 = 0.0;
+    this.m11 = cosAngle;
+    this.m12 = -sinAngle;
+    this.m13 = 0.0;
 
-	this.m20 = 0.0;
-	this.m21 = sinAngle;
-	this.m22 = cosAngle;
-	this.m23 = 0.0;
+    this.m20 = 0.0;
+    this.m21 = sinAngle;
+    this.m22 = cosAngle;
+    this.m23 = 0.0;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
     /**
@@ -2482,30 +2482,30 @@ public class Matrix4d {
      */
     public final void rotY(double angle)
     {
-	double	sinAngle, cosAngle;
+    double	sinAngle, cosAngle;
 
-	sinAngle = Math.sin(angle);
-	cosAngle = Math.cos(angle);
+    sinAngle = Math.sin(angle);
+    cosAngle = Math.cos(angle);
 
-	this.m00 = cosAngle;
-	this.m01 = 0.0;
-	this.m02 = sinAngle;
-	this.m03 = 0.0;
+    this.m00 = cosAngle;
+    this.m01 = 0.0;
+    this.m02 = sinAngle;
+    this.m03 = 0.0;
 
-	this.m10 = 0.0;
-	this.m11 = 1.0;
-	this.m12 = 0.0;
-	this.m13 = 0.0;
+    this.m10 = 0.0;
+    this.m11 = 1.0;
+    this.m12 = 0.0;
+    this.m13 = 0.0;
 
-	this.m20 = -sinAngle;
-	this.m21 = 0.0;
-	this.m22 = cosAngle;
-	this.m23 = 0.0;
+    this.m20 = -sinAngle;
+    this.m21 = 0.0;
+    this.m22 = cosAngle;
+    this.m23 = 0.0;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
     /**
@@ -2515,30 +2515,30 @@ public class Matrix4d {
      */
     public final void rotZ(double angle)
     {
-	double	sinAngle, cosAngle;
+    double	sinAngle, cosAngle;
 
-	sinAngle = Math.sin(angle);
-	cosAngle = Math.cos(angle);
+    sinAngle = Math.sin(angle);
+    cosAngle = Math.cos(angle);
 
-	this.m00 = cosAngle;
-	this.m01 = -sinAngle;
-	this.m02 = 0.0;
-	this.m03 = 0.0;
+    this.m00 = cosAngle;
+    this.m01 = -sinAngle;
+    this.m02 = 0.0;
+    this.m03 = 0.0;
 
-	this.m10 = sinAngle;
-	this.m11 = cosAngle;
-	this.m12 = 0.0;
-	this.m13 = 0.0;
+    this.m10 = sinAngle;
+    this.m11 = cosAngle;
+    this.m12 = 0.0;
+    this.m13 = 0.0;
 
-	this.m20 = 0.0;
-	this.m21 = 0.0;
-	this.m22 = 1.0;
-	this.m23 = 0.0;
+    this.m20 = 0.0;
+    this.m21 = 0.0;
+    this.m22 = 1.0;
+    this.m23 = 0.0;
 
-	this.m30 = 0.0;
-	this.m31 = 0.0;
-	this.m32 = 0.0;
-	this.m33 = 1.0;
+    this.m30 = 0.0;
+    this.m31 = 0.0;
+    this.m32 = 0.0;
+    this.m33 = 1.0;
     }
 
    /**
@@ -2601,7 +2601,7 @@ public class Matrix4d {
             double      m00, m01, m02, m03,
                         m10, m11, m12, m13,
                         m20, m21, m22, m23,
-		        m30, m31, m32, m33;  // vars for temp result matrix 
+                m30, m31, m32, m33;  // vars for temp result matrix 
 
         m00 = this.m00*m1.m00 + this.m01*m1.m10 + 
               this.m02*m1.m20 + this.m03*m1.m30;
@@ -2653,76 +2653,76 @@ public class Matrix4d {
      */
     public final void mul(Matrix4d m1, Matrix4d m2)
     {
-	if (this != m1 && this != m2) {
-	    // code for mat mul 
-	    this.m00 = m1.m00*m2.m00 + m1.m01*m2.m10 + 
+    if (this != m1 && this != m2) {
+        // code for mat mul 
+        this.m00 = m1.m00*m2.m00 + m1.m01*m2.m10 + 
                        m1.m02*m2.m20 + m1.m03*m2.m30;
-	    this.m01 = m1.m00*m2.m01 + m1.m01*m2.m11 + 
+        this.m01 = m1.m00*m2.m01 + m1.m01*m2.m11 + 
                        m1.m02*m2.m21 + m1.m03*m2.m31;
-	    this.m02 = m1.m00*m2.m02 + m1.m01*m2.m12 + 
+        this.m02 = m1.m00*m2.m02 + m1.m01*m2.m12 + 
                        m1.m02*m2.m22 + m1.m03*m2.m32;
-	    this.m03 = m1.m00*m2.m03 + m1.m01*m2.m13 + 
+        this.m03 = m1.m00*m2.m03 + m1.m01*m2.m13 + 
                        m1.m02*m2.m23 + m1.m03*m2.m33;
 
-	    this.m10 = m1.m10*m2.m00 + m1.m11*m2.m10 + 
+        this.m10 = m1.m10*m2.m00 + m1.m11*m2.m10 + 
                        m1.m12*m2.m20 + m1.m13*m2.m30;
-	    this.m11 = m1.m10*m2.m01 + m1.m11*m2.m11 + 
+        this.m11 = m1.m10*m2.m01 + m1.m11*m2.m11 + 
                        m1.m12*m2.m21 + m1.m13*m2.m31;
-	    this.m12 = m1.m10*m2.m02 + m1.m11*m2.m12 + 
+        this.m12 = m1.m10*m2.m02 + m1.m11*m2.m12 + 
                        m1.m12*m2.m22 + m1.m13*m2.m32;
-	    this.m13 = m1.m10*m2.m03 + m1.m11*m2.m13 + 
+        this.m13 = m1.m10*m2.m03 + m1.m11*m2.m13 + 
                        m1.m12*m2.m23 + m1.m13*m2.m33;
 
-	    this.m20 = m1.m20*m2.m00 + m1.m21*m2.m10 + 
+        this.m20 = m1.m20*m2.m00 + m1.m21*m2.m10 + 
                        m1.m22*m2.m20 + m1.m23*m2.m30;
-	    this.m21 = m1.m20*m2.m01 + m1.m21*m2.m11 + 
+        this.m21 = m1.m20*m2.m01 + m1.m21*m2.m11 + 
                        m1.m22*m2.m21 + m1.m23*m2.m31;
-	    this.m22 = m1.m20*m2.m02 + m1.m21*m2.m12 + 
+        this.m22 = m1.m20*m2.m02 + m1.m21*m2.m12 + 
                        m1.m22*m2.m22 + m1.m23*m2.m32;
-	    this.m23 = m1.m20*m2.m03 + m1.m21*m2.m13 + 
+        this.m23 = m1.m20*m2.m03 + m1.m21*m2.m13 + 
                        m1.m22*m2.m23 + m1.m23*m2.m33;
 
-	    this.m30 = m1.m30*m2.m00 + m1.m31*m2.m10 + 
+        this.m30 = m1.m30*m2.m00 + m1.m31*m2.m10 + 
                        m1.m32*m2.m20 + m1.m33*m2.m30;
-	    this.m31 = m1.m30*m2.m01 + m1.m31*m2.m11 + 
+        this.m31 = m1.m30*m2.m01 + m1.m31*m2.m11 + 
                        m1.m32*m2.m21 + m1.m33*m2.m31;
-	    this.m32 = m1.m30*m2.m02 + m1.m31*m2.m12 + 
+        this.m32 = m1.m30*m2.m02 + m1.m31*m2.m12 + 
                        m1.m32*m2.m22 + m1.m33*m2.m32;
-	    this.m33 = m1.m30*m2.m03 + m1.m31*m2.m13 + 
+        this.m33 = m1.m30*m2.m03 + m1.m31*m2.m13 + 
                        m1.m32*m2.m23 + m1.m33*m2.m33;
-	} else {
-	    double	m00, m01, m02, m03,
-			m10, m11, m12, m13,
-			m20, m21, m22, m23,
-		        m30, m31, m32, m33;  // vars for temp result matrix 
+    } else {
+        double	m00, m01, m02, m03,
+            m10, m11, m12, m13,
+            m20, m21, m22, m23,
+                m30, m31, m32, m33;  // vars for temp result matrix 
 
-	    // code for mat mul 
-	    m00 = m1.m00*m2.m00 + m1.m01*m2.m10 + m1.m02*m2.m20 + m1.m03*m2.m30;
-	    m01 = m1.m00*m2.m01 + m1.m01*m2.m11 + m1.m02*m2.m21 + m1.m03*m2.m31;
-	    m02 = m1.m00*m2.m02 + m1.m01*m2.m12 + m1.m02*m2.m22 + m1.m03*m2.m32;
-	    m03 = m1.m00*m2.m03 + m1.m01*m2.m13 + m1.m02*m2.m23 + m1.m03*m2.m33;
+        // code for mat mul 
+        m00 = m1.m00*m2.m00 + m1.m01*m2.m10 + m1.m02*m2.m20 + m1.m03*m2.m30;
+        m01 = m1.m00*m2.m01 + m1.m01*m2.m11 + m1.m02*m2.m21 + m1.m03*m2.m31;
+        m02 = m1.m00*m2.m02 + m1.m01*m2.m12 + m1.m02*m2.m22 + m1.m03*m2.m32;
+        m03 = m1.m00*m2.m03 + m1.m01*m2.m13 + m1.m02*m2.m23 + m1.m03*m2.m33;
 
-	    m10 = m1.m10*m2.m00 + m1.m11*m2.m10 + m1.m12*m2.m20 + m1.m13*m2.m30;
-	    m11 = m1.m10*m2.m01 + m1.m11*m2.m11 + m1.m12*m2.m21 + m1.m13*m2.m31;
-	    m12 = m1.m10*m2.m02 + m1.m11*m2.m12 + m1.m12*m2.m22 + m1.m13*m2.m32;
-	    m13 = m1.m10*m2.m03 + m1.m11*m2.m13 + m1.m12*m2.m23 + m1.m13*m2.m33;
+        m10 = m1.m10*m2.m00 + m1.m11*m2.m10 + m1.m12*m2.m20 + m1.m13*m2.m30;
+        m11 = m1.m10*m2.m01 + m1.m11*m2.m11 + m1.m12*m2.m21 + m1.m13*m2.m31;
+        m12 = m1.m10*m2.m02 + m1.m11*m2.m12 + m1.m12*m2.m22 + m1.m13*m2.m32;
+        m13 = m1.m10*m2.m03 + m1.m11*m2.m13 + m1.m12*m2.m23 + m1.m13*m2.m33;
 
-	    m20 = m1.m20*m2.m00 + m1.m21*m2.m10 + m1.m22*m2.m20 + m1.m23*m2.m30;
-	    m21 = m1.m20*m2.m01 + m1.m21*m2.m11 + m1.m22*m2.m21 + m1.m23*m2.m31;
-	    m22 = m1.m20*m2.m02 + m1.m21*m2.m12 + m1.m22*m2.m22 + m1.m23*m2.m32;
-	    m23 = m1.m20*m2.m03 + m1.m21*m2.m13 + m1.m22*m2.m23 + m1.m23*m2.m33;
+        m20 = m1.m20*m2.m00 + m1.m21*m2.m10 + m1.m22*m2.m20 + m1.m23*m2.m30;
+        m21 = m1.m20*m2.m01 + m1.m21*m2.m11 + m1.m22*m2.m21 + m1.m23*m2.m31;
+        m22 = m1.m20*m2.m02 + m1.m21*m2.m12 + m1.m22*m2.m22 + m1.m23*m2.m32;
+        m23 = m1.m20*m2.m03 + m1.m21*m2.m13 + m1.m22*m2.m23 + m1.m23*m2.m33;
 
-	    m30 = m1.m30*m2.m00 + m1.m31*m2.m10 + m1.m32*m2.m20 + m1.m33*m2.m30;
-	    m31 = m1.m30*m2.m01 + m1.m31*m2.m11 + m1.m32*m2.m21 + m1.m33*m2.m31;
-	    m32 = m1.m30*m2.m02 + m1.m31*m2.m12 + m1.m32*m2.m22 + m1.m33*m2.m32;
-	    m33 = m1.m30*m2.m03 + m1.m31*m2.m13 + m1.m32*m2.m23 + m1.m33*m2.m33;
+        m30 = m1.m30*m2.m00 + m1.m31*m2.m10 + m1.m32*m2.m20 + m1.m33*m2.m30;
+        m31 = m1.m30*m2.m01 + m1.m31*m2.m11 + m1.m32*m2.m21 + m1.m33*m2.m31;
+        m32 = m1.m30*m2.m02 + m1.m31*m2.m12 + m1.m32*m2.m22 + m1.m33*m2.m32;
+        m33 = m1.m30*m2.m03 + m1.m31*m2.m13 + m1.m32*m2.m23 + m1.m33*m2.m33;
 
-	    this.m00 = m00; this.m01 = m01; this.m02 = m02; this.m03 = m03;
-	    this.m10 = m10; this.m11 = m11; this.m12 = m12; this.m13 = m13;
-	    this.m20 = m20; this.m21 = m21; this.m22 = m22; this.m23 = m23;
-	    this.m30 = m30; this.m31 = m31; this.m32 = m32; this.m33 = m33;
+        this.m00 = m00; this.m01 = m01; this.m02 = m02; this.m03 = m03;
+        this.m10 = m10; this.m11 = m11; this.m12 = m12; this.m13 = m13;
+        this.m20 = m20; this.m21 = m21; this.m22 = m22; this.m23 = m23;
+        this.m30 = m30; this.m31 = m31; this.m32 = m32; this.m33 = m33;
 
-	}
+    }
     }
 
    /**
@@ -2756,7 +2756,7 @@ public class Matrix4d {
         } else {
             double      m00, m01, m02, m03,
                         m10, m11, m12, m13,
-		        m20, m21, m22, m23,  // vars for temp result matrix 
+                m20, m21, m22, m23,  // vars for temp result matrix 
                         m30, m31, m32, m33;
          
             m00 = m1.m00*m2.m00 + m1.m10*m2.m01 + m1.m20*m2.m02 + m1.m30*m2.m03;
@@ -2820,7 +2820,7 @@ public class Matrix4d {
     } else {
             double      m00, m01, m02, m03,
                         m10, m11, m12, m13,
-		        m20, m21, m22, m23,  // vars for temp result matrix
+                m20, m21, m22, m23,  // vars for temp result matrix
                         m30, m31, m32, m33;
 
       m00 = m1.m00*m2.m00 + m1.m01*m2.m01 + m1.m02*m2.m02 + m1.m03*m2.m03;
@@ -2882,7 +2882,7 @@ public class Matrix4d {
     } else {
             double      m00, m01, m02, m03,
                         m10, m11, m12, m13,
-		        m20, m21, m22, m23,  // vars for temp result matrix
+                m20, m21, m22, m23,  // vars for temp result matrix
                         m30, m31, m32, m33;
  
               
@@ -2962,7 +2962,7 @@ public class Matrix4d {
      * @deprecated Use epsilonEquals(Matrix4d,double) instead
      */   
     public boolean epsilonEquals(Matrix4d m1, float epsilon) {
-	return epsilonEquals(m1, (double)epsilon);
+    return epsilonEquals(m1, (double)epsilon);
     }
 
     /**   
@@ -3037,24 +3037,24 @@ public class Matrix4d {
      * @return the integer hash code value
      */  
     public int hashCode() {
-	long bits = 1L;
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m00);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m01);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m02);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m03);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m10);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m11);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m12);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m13);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m20);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m21);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m22);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m23);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m30);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m31);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m32);
-	bits = 31L * bits + VecMathUtil.doubleToLongBits(m33);
-	return (int) (bits ^ (bits >> 32));
+    long bits = 1L;
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m00);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m01);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m02);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m03);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m10);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m11);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m12);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m13);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m20);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m21);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m22);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m23);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m30);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m31);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m32);
+    bits = 31L * bits + VecMathUtil.doubleToLongBits(m33);
+    return (int) (bits ^ (bits >> 32));
     }
 
 
@@ -3297,22 +3297,22 @@ public class Matrix4d {
      * @param m1   double precision 3x3 matrix
      */  
     public final void setRotation( Matrix3d m1){ 
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
   
-	getScaleRotate( tmp_scale, tmp_rot );
+    getScaleRotate( tmp_scale, tmp_rot );
 
-	m00 = m1.m00*tmp_scale[0];
-	m01 = m1.m01*tmp_scale[1];
-	m02 = m1.m02*tmp_scale[2];
+    m00 = m1.m00*tmp_scale[0];
+    m01 = m1.m01*tmp_scale[1];
+    m02 = m1.m02*tmp_scale[2];
 
-	m10 = m1.m10*tmp_scale[0];
-	m11 = m1.m11*tmp_scale[1];
-	m12 = m1.m12*tmp_scale[2];
+    m10 = m1.m10*tmp_scale[0];
+    m11 = m1.m11*tmp_scale[1];
+    m12 = m1.m12*tmp_scale[2];
 
-	m20 = m1.m20*tmp_scale[0];
-	m21 = m1.m21*tmp_scale[1];
-	m22 = m1.m22*tmp_scale[2];
+    m20 = m1.m20*tmp_scale[0];
+    m21 = m1.m21*tmp_scale[1];
+    m22 = m1.m22*tmp_scale[2];
 
     } 
  
@@ -3419,10 +3419,10 @@ public class Matrix4d {
      */
     public final void setRotation(AxisAngle4d a1)
     {  
-	double[]    tmp_rot = new double[9];  // scratch matrix
-	double[]    tmp_scale = new double[3];  // scratch matrix
-	
-	getScaleRotate( tmp_scale, tmp_rot );
+    double[]    tmp_rot = new double[9];  // scratch matrix
+    double[]    tmp_scale = new double[3];  // scratch matrix
+    
+    getScaleRotate( tmp_scale, tmp_rot );
 
         double mag = 1.0/Math.sqrt( a1.x*a1.x + a1.y*a1.y + a1.z*a1.z);
         double ax = a1.x*mag;
@@ -3522,22 +3522,22 @@ public class Matrix4d {
         this.m33 = -m1.m33;
     }
     private final void getScaleRotate(double scales[], double rots[]) {
-	double[]    tmp = new double[9];  // scratch matrix
-	tmp[0] = m00;
-	tmp[1] = m01;
-	tmp[2] = m02;
+    double[]    tmp = new double[9];  // scratch matrix
+    tmp[0] = m00;
+    tmp[1] = m01;
+    tmp[2] = m02;
 
-	tmp[3] = m10;
-	tmp[4] = m11;
-	tmp[5] = m12;
+    tmp[3] = m10;
+    tmp[4] = m11;
+    tmp[5] = m12;
 
-	tmp[6] = m20;
-	tmp[7] = m21;
-	tmp[8] = m22;
+    tmp[6] = m20;
+    tmp[7] = m21;
+    tmp[8] = m22;
 
-	Matrix3d.compute_svd( tmp, scales, rots);
+    Matrix3d.compute_svd( tmp, scales, rots);
 
-	return;
+    return;
     }
 
     /**
@@ -3549,369 +3549,369 @@ public class Matrix4d {
      * @since vecmath 1.3
      */
     public Object clone() {
-	Matrix4d m1 = null;
-	try {
-	    m1 = (Matrix4d)super.clone();
-	} catch (CloneNotSupportedException e) {
-	    // this shouldn't happen, since we are Cloneable
-	    throw new InternalError();
-	}
+    Matrix4d m1 = null;
+    try {
+        m1 = (Matrix4d)super.clone();
+    } catch (CloneNotSupportedException e) {
+        // this shouldn't happen, since we are Cloneable
+        throw new InternalError();
+    }
 
-	return m1;
+    return m1;
     }
 
     /**
-	 * Get the first matrix element in the first row.
-	 * 
-	 * @return Returns the m00.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  double getM00() {
-		return m00;
-	}
+     * Get the first matrix element in the first row.
+     * 
+     * @return Returns the m00.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  double getM00() {
+        return m00;
+    }
 
-	/**
-	 * Set the first matrix element in the first row.
-	 * 
-	 * @param m00 The m00 to set.
-	 * 
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  void setM00(double m00) {
-		this.m00 = m00;
-	}
+    /**
+     * Set the first matrix element in the first row.
+     * 
+     * @param m00 The m00 to set.
+     * 
+     * 
+     * @since vecmath 1.5
+     */
+    public final  void setM00(double m00) {
+        this.m00 = m00;
+    }
 
-	/**
-	 * Get the second matrix element in the first row.
-	 * 
-	 * @return Returns the m01.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  double getM01() {
-		return m01;
-	}
+    /**
+     * Get the second matrix element in the first row.
+     * 
+     * @return Returns the m01.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  double getM01() {
+        return m01;
+    }
 
-	/**
-	 * Set the second matrix element in the first row.
-	 * 
-	 * @param m01 The m01 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public  final void setM01(double m01) {
-		this.m01 = m01;
-	}
+    /**
+     * Set the second matrix element in the first row.
+     * 
+     * @param m01 The m01 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public  final void setM01(double m01) {
+        this.m01 = m01;
+    }
 
-	/**
-	 * Get the third matrix element in the first row.
-	 * 
-	 * @return Returns the m02.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM02() {
-		return m02;
-	}
+    /**
+     * Get the third matrix element in the first row.
+     * 
+     * @return Returns the m02.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM02() {
+        return m02;
+    }
 
-	/**
-	 * Set the third matrix element in the first row.
-	 * 
-	 * @param m02 The m02 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  void setM02(double m02) {
-		this.m02 = m02;
-	}
+    /**
+     * Set the third matrix element in the first row.
+     * 
+     * @param m02 The m02 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  void setM02(double m02) {
+        this.m02 = m02;
+    }
 
-	/**
-	 * Get first matrix element in the second row.
-	 * 
-	 * @return Returns the m10.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  double getM10() {
-		return m10;
-	}
+    /**
+     * Get first matrix element in the second row.
+     * 
+     * @return Returns the m10.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  double getM10() {
+        return m10;
+    }
 
-	/**
-	 * Set first matrix element in the second row.
-	 * 
-	 * @param m10 The m10 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  void setM10(double m10) {
-		this.m10 = m10;
-	}
+    /**
+     * Set first matrix element in the second row.
+     * 
+     * @param m10 The m10 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  void setM10(double m10) {
+        this.m10 = m10;
+    }
 
-	/**
-	 * Get second matrix element in the second row.
-	 * 
-	 * @return Returns the m11.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  double getM11() {
-		return m11;
-	}
+    /**
+     * Get second matrix element in the second row.
+     * 
+     * @return Returns the m11.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  double getM11() {
+        return m11;
+    }
 
-	/**
-	 * Set the second matrix element in the second row.
-	 * 
-	 * @param m11 The m11 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  void setM11(double m11) {
-		this.m11 = m11;
-	}
+    /**
+     * Set the second matrix element in the second row.
+     * 
+     * @param m11 The m11 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  void setM11(double m11) {
+        this.m11 = m11;
+    }
 
-	/**
-	 * Get the third matrix element in the second row.
-	 * 
-	 * @return Returns the m12.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  double getM12() {
-		return m12;
-	}
+    /**
+     * Get the third matrix element in the second row.
+     * 
+     * @return Returns the m12.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  double getM12() {
+        return m12;
+    }
 
-	/**
-	 * Set the third matrix element in the second row.
-	 * 
-	 * @param m12 The m12 to set.
-	 * 
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  void setM12(double m12) {
-		this.m12 = m12;
-	}
+    /**
+     * Set the third matrix element in the second row.
+     * 
+     * @param m12 The m12 to set.
+     * 
+     * 
+     * @since vecmath 1.5
+     */
+    public final  void setM12(double m12) {
+        this.m12 = m12;
+    }
 
-	/**
-	 * Get the first matrix element in the third row.
-	 * 
-	 * @return Returns the m20.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final  double getM20() {
-		return m20;
-	}
+    /**
+     * Get the first matrix element in the third row.
+     * 
+     * @return Returns the m20.
+     * 
+     * @since vecmath 1.5
+     */
+    public final  double getM20() {
+        return m20;
+    }
 
-	/**
-	 * Set the first matrix element in the third row.
-	 * 
-	 * @param m20 The m20 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM20(double m20) {
-		this.m20 = m20;
-	}
+    /**
+     * Set the first matrix element in the third row.
+     * 
+     * @param m20 The m20 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM20(double m20) {
+        this.m20 = m20;
+    }
 
-	/**
-	 * Get the second matrix element in the third row.
-	 * 
-	 * @return Returns the m21.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM21() {
-		return m21;
-	}
+    /**
+     * Get the second matrix element in the third row.
+     * 
+     * @return Returns the m21.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM21() {
+        return m21;
+    }
 
-	/**
-	 * Set the second matrix element in the third row.
-	 * 
-	 * @param m21 The m21 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM21(double m21) {
-		this.m21 = m21;
-	}
+    /**
+     * Set the second matrix element in the third row.
+     * 
+     * @param m21 The m21 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM21(double m21) {
+        this.m21 = m21;
+    }
 
-	/**
-	 * Get the third matrix element in the third row.
-	 * 
-	 * @return Returns the m22.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM22() {
-		return m22;
-	}
+    /**
+     * Get the third matrix element in the third row.
+     * 
+     * @return Returns the m22.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM22() {
+        return m22;
+    }
 
-	/**
-	 * Set the third matrix element in the third row.
-	 * 
-	 * @param m22 The m22 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM22(double m22) {
-		this.m22 = m22;
-	}
+    /**
+     * Set the third matrix element in the third row.
+     * 
+     * @param m22 The m22 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM22(double m22) {
+        this.m22 = m22;
+    }
 
-	/**
-	 * Get the fourth element of the first row.
-	 * 
-	 * @return Returns the m03.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM03() {
-		return m03;
-	}
+    /**
+     * Get the fourth element of the first row.
+     * 
+     * @return Returns the m03.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM03() {
+        return m03;
+    }
 
-	/**
-	 * Set the fourth element of the first row.
-	 * 
-	 * @param m03 The m03 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM03(double m03) {
-		this.m03 = m03;
-	}
+    /**
+     * Set the fourth element of the first row.
+     * 
+     * @param m03 The m03 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM03(double m03) {
+        this.m03 = m03;
+    }
 
-	/**
-	 * Get the fourth element of the second row.
-	 * 
-	 * @return Returns the m13.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM13() {
-		return m13;
-	}
+    /**
+     * Get the fourth element of the second row.
+     * 
+     * @return Returns the m13.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM13() {
+        return m13;
+    }
 
-	/**
-	 * Set the fourth element of the second row.
-	 * 
-	 * @param m13 The m13 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM13(double m13) {
-		this.m13 = m13;
-	}
+    /**
+     * Set the fourth element of the second row.
+     * 
+     * @param m13 The m13 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM13(double m13) {
+        this.m13 = m13;
+    }
 
-	/**
-	 * Get the fourth element of the third row.
-	 * 
-	 * @return Returns the m23.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM23() {
-		return m23;
-	}
+    /**
+     * Get the fourth element of the third row.
+     * 
+     * @return Returns the m23.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM23() {
+        return m23;
+    }
 
-	/**
-	 * Set the fourth element of the third row.
-	 * 
-	 * @param m23 The m23 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM23(double m23) {
-		this.m23 = m23;
-	}
+    /**
+     * Set the fourth element of the third row.
+     * 
+     * @param m23 The m23 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM23(double m23) {
+        this.m23 = m23;
+    }
 
-	/**
-	 * Get the first element of the fourth row.
-	 * 
-	 * @return Returns the m30.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM30() {
-		return m30;
-	}
+    /**
+     * Get the first element of the fourth row.
+     * 
+     * @return Returns the m30.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM30() {
+        return m30;
+    }
 
-	/**
-	 * Set the first element of the fourth row.
-	 * 
-	 * @param m30 The m30 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM30(double m30) {
-		this.m30 = m30;
-	}
+    /**
+     * Set the first element of the fourth row.
+     * 
+     * @param m30 The m30 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM30(double m30) {
+        this.m30 = m30;
+    }
 
-	/**
-	 * Get the second element of the fourth row.
-	 * 
-	 * @return Returns the m31.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM31() {
-		return m31;
-	}
+    /**
+     * Get the second element of the fourth row.
+     * 
+     * @return Returns the m31.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM31() {
+        return m31;
+    }
 
-	/**
-	 * Set the second element of the fourth row.
-	 * 
-	 * @param m31 The m31 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM31(double m31) {
-		this.m31 = m31;
-	}
+    /**
+     * Set the second element of the fourth row.
+     * 
+     * @param m31 The m31 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM31(double m31) {
+        this.m31 = m31;
+    }
 
-	/**
-	 * Get the third element of the fourth row.
-	 *  
-	 * @return Returns the m32.
-	 * 
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM32() {
-		return m32;
-	}
+    /**
+     * Get the third element of the fourth row.
+     *  
+     * @return Returns the m32.
+     * 
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM32() {
+        return m32;
+    }
 
-	/**
-	 * Set the third element of the fourth row.
-	 * 
-	 * @param m32 The m32 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM32(double m32) {
-		this.m32 = m32;
-	}
+    /**
+     * Set the third element of the fourth row.
+     * 
+     * @param m32 The m32 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM32(double m32) {
+        this.m32 = m32;
+    }
 
-	/**
-	 * Get the fourth element of the fourth row.
-	 * 
-	 * @return Returns the m33.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final double getM33() {
-		return m33;
-	}
+    /**
+     * Get the fourth element of the fourth row.
+     * 
+     * @return Returns the m33.
+     * 
+     * @since vecmath 1.5
+     */
+    public final double getM33() {
+        return m33;
+    }
 
-	/**
-	 * Set the fourth element of the fourth row.
-	 * 
-	 * @param m33 The m33 to set.
-	 * 
-	 * @since vecmath 1.5
-	 */
-	public final void setM33(double m33) {
-		this.m33 = m33;
-	}
+    /**
+     * Set the fourth element of the fourth row.
+     * 
+     * @param m33 The m33 to set.
+     * 
+     * @since vecmath 1.5
+     */
+    public final void setM33(double m33) {
+        this.m33 = m33;
+    }
 }

@@ -4,7 +4,6 @@ package com.github.worldsender.mcanm.common.animation.parts;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import com.github.worldsender.mcanm.MCAnm;
 import com.github.worldsender.mcanm.common.util.math.Vector2f;
 
 
@@ -12,12 +11,9 @@ public class BSplineInterpolation extends Spline {
     public static final IInterpolationSplineFactory factory = new IInterpolationSplineFactory() {
         @Override
         public Spline newSpline(Vector2f left, Vector2f right, DataInputStream additionalData) throws IOException {
-        	if(MCAnm.isClientSided){
             Vector2f leftHandle = Spline.readPoint(additionalData);
             Vector2f rightHandle = Spline.readPoint(additionalData);
             return new BSplineInterpolation(left, leftHandle, rightHandle, right);
-        	}
-			return null;
         }
     };
 

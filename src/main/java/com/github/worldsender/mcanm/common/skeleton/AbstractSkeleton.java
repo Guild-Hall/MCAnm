@@ -111,21 +111,21 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
     @Override
     public void debugDraw(Tessellator tess) {
         return;
-		/*
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_DEPTH_TEST);
-		tess.getWorldRenderer().begin(GL_LINES, new VertexFormat().addElement(VertexFormatElement.EnumUsage.UV));
-		startDrawing(GL_LINES);
-		glColor4f(0f, 0f, 0f, 1f);
-		for (Bone bone : bonesBreadthFirst) {
-			Vector4f tail = bone.getTail();
-			Vector4f head = bone.getHead();
-			tess.addVertex(tail.x, tail.z, -tail.y);
-			tess.addVertex(head.x, head.z, -head.y);
-		}
-		tess.draw();
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_TEXTURE_2D);*/
+        /*
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
+        tess.getWorldRenderer().begin(GL_LINES, new VertexFormat().addElement(VertexFormatElement.EnumUsage.UV));
+        startDrawing(GL_LINES);
+        glColor4f(0f, 0f, 0f, 1f);
+        for (Bone bone : bonesBreadthFirst) {
+            Vector4f tail = bone.getTail();
+            Vector4f head = bone.getHead();
+            tess.addVertex(tail.x, tail.z, -tail.y);
+            tess.addVertex(head.x, head.z, -head.y);
+        }
+        tess.draw();
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_TEXTURE_2D);*/
     }
 
     private class SkeletonVisitor implements ISkeletonVisitor {
