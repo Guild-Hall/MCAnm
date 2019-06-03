@@ -1,93 +1,188 @@
 package com.github.worldsender.mcanm.common.util.math;
 
+
 public class Vector4f extends Tuple4f{
-     public float x;
-      public float y;
-      public float z;
-      public float w;
 
-      public Vector4f() {
-        x = 0;
-        y = 0;
-        z = 0;
-        w = 0;
-      }
-
-      public Vector4f(float x, float y, float z, float w) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-      }
-      
-      public Vector4f(float[] v)
-      {
-         super(v);
-      }
-
-      public Vector4f(double x, double y, double z, double w) {
-        this.x = (float) x;
-        this.y = (float) y;
-        this.z = (float) z;
-        this.w = (float) w;
-      }
-
-      public Vector4f(Vector4f other) {
-        this(other.x, other.y, other.z, other.w);
-      }
-
-      public void set(Vector4f vec) {
-        x = vec.x;
-        y = vec.y;
-        z = vec.z;
-        w = vec.w;
-      }
-
-      public void add(Vector4f vec) {
-        x += vec.x;
-        y += vec.y;
-        z += vec.z;
-        w += vec.w;
-      }
-
-      public void sub(Vector4f vec) {
-        x -= vec.x;
-        y -= vec.y;
-        z -= vec.z;
-        w -= vec.w;
-      }
+	  /**
+	   * Constructs and initializes a Vector4f from the specified xyzw coordinates.
+	   * @param x the x coordinate
+	   * @param y the y coordinate
+	   * @param z the z coordinate
+	   * @param w the w coordinate
+	   */
+	  public Vector4f(float x, float y, float z, float w)
+	  {
+	       super(x,y,z,w);
+	  }
 
 
-      public void scale(double s) {
-        x *= s;
-        y *= s;
-        z *= s;
-        w *= s;
-      }
+	  /**
+	   * Constructs and initializes a Vector4f from the array of length 4. 
+	   * @param v the array of length 4 containing xyzw in order
+	   */
+	  public Vector4f(float[] v)
+	  {
+	     super(v);
+	  }
 
-      public void normalize() {
-        double scale = 1.0 / Math.sqrt(x * x + y * y + z * z + w * w);
-        scale(scale);
-      }
 
-      public double dot(Vector4f other) {
-        return x * other.x + y * other.y + z * other.z + w * other.w;
-      }
+	  /**
+	   * Constructs and initializes a Vector4f from the specified Vector4f.
+	   * @param v1 the Vector4f containing the initialization x y z w data
+	   */
+	  public Vector4f(Vector4f v1)
+	  {
+	      super(v1);
+	  }
 
-      public double lengthSquared() {
-        return x * x + y * y + z * z + w * w;
-      }
 
-      public double length() {
-        return Math.sqrt(lengthSquared());
-      }
+	  /**
+	   * Constructs and initializes a Vector4f from the specified Vector4d.
+	   * @param v1 the Vector4d containing the initialization x y z w data
+	   */
+	  public Vector4f(Vector4d v1)
+	  {
+	      super(v1);
+	  }
 
-      public Vector3f toVector3f() {
-        return new Vector3f(x, y, z);
-      }
 
-      @Override
-      public String toString() {
-        return "Vector4f(" + x + ", " + y + ", " + z + ", " + w + ")";
-      }
-    }
+	    /**
+	     * Constructs and initializes a Vector4f from the specified Tuple4f.
+	     * @param t1 the Tuple4f containing the initialization x y z w data
+	     */  
+	    public Vector4f(Tuple4f t1) 
+	    {
+	       super(t1);
+	    }
+
+
+	    /**
+	     * Constructs and initializes a Vector4f from the specified Tuple4d.
+	     * @param t1 the Tuple4d containing the initialization x y z w data 
+	     */  
+	    public Vector4f(Tuple4d t1) 
+	    {
+	       super(t1); 
+	    }
+
+
+	    /**
+	     * Constructs and initializes a Vector4f from the specified Tuple3f.
+	     * The x,y,z components of this vector are set to the corresponding
+	     * components of tuple t1.  The w component of this vector
+	     * is set to 0.
+	     * @param t1 the tuple to be copied
+	     *
+	     * @since vecmath 1.2
+	     */
+	    public Vector4f(Tuple3f t1) {
+		super(t1.x, t1.y, t1.z, 0.0f);
+	    }
+
+
+	  /**
+	   * Constructs and initializes a Vector4f to (0,0,0,0).
+	   */
+	  public Vector4f()
+	  {
+	      super();
+	  }
+
+
+	    /**
+	     * Sets the x,y,z components of this vector to the corresponding
+	     * components of tuple t1.  The w component of this vector
+	     * is set to 0.
+	     * @param t1 the tuple to be copied
+	     *
+	     * @since vecmath 1.2
+	     */
+	    public final void set(Tuple3f t1) {
+		this.x = t1.x;
+		this.y = t1.y;
+		this.z = t1.z;
+		this.w = 0.0f;
+	    }
+
+
+	 /**
+	   * Returns the length of this vector.
+	   * @return the length of this vector as a float
+	   */
+	  public final float length()
+	  {
+	    return
+	      (float) Math.sqrt(this.x*this.x + this.y*this.y +
+	                        this.z*this.z + this.w*this.w);
+	  }
+
+	  /**
+	   * Returns the squared length of this vector
+	   * @return the squared length of this vector as a float
+	   */
+	  public final float lengthSquared()
+	  {
+	    return (this.x*this.x + this.y*this.y +
+	            this.z*this.z + this.w*this.w);
+	  }
+
+	  /**
+	   * returns the dot product of this vector and v1
+	   * @param v1 the other vector
+	   * @return the dot product of this vector and v1
+	   */
+	  public final float dot(Vector4f v1)
+	    {
+	      return (this.x*v1.x + this.y*v1.y + this.z*v1.z + this.w*v1.w);
+	    }
+
+
+	 /**
+	   * Sets the value of this vector to the normalization of vector v1.
+	   * @param v1 the un-normalized vector
+	   */
+	  public final void normalize(Vector4f v1)
+	  {
+	    float norm;
+
+	    norm = (float) (1.0/Math.sqrt(v1.x*v1.x + v1.y*v1.y +
+	                                  v1.z*v1.z + v1.w*v1.w));
+	    this.x = v1.x*norm;
+	    this.y = v1.y*norm;
+	    this.z = v1.z*norm;
+	    this.w = v1.w*norm;
+	  }
+
+
+	  /**
+	   * Normalizes this vector in place.
+	   */
+	  public final void normalize()
+	  {
+	    float norm;
+
+	    norm = (float) (1.0/Math.sqrt(this.x*this.x + this.y*this.y +
+	                                  this.z*this.z + this.w*this.w));
+	    this.x *= norm;
+	    this.y *= norm;
+	    this.z *= norm;
+	    this.w *= norm;
+	  }
+
+
+	  /** 
+	    *   Returns the (4-space) angle in radians between this vector and 
+	    *   the vector parameter; the return value is constrained to the 
+	    *   range [0,PI]. 
+	    *   @param v1    the other vector 
+	    *   @return   the angle in radians in the range [0,PI] 
+	    */   
+	   public final float angle(Vector4f v1) 
+	   { 
+	      double vDot = this.dot(v1) / ( this.length()*v1.length() );
+	      if( vDot < -1.0) vDot = -1.0;
+	      if( vDot >  1.0) vDot =  1.0;
+	      return((float) (Math.acos( vDot )));
+	   } 
+
+	}

@@ -1,113 +1,170 @@
 package com.github.worldsender.mcanm.common.util.math;
 
-public class Vector3d extends Tuple3d{
 
-      public double x;
-      public double y;
-      public double z;
+public class Vector3d extends Tuple3d  {
 
-      public Vector3d() {
-        x = 0;
-        y = 0;
-        z = 0;
-      }
 
-      public Vector3d(double x, double y, double z) {
+    /**
+     * Constructs and initializes a Vector3d from the specified xyz coordinates.
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param z the z coordinate
+     */
+    public Vector3d(double x, double y, double z)
+    {
+        super(x,y,z);
+    }
+
+
+    /**
+     * Constructs and initializes a Vector3d from the array of length 3.
+     * @param v the array of length 3 containing xyz in order
+     */
+    public Vector3d(double[] v)
+    {
+       super(v);
+    }
+
+
+    /**
+     * Constructs and initializes a Vector3d from the specified Vector3d.
+     * @param v1 the Vector3d containing the initialization x y z data
+     */
+    public Vector3d(Vector3d v1)
+    {
+         super(v1);
+    }
+
+
+    /**
+     * Constructs and initializes a Vector3d from the specified Vector3f.
+     * @param v1 the Vector3f containing the initialization x y z data
+     */
+    public Vector3d(Vector3f v1)
+    {
+       super(v1);
+    }
+
+
+    /**
+     * Constructs and initializes a Vector3d from the specified Tuple3f.
+     * @param t1 the Tuple3f containing the initialization x y z data
+     */  
+    public Vector3d(Tuple3f t1) 
+    {
+       super(t1);
+    }
+
+
+    /**
+     * Constructs and initializes a Vector3d from the specified Tuple3d.
+     * @param t1 the Tuple3d containing the initialization x y z data 
+     */  
+    public Vector3d(Tuple3d t1) 
+    {
+       super(t1); 
+    }
+
+
+    /**
+     * Constructs and initializes a Vector3d to (0,0,0).
+     */
+    public Vector3d()
+    {
+       super();
+    }
+
+
+   /**
+     * Sets this vector to the vector cross product of vectors v1 and v2.
+     * @param v1 the first vector
+     * @param v2 the second vector
+     */
+    public final void cross(Vector3d v1, Vector3d v2)
+    { 
+        double x,y;
+
+        x = v1.y*v2.z - v1.z*v2.y;
+        y = v2.x*v1.z - v2.z*v1.x;
+        this.z = v1.x*v2.y - v1.y*v2.x;
         this.x = x;
         this.y = y;
-        this.z = z;
-      }
-
-      public Vector3d(Vector3d other) {
-        this(other.x, other.y, other.z);
-      }
-
-      public Vector3d(Vector3f corner) {
-        this(corner.x, corner.y, corner.z);
-      }
-
-
-      public void set(Vector3f v) {
-        set(v.x, v.y, v.z);
-      }
-
-      public void set(Vector3d vec) {
-        x = vec.x;
-        y = vec.y;
-        z = vec.z;
-      }
-
-      public Vector3d add(Vector3d vec) {
-        x += vec.x;
-        y += vec.y;
-        z += vec.z;
-        return this;
-      }
-
-      public Vector3d add(Vector3f vec) {
-        x += vec.x;
-        y += vec.y;
-        z += vec.z;
-        return this;
-      }
-
-      public void sub(Vector3d vec) {
-        x -= vec.x;
-        y -= vec.y;
-        z -= vec.z;
-      }
-
-      public void sub(Vector3f vec) {
-        x -= vec.x;
-        y -= vec.y;
-        z -= vec.z;
-      }
-
-
-      public void normalize() {
-        double scale = 1.0 / Math.sqrt(x * x + y * y + z * z);
-        scale(scale);
-      }
-
-      public double dot(Vector3d other) {
-        return x * other.x + y * other.y + z * other.z;
-      }
-
-      public void cross(Vector3d v1, Vector3d v2) {
-        x = v1.y * v2.z - v1.z * v2.y;
-        y = v2.x * v1.z - v2.z * v1.x;
-        z = v1.x * v2.y - v1.y * v2.x;
-      }
-
-      public double lengthSquared() {
-        return x * x + y * y + z * z;
-      }
-
-      public double length() {
-        return Math.sqrt(lengthSquared());
-      }
-
-      public double distanceSquared(Vector3d v) {
-        double dx, dy, dz;
-        dx = x - v.x;
-        dy = y - v.y;
-        dz = z - v.z;
-        return (dx * dx + dy * dy + dz * dz);
-      }
-
-      public double distance(Vector3d v) {
-        return Math.sqrt(distanceSquared(v));
-      }
-
-      @Override
-      public String toString() {
-        return "Vector3d(" + x + ", " + y + ", " + z + ")";
-      }
-
-      public void abs() {
-        x = Math.abs(x);
-        y = Math.abs(y);
-        z = Math.abs(z);
-      }
-
     }
+
+
+    /**
+     * Sets the value of this vector to the normalization of vector v1.
+     * @param v1 the un-normalized vector
+     */
+    public final void normalize(Vector3d v1)
+    {
+        double norm;
+
+        norm = 1.0/Math.sqrt(v1.x*v1.x + v1.y*v1.y + v1.z*v1.z);
+        this.x = v1.x*norm;
+        this.y = v1.y*norm;
+        this.z = v1.z*norm;
+    }
+
+
+    /**
+     * Normalizes this vector in place.
+     */
+    public final void normalize()
+    {
+        double norm;
+
+        norm = 1.0/Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
+        this.x *= norm;
+        this.y *= norm;
+        this.z *= norm;
+    }
+
+
+  /**
+   * Returns the dot product of this vector and vector v1.
+   * @param v1 the other vector
+   * @return the dot product of this and v1
+   */
+  public final double dot(Vector3d v1)
+    {
+      return (this.x*v1.x + this.y*v1.y + this.z*v1.z);
+    }
+
+
+    /**
+     * Returns the squared length of this vector.
+     * @return the squared length of this vector
+     */
+    public final double lengthSquared()
+    {
+        return (this.x*this.x + this.y*this.y + this.z*this.z);
+    }
+
+
+    /**
+     * Returns the length of this vector.
+     * @return the length of this vector
+     */
+    public final double length()
+    {
+        return Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
+    }
+
+
+  /** 
+    *   Returns the angle in radians between this vector and the vector
+    *   parameter; the return value is constrained to the range [0,PI]. 
+    *   @param v1    the other vector 
+    *   @return   the angle in radians in the range [0,PI] 
+    */   
+   public final double angle(Vector3d v1) 
+   { 
+      double vDot = this.dot(v1) / ( this.length()*v1.length() );
+      if( vDot < -1.0) vDot = -1.0;
+      if( vDot >  1.0) vDot =  1.0;
+      return((double) (Math.acos( vDot )));
+   } 
+ 
+
+}

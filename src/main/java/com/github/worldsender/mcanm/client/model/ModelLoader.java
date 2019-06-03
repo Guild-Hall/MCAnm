@@ -343,7 +343,7 @@ public enum ModelLoader implements ICustomModelLoader {
 
     }
 
-    private static class BakedModelWrapper implements IBakedModel, IModel {
+    public static class BakedModelWrapper implements IBakedModel, IModel {
         private final ModelMCMD actualModel;
         private final IModelState bakedState;
         private final VertexFormat format;
@@ -406,7 +406,7 @@ public enum ModelLoader implements ICustomModelLoader {
         }
 
         @Override
-        public Pair<BakedModelWrapper, Matrix4f> handlePerspective(TransformType cameraTransformType) {
+        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
             Matrix4f matr = new Matrix4f();
             matr.setIdentity();
             if (cameraTransformType == TransformType.THIRD_PERSON_RIGHT_HAND) {

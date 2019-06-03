@@ -3,8 +3,6 @@ package com.github.worldsender.mcanm.common.util.math;
 
 public class Matrix4f {
 
-    // Compatible with 1.1
-    static final long serialVersionUID = -8405036035410109353L;
  
     /**
      *  The first element of the first row.

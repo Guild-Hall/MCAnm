@@ -1,81 +1,81 @@
+
 package com.github.worldsender.mcanm.common.util.math;
 
 import java.lang.Math;
 
 /**
- * A 2-element vector that is represented by single-precision floating 
+ * A 2-element vector that is represented by double-precision floating 
  * point x,y coordinates.
  *
  */
-public class Vector2f extends Tuple2f{
+public class Vector2d extends Tuple2d{
 
 
     /**
-     * Constructs and initializes a Vector2f from the specified xy coordinates.
+     * Constructs and initializes a Vector2d from the specified xy coordinates.
      * @param x the x coordinate
      * @param y the y coordinate
      */
-    public Vector2f(float x, float y)
+    public Vector2d(double x, double y)
     {
       super(x,y);
     }
 
 
     /**
-     * Constructs and initializes a Vector2f from the specified array.
+     * Constructs and initializes a Vector2d from the specified array.
      * @param v the array of length 2 containing xy in order
      */
-    public Vector2f(float[] v)
+    public Vector2d(double[] v)
     {
       super(v);
     }
 
 
     /**
-     * Constructs and initializes a Vector2f from the specified Vector2f.
-     * @param v1 the Vector2f containing the initialization x y data
-     */
-    public Vector2f(Vector2f v1)
-    {
-       super(v1);
-    }
-
-
-    /**
-     * Constructs and initializes a Vector2f from the specified Vector2d.
+     * Constructs and initializes a Vector2d from the specified Vector2d.
      * @param v1 the Vector2d containing the initialization x y data
      */
-    public Vector2f(Vector2d v1)
+    public Vector2d(Vector2d v1)
     {
        super(v1);
     }
 
 
     /**
-     * Constructs and initializes a Vector2f from the specified Tuple2f.
-     * @param t1 the Tuple2f containing the initialization x y data
-     */  
-    public Vector2f(Tuple2f t1)
+     * Constructs and initializes a Vector2d from the specified Vector2f.
+     * @param v1 the Vector2f containing the initialization x y data
+     */
+    public Vector2d(Vector2f v1)
     {
-       super(t1);
+       super(v1);
     }
 
 
     /**
-     * Constructs and initializes a Vector2f from the specified Tuple2d.
+     * Constructs and initializes a Vector2d from the specified Tuple2d.
      * @param t1 the Tuple2d containing the initialization x y data
      */  
-    public Vector2f(Tuple2d t1)
+    public Vector2d(Tuple2d t1)
     {
        super(t1);
     }
 
 
+    /**
+     * Constructs and initializes a Vector2d from the specified Tuple2f.
+     * @param t1 the Tuple2f containing the initialization x y data
+     */  
+    public Vector2d(Tuple2f t1)
+    {
+       super(t1);
+    }
+
 
     /**
-     * Constructs and initializes a Vector2f to (0,0).
+     * Constructs and initializes a Vector2d to (0,0).
      */
-    public Vector2f()
+    public Vector2d()
     {
         super();
     }
@@ -85,7 +85,7 @@ public class Vector2f extends Tuple2f{
    * Computes the dot product of the this vector and vector v1.
    * @param v1 the other vector
    */
-  public final float dot(Vector2f v1)
+  public final double dot(Vector2d v1)
     {
       return (this.x*v1.x + this.y*v1.y);
     }
@@ -95,16 +95,16 @@ public class Vector2f extends Tuple2f{
      * Returns the length of this vector.
      * @return the length of this vector
      */  
-    public final float length()
+    public final double length()
     {
-        return (float) Math.sqrt(this.x*this.x + this.y*this.y);
+        return (double) Math.sqrt(this.x*this.x + this.y*this.y);
     }
 
     /**  
      * Returns the squared length of this vector.
      * @return the squared length of this vector
      */  
-    public final float lengthSquared()
+    public final double lengthSquared()
     {
         return (this.x*this.x + this.y*this.y);
     }
@@ -113,11 +113,11 @@ public class Vector2f extends Tuple2f{
      * Sets the value of this vector to the normalization of vector v1.
      * @param v1 the un-normalized vector
      */  
-    public final void normalize(Vector2f v1)
+    public final void normalize(Vector2d v1)
     {
-        float norm;
+        double norm;
 
-        norm = (float) (1.0/Math.sqrt(v1.x*v1.x + v1.y*v1.y));
+        norm = (double) (1.0/Math.sqrt(v1.x*v1.x + v1.y*v1.y));
         this.x = v1.x*norm;
         this.y = v1.y*norm;
     }
@@ -127,9 +127,9 @@ public class Vector2f extends Tuple2f{
      */  
     public final void normalize()
     {
-        float norm;
+        double norm;
 
-        norm = (float)
+        norm = (double)
                (1.0/Math.sqrt(this.x*this.x + this.y*this.y));
         this.x *= norm;
         this.y *= norm;
@@ -142,12 +142,13 @@ public class Vector2f extends Tuple2f{
     *   @param v1    the other vector
     *   @return   the angle in radians in the range [0,PI]
     */
-   public final float angle(Vector2f v1)
+   public final double angle(Vector2d v1)
    {
       double vDot = this.dot(v1) / ( this.length()*v1.length() );
       if( vDot < -1.0) vDot = -1.0;
       if( vDot >  1.0) vDot =  1.0;
-      return((float) (Math.acos( vDot )));
+      return((double) (Math.acos( vDot )));
+
    }
 
 
