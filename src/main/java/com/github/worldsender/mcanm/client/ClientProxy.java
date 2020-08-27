@@ -1,5 +1,7 @@
 package com.github.worldsender.mcanm.client;
 
+import java.util.function.Predicate;
+
 import com.github.worldsender.mcanm.MCAnm;
 import com.github.worldsender.mcanm.client.mcanmmodel.IModel;
 import com.github.worldsender.mcanm.client.model.IEntityAnimator;
@@ -20,7 +22,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.IItemPropertyGetter;
@@ -29,6 +30,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.resource.IResourceType;
+import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -52,11 +55,11 @@ public class ClientProxy extends ServerProxy {
         return animator;
     }
 
-    private static void reload() {
+    private static void reload(Predicate<IResourceType> resourcePredicate) {
         if (!MCAnm.configuration().isReloadEnabled()) {
             return;
         }
-        MinecraftResourcePool.instance.onResourceManagerReloaded();
+        MinecraftResourcePool.instance.onResourceManagerReloaded(resourcePredicate);
     }
 
     @SideOnly(Side.CLIENT)
@@ -67,10 +70,11 @@ public class ClientProxy extends ServerProxy {
         IResourceManager resManager = Minecraft.getMinecraft().getResourceManager();
         if (resManager instanceof IReloadableResourceManager) {
             IReloadableResourceManager registry = (IReloadableResourceManager) resManager;
-            registry.registerReloadListener(new IResourceManagerReloadListener() {
+            registry.registerReloadListener(new ISelectiveResourceReloadListener(){
                 @Override
-                public void onResourceManagerReload(IResourceManager p_110549_1_) {
-                    ClientProxy.reload();
+                public void onResourceManagerReload(IResourceManager resourceManager,
+                        Predicate<IResourceType> resourcePredicate) {
+                    ClientProxy.reload(resourcePredicate);
                 }
             });
         } else {

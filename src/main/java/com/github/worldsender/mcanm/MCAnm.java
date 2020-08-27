@@ -1,6 +1,5 @@
 package com.github.worldsender.mcanm;
 
-import com.github.worldsender.mcanm.client.ClientProxy;
 import com.github.worldsender.mcanm.client.config.MCAnmConfiguration;
 import com.github.worldsender.mcanm.server.ServerProxy;
 import com.github.worldsender.mcanm.test.CubeEntity;
@@ -17,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Reference.core_modid, name = Reference.core_modname, version = Reference.core_modversion, guiFactory = "com.github.worldsender.mcanm.client.config.MCAnmGuiFactory", useMetadata = true, acceptedMinecraftVersions = "1.12.2")
+@Mod(modid = Reference.core_modid, name = Reference.core_modname, version = Reference.core_modversion, guiFactory = "com.github.worldsender.mcanm.client.config.MCAnmGuiFactory", useMetadata = true, acceptedMinecraftVersions = Reference.core_mcversion)
 public class MCAnm {
     /**
      * Enables various visual outputs, e.g. the bones of models are rendered.

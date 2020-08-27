@@ -1,50 +1,88 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'maven-publish'
 
-plugins {
-    id 'maven-publish'
-}
-apply plugin: 'maven'
-apply plugin: 'net.minecraftforge.gradle.forge'
 apply from: 'build.properties'
-
-minecraft {
-    runDir = "eclipse/"
-}
 
 project.version = getVersion()
 project.ext.shortVersion = getShortVersion()
 
-minecraft {
-    replaceIn "Reference.java"
-    replace "@VERSION@", project.shortVersion
-    replace "@modid@", project.archivesBaseName
-    replace "@MODNAME@", project.longname
+repositories {
+    // Put remote maven repositories here
 }
 
-task deobfJar(type: Jar) {
+// We will combine the outputs into one directory, so that it shows up as one entry on the classpath
+// This is necessary to load resources with runClient
+task combinedSource(type: Sync) {
     from sourceSets.main.output
-    classifier = 'deobf'
+    into "$buildDir/combined-classpath"
 }
 
-tasks["sourceJar"].classifier = 'sources'
-
-tasks.build.dependsOn('deobfJar', 'sourceJar')
-
-// Debug connection for development
-tasks.runClient {
-	args '--username=jayrol_rante2006@yahoo.com', '--password=poring745'
-    jvmArgs += ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006"]
+sourceSets {
+    main {
+        runtimeClasspath = files(combinedSource.outputs) + project.configurations.runtimeClasspath
+    }
 }
+
+minecraft {
+    runs {
+        client {
+            workingDirectory project.file('run')
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+            // Debug connection for development
+            jvmArgs += ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5006"]
+
+            mods {
+                mcanm {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+            // Debug connection for development
+            jvmArgs += ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5006"]
+
+            mods {
+                mcanm {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": project.archivesBaseName,
+            "Specification-Vendor": "WorldSEnder",
+            "Specification-Version": project.shortVersion,
+            "Implementation-Title": project.name,
+            "Implementation-Version": project.shortVersion,
+            "Implementation-Vendor" :"WorldSEnder",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
@@ -56,30 +94,48 @@ processResources {
     }
 }
 
-repositories {
-   	maven { url 'https://jitpack.io' }
+task processSource(type: Sync) {
+    from(sourceSets.main.java) {
+        include 'com/github/worldsender/mcanm/Reference.java'
+        expand project.properties
+    }
+    from(sourceSets.main.java) {
+        exclude 'com/github/worldsender/mcanm/Reference.java'
+    }
+    into "$buildDir/processed-src"
 }
+
+compileJava {
+    source = processSource.outputs
+}
+
+jar.finalizedBy('reobfJar')
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from jar.source
+}
+
+build.dependsOn sourceJar
 
 artifacts {
     archives jar
-    archives deobfJar
     archives sourceJar
 }
 
-
-
-publishing.publications {
-     mavenJava(MavenPublication) {
-       artifact jar
-       artifact deobfJar
-       artifact sourceJar
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+            artifact sourceJar
         }
-}
- publishing.repositories {
-        maven { url 'https://jitpack.io' }
     }
-
-
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
 
 def getShortVersion() {
     def stdout = new ByteArrayOutputStream()
@@ -88,12 +144,12 @@ def getShortVersion() {
         args "rev-list", "--count", "HEAD"
         standardOutput = stdout
     }
-    def revision = stdout.toString().trim()
+    def revision = stdout.toString().trim() as Integer
     return "${major}.${minor}.${patch}.${revision}"
 }
 
 def getVersion() {
-    return getShortVersion() + getArtifactID() + "+${minecraft.version}"
+    return "${getShortVersion()}${getArtifactID()}+${project.mcversion}"
 }
 
 def getArtifactID() {
@@ -104,14 +160,17 @@ def getArtifactID() {
         standardOutput = stdout
     }
     def branch = stdout.toString().trim()
-    if (branch == "HEAD") {
+    def branchArtifact = branch != "HEAD" ? null : {
         stdout.reset()
         exec {
             executable "git"
             args "rev-parse", "--short", "HEAD"
             standardOutput = stdout
         }
-        branch = stdout.toString().trim()
-    }
-    return "${branch == 'master' ? '' : '-' + branch.replace('/', '.')}"
+        stdout.toString().trim().replace('/', '.')
+    }()
+    def isClean = exec({ executable "git"; args "diff", "--quiet"; ignoreExitValue = true }).exitValue == 0
+    def dirtyArtifact = isClean ? null : "SNAPSHOT"
+    def artifact = [branchArtifact, dirtyArtifact].findAll().join('.')
+    return "${artifact == '' ? '' : '-' + artifact}"
 }

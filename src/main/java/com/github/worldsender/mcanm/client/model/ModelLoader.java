@@ -92,15 +92,15 @@ public enum ModelLoader implements ICustomModelLoader {
 
     @Override
     public boolean accepts(ResourceLocation modelLocation) {
-        return modelLocation.getPath().endsWith(SUFFIX);
+        return modelLocation.getResourcePath().endsWith(SUFFIX);
     }
 
     @Override
     public IModel loadModel(ResourceLocation modelLocation) throws Exception {
         // load model cached
         ResourceLocation file = new ResourceLocation(
-                modelLocation.getNamespace(),
-                modelLocation.getPath());
+                modelLocation.getResourceDomain(),
+                modelLocation.getResourcePath());
         ModelDescription description = modelCache.get(file);
         return new ModelWrapper(file, description);
     }

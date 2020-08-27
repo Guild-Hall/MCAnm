@@ -8,7 +8,8 @@ public class Reference {
     public static final String[] model_suffix_list = {".mhmd"};
     public static final String model_type = "model_type";
 
-    public static final String core_modid = "@modid@";
-    public static final String core_modname = "@MODNAME@";
-    public static final String core_modversion = "@VERSION@";
+    public static final String core_modid = "${archivesBaseName}";
+    public static final String core_modname = "${longname}";
+    public static final String core_modversion = "${shortVersion}";
+    public static final String core_mcversion = "${mcversion}";
 }
