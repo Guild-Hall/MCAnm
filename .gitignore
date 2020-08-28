@@ -9,6 +9,7 @@
 !LICENSE
 !build.gradle
 !build.properties
+!gradle.properties
 !.gitignore
 !.travis.yml
 
