@@ -1,13 +1,12 @@
 package com.github.worldsender.mcanm.client.renderer;
 
+import com.github.worldsender.mcanm.client.mcanmmodel.IModel;
 import com.github.worldsender.mcanm.client.model.IEntityAnimator;
 import com.github.worldsender.mcanm.client.model.IRenderPassInformation;
 import com.github.worldsender.mcanm.client.model.util.RenderPassInformation;
 import com.github.worldsender.mcanm.client.renderer.entity.RenderAnimatedModel;
-import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public interface IAnimatedObject {
     /**
      * An animator that can be used in
-     * {@link RenderAnimatedModel#fromResLocation(IEntityAnimator, ResourceLocation, ISkeleton, float)} when the
+     * {@link RenderAnimatedModel#fromModel(IEntityAnimator, IModel, float)} when the
      * animated entity implements the {@link IAnimatedObject} interface.
      */
     static <T extends Entity & IAnimatedObject> IEntityAnimator<T> ANIMATOR_ADAPTER() {
@@ -31,7 +30,7 @@ public interface IAnimatedObject {
                     T entity,
                     RenderPassInformation buffer,
                     float partialTick) {
-                return IAnimatedObject.class.cast(entity).preRenderCallback(partialTick, buffer);
+                return entity.preRenderCallback(partialTick, buffer);
             }
         };
     }

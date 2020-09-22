@@ -94,6 +94,13 @@ public class Vertex {
         this.norm.set(0, 0, 0);
     }
 
+    public void setRetainUV(Vertex copyFrom) {
+        Vector4f p = copyFrom.pos;
+        Vector3f n = copyFrom.norm;
+        this.pos.set(p.getX(), p.getY(), p.getZ(), p.getW());
+        this.norm.set(n.getX(), n.getY(), n.getZ());
+    }
+
 	public void globalTransform(Entry globalMatrix) {
         this.pos.transform(globalMatrix.getMatrix());
         this.norm.transform(globalMatrix.getNormal());

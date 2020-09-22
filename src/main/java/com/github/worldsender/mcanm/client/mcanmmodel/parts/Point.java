@@ -16,7 +16,6 @@ import com.github.worldsender.mcanm.common.util.math.Tuple4f;
 import com.github.worldsender.mcanm.common.util.math.Vector2f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
 import com.github.worldsender.mcanm.common.util.math.Vector4f;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -29,9 +28,16 @@ import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 @OnlyIn(Dist.CLIENT)
 public class Point {
     protected final Vertex vert;
+    protected final Vertex transformed;
 
     protected Point(Vector3f pos, Vector3f norm, Vector2f uv) {
         this.vert = new Vertex(new Vector4f(pos.x, pos.y, pos.z, 1F), norm, uv);
+        this.transformed = new Vertex(this.vert);
+    }
+
+    protected Vertex setupTransformed() {
+        this.transformed.setRetainUV(this.vert);
+        return this.transformed;
     }
 
     /**
@@ -52,15 +58,13 @@ public class Point {
      * Renders this point, already transformed
      */
 	public void render(IVertexBuilder buffer, IRenderPass renderPass) {
-        getTransformedVertex(renderPass.getActiveMatrixStack().getLast()).render(buffer, renderPass);
+        Vertex transformedVertex = setupTransformed();
+        transformedVertex.globalTransform(renderPass.getActiveMatrixStack().getLast());
+        transformedVertex.render(buffer, renderPass);
 	}
 
-    protected Vertex getTransformedVertex(MatrixStack.Entry globalMatrix) {
-        return vert;
-    }
-
     public void putIntoBakedQuadBuilder(IVertexConsumer consumer, TextureAtlasSprite tex) {
-        Vertex transformed = getTransformedVertex(new MatrixStack().getLast());
+        Vertex transformed = setupTransformed();
         Tuple4f positionBuffer = new Vector4f();
         transformed.getPosition(positionBuffer);
         Tuple3f normalBuffer = new Vector3f();
@@ -95,12 +99,11 @@ public class Point {
 
     private static class BoundPoint extends Point {
         private List<Binding> binds;
-        private Vertex transformed;
+
         public BoundPoint(Vector3f pos, Vector3f norm, Vector2f uv, BoneBinding[] readBinds, ISkeleton skelet) {
             super(pos, norm, uv);
             // readBinds can be assumed to at least be size 1
             this.binds = new ArrayList<>();
-            this.transformed = new Vertex(this.vert);
             float strengthSummed = 0.0F;
             for (BoneBinding bind : readBinds) {
                 if (bind.bindingValue <= 0.0f)
@@ -117,19 +120,14 @@ public class Point {
         }
 
         @Override
-        protected Vertex getTransformedVertex(MatrixStack.Entry globalMatrix) {
+        protected Vertex setupTransformed() {
             Vertex base = this.vert;
-            Vertex transformed = setupTransformed();
+            Vertex transformed = super.setupTransformed();
+            transformed.retainUVOnly();
             for (Binding bind : this.binds) {
                 bind.addTransformed(base, transformed);
             }
-            transformed.globalTransform(globalMatrix);
             return transformed;
-        }
-
-        private Vertex setupTransformed() {
-            this.transformed.retainUVOnly();
-            return this.transformed;
         }
 
         private static class Binding {
