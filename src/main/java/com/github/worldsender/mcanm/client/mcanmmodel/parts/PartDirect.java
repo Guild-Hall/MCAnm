@@ -40,7 +40,7 @@ public class PartDirect implements IPart {
 
     private final String textureSlot;
     private final String name;
-    private final String textureSlotWithOct;
+    private final String textureSlotForModel;
     private final Point[] pointsList;
     private final int[] indices;
 
@@ -61,7 +61,9 @@ public class PartDirect implements IPart {
         this.pointsList = points;
         this.name = Objects.requireNonNull(builder.name, "A name is required");
         this.textureSlot = Objects.requireNonNull(builder.textureName, "texture name required");
-        this.textureSlotWithOct = "#" + textureSlot;
+        // In version 1 the texture path was included directly in the model
+        // From version 2 upwards, there is a texture slot with a name
+        this.textureSlotForModel = builder.version == 1 ? textureSlot : "#" + textureSlot;
         // Required for the stupid item rendering...
         this.indices = IntStream.range(0, indices.length).map(i -> indices[i]).toArray();
     }
@@ -88,28 +90,30 @@ public class PartDirect implements IPart {
             Point point1 = pointsList[indices[i]];
             Point point2 = pointsList[indices[i + 1]];
             Point point3 = pointsList[indices[i + 2]];
-            BakedQuadBuilder builder = new BakedQuadBuilder(tex);
 
             Tuple3f normal = new Tuple3f();
             point1.vert.getNormal(normal);
+
+            BakedQuadBuilder builder = new BakedQuadBuilder(tex);
+            builder.setContractUVs(true);
             builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
 
-            point1.putIntoBakedQuadBuilder(builder);
-            point2.putIntoBakedQuadBuilder(builder);
-            point3.putIntoBakedQuadBuilder(builder);
-            point1.putIntoBakedQuadBuilder(builder);
+            point1.putIntoBakedQuadBuilder(builder, tex);
+            point2.putIntoBakedQuadBuilder(builder, tex);
+            point3.putIntoBakedQuadBuilder(builder, tex);
+            point1.putIntoBakedQuadBuilder(builder, tex);
 
             out.add(builder.build());
         }
     }
 
     private TextureAtlasSprite retrieveSprite(Map<String, TextureAtlasSprite> slotToTex) {
-        return slotToTex.get(textureSlotWithOct);
+        return slotToTex.get(textureSlotForModel);
     }
 
     @Override
     public Set<String> getTextureSlots() {
-        return Collections.singleton(textureSlotWithOct);
+        return Collections.singleton(textureSlotForModel);
     }
 
     @Override

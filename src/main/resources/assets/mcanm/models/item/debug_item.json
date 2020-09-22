@@ -3,7 +3,7 @@
     "loader": "mcanm:loader",
     "mesh": "mcanm:models/cubev2/cube.mcmd",
     "textures": {
-        "#Untitled": "mcanm:models/cube/untitled"
+        "Untitled": "mcanm:models/cube/untitled"
     },
     "transforms": {
         "GUI": { "scale": 0.4142, "rotation": [{"x": 30}, {"y": 45}] }

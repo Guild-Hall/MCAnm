@@ -20,6 +20,7 @@ public class PartBuilder {
     /*package */ String textureName;
     /*package */ List<TesselationPoint> pointList;
     /*package */ ISkeleton skeleton;
+    /*package */ int version;
 
     public PartBuilder() {
         reset();
@@ -31,6 +32,7 @@ public class PartBuilder {
         this.textureName = null;
         this.skeleton = null;
         this.pointList = new ArrayList<>();
+        this.version = -1;
     }
 
     public PartBuilder setName(String name) {
@@ -45,6 +47,11 @@ public class PartBuilder {
 
     public PartBuilder setSkeleton(ISkeleton skeleton) {
         this.skeleton = Objects.requireNonNull(skeleton);
+        return this;
+    }
+
+    public PartBuilder setVersion(int version) {
+        this.version = version;
         return this;
     }
 

@@ -91,7 +91,13 @@ public abstract class ModelRenderAbstract<P extends IPart> implements IModelRend
     }
 
     private class ModelVisitor implements IModelVisitor {
+        int modelVersion = -1;
         List<IPart> parts = new ArrayList<>();
+
+        @Override
+        public void visitVersion(int version) {
+            this.modelVersion = version;
+        }
 
         @Override
         public void visitModelUUID(UUID uuid) {
@@ -106,7 +112,10 @@ public abstract class ModelRenderAbstract<P extends IPart> implements IModelRend
             final int partIndex = parts.size();
             parts.add(null);
             return new IPartVisitor() {
-                private PartBuilder builder = new PartBuilder().setSkeleton(skeleton).setName(name);
+                private PartBuilder builder = new PartBuilder()
+                    .setSkeleton(skeleton)
+                    .setName(name)
+                    .setVersion(ModelVisitor.this.modelVersion);
 
                 @Override
                 public void visitEnd() {

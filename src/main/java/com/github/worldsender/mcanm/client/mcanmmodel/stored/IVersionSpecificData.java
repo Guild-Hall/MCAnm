@@ -7,5 +7,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public interface IVersionSpecificData {
+    int getVersion();
+
     void visitBy(IModelVisitor visitor);
 }

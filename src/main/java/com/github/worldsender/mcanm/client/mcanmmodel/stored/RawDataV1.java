@@ -113,6 +113,11 @@ public class RawDataV1 implements IVersionSpecificData, ISkeletonVisitable {
     }
 
     @Override
+    public int getVersion() {
+        return 1;
+    }
+
+    @Override
     public void visitBy(IModelVisitor visitor) {
         for (ModelPartV1 part : parts) {
             IPartVisitor partVisitor = visitor.visitPart(part.name);

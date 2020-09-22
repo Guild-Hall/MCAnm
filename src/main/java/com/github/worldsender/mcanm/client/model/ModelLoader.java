@@ -1,7 +1,9 @@
 package com.github.worldsender.mcanm.client.model;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
@@ -24,6 +26,7 @@ import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.model.Material;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -31,6 +34,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.IModelConfiguration;
 import net.minecraftforge.client.model.IModelLoader;
+import net.minecraftforge.client.model.data.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 
 /**
@@ -71,6 +76,23 @@ public enum ModelLoader implements IModelLoader<ModelLoader.ModelWrapper> {
             this.actualModel = description.getModel();
         }
 
+        private Function<String, Material> resolveMaterialOn(IModelConfiguration owner) {
+            return slot -> {
+                if (slot.startsWith("#")) {
+                    return owner.resolveTexture(slot);
+                }
+                slot = slot.toLowerCase(Locale.ENGLISH);
+                if (slot.endsWith(".png")) {
+                    slot = slot.substring(0, slot.length() - ".png".length());
+                }
+                ResourceLocation resSlot = new ResourceLocation(slot);
+                if(resSlot.getPath().startsWith("textures/")) {
+                    resSlot = new ResourceLocation(resSlot.getNamespace(), resSlot.getPath().substring("textures/".length()));
+                }
+                return new Material(PlayerContainer.LOCATION_BLOCKS_TEXTURE, resSlot);
+            };
+        }
+
         @Override
         public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery,
                 Function<Material, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform,
@@ -78,40 +100,39 @@ public enum ModelLoader implements IModelLoader<ModelLoader.ModelWrapper> {
             ImmutableMap.Builder<String, TextureAtlasSprite> slotToTexSprite = ImmutableMap.builder();
 
             for (String textureSlot : actualModel.getTextureSlots()) {
-                slotToTexSprite.put(textureSlot, spriteGetter.apply(owner.resolveTexture(textureSlot)));
+                slotToTexSprite.put(textureSlot, spriteGetter.apply(resolveMaterialOn(owner).apply(textureSlot)));
             }
             // Note the missing leading '#', surely it does not collide
             TextureAtlasSprite particleSprite = spriteGetter.apply(owner.resolveTexture("particles"));
-            return new BakedModelWrapper(actualModel, particleSprite, slotToTexSprite.build(), overrides);
+
+            ModelStateInformation stateInformation = new ModelStateInformation();
+            stateInformation.setAnimation(new AnimationStateProxy());
+            stateInformation.setFrame(0);
+            List<BakedQuad> bakedQuads = actualModel.getAsBakedQuads(stateInformation, slotToTexSprite.build());
+
+            return new BakedModelWrapper(bakedQuads, particleSprite, overrides);
         }
 
         @Override
         public Collection<Material> getTextures(IModelConfiguration owner,
                 Function<ResourceLocation, IUnbakedModel> modelGetter,
                 Set<com.mojang.datafixers.util.Pair<String, String>> missingTextureErrors) {
-            return actualModel.getTextureSlots().stream().map(owner::resolveTexture).collect(Collectors.toSet());
+            return actualModel.getTextureSlots().stream().map(resolveMaterialOn(owner)).collect(Collectors.toSet());
         }
     }
 
-    public static class BakedModelWrapper implements IBakedModel {
-        private final ModelMCMD actualModel;
-        private final ImmutableMap<String, TextureAtlasSprite> slotToSprite;
+    public static class BakedModelWrapper implements IDynamicBakedModel {
+        private final List<BakedQuad> generalBakedQuads;
         private final TextureAtlasSprite particleSprite;
-        private final ModelStateInformation stateInformation;
         private final ItemOverrideList itemOverrides;
 
         public BakedModelWrapper(
-                ModelMCMD model,
+                List<BakedQuad> generalBakedQuads,
                 TextureAtlasSprite particleSprite,
-                ImmutableMap<String, TextureAtlasSprite> slotToSprite,
                 ItemOverrideList itemOverrides) {
-            this.actualModel = Objects.requireNonNull(model);
-            this.slotToSprite = Objects.requireNonNull(slotToSprite);
+            this.generalBakedQuads = Objects.requireNonNull(generalBakedQuads);
             // There is at least the "missingno" texture in the list
             this.particleSprite = particleSprite;
-            this.stateInformation = new ModelStateInformation();
-            stateInformation.setAnimation(new AnimationStateProxy());
-            stateInformation.setFrame(0);
             this.itemOverrides = Objects.requireNonNull(itemOverrides);
         }
 
@@ -136,8 +157,11 @@ public enum ModelLoader implements IModelLoader<ModelLoader.ModelWrapper> {
         }
 
         @Override
-        public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
-            return actualModel.getAsBakedQuads(stateInformation, slotToSprite);
+        public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand, IModelData modelData) {
+            if (side == null) {
+                return generalBakedQuads;
+            }
+            return Collections.emptyList();
         }
 
         @Override

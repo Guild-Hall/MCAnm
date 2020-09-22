@@ -1,7 +1,6 @@
 package com.github.worldsender.mcanm.client.model;
 
 import java.lang.reflect.Type;
-import java.util.Map.Entry;
 import java.util.Objects;
 
 import com.github.worldsender.mcanm.client.ClientLoader;
@@ -88,15 +87,6 @@ public class ModelDescription {
             ResourceLocation modelLocation = new ResourceLocation(jsonObject.get("mesh").getAsString());
             ModelMCMD mesh = ClientLoader.loadModel(modelLocation, skeleton);
 
-            if (version != 0) {
-                JsonObject textureMap = jsonObject.getAsJsonObject("textures");
-                for (Entry<String, JsonElement> texEntry : textureMap.entrySet()) {
-                    String slotName = texEntry.getKey();
-                    if (!slotName.startsWith("#")) {
-                        throw new JsonParseException("Slot names must begin with '#'");
-                    }
-                }
-            }
             return new ModelDescription(mesh, skeleton);
         }
     }

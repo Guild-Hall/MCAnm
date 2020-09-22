@@ -38,6 +38,10 @@ public class RawData implements IModelVisitable {
         MISSING_DATA.modelUUID = new UUID(0, 0);
         MISSING_DATA.specificData = new IVersionSpecificData() {
             @Override
+            public int getVersion() {
+                return 2;
+            }
+            @Override
             public void visitBy(IModelVisitor visitor) {
             }
         };
@@ -107,6 +111,7 @@ public class RawData implements IModelVisitable {
 
     @Override
     public void visitBy(IModelVisitor visitor) {
+        visitor.visitVersion(this.specificData.getVersion());
         visitor.visitModelUUID(getModelUUID());
         visitor.visitArtist(getArtist());
         specificData.visitBy(visitor);

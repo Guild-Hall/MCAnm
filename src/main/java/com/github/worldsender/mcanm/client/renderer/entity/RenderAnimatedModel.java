@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +29,6 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 @OnlyIn(Dist.CLIENT)
 public class RenderAnimatedModel<T extends LivingEntity> extends EntityRenderer<T> {
-    private static final ResourceLocation UNUSED_TEXTURE = DefaultPlayerSkin.getDefaultSkinLegacy();
     protected ModelAnimated model;
     private IEntityAnimator<T> animator;
 
@@ -124,7 +122,7 @@ public class RenderAnimatedModel<T extends LivingEntity> extends EntityRenderer<
 
     @Override
     public ResourceLocation getEntityTexture(T entity) {
-        // We have to return non-null here to get rendered.
-        return UNUSED_TEXTURE;
+        // There is no "main" texture we could return here
+        return null;
     }
 }

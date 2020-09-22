@@ -7,6 +7,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public interface IModelVisitor {
+    void visitVersion(int version);
+
     void visitModelUUID(UUID uuid);
 
     void visitArtist(String artist);

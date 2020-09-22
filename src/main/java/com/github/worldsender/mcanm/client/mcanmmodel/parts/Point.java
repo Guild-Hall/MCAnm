@@ -19,6 +19,7 @@ import com.github.worldsender.mcanm.common.util.math.Vector4f;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraftforge.api.distmarker.Dist;
@@ -58,7 +59,7 @@ public class Point {
         return vert;
     }
 
-    public void putIntoBakedQuadBuilder(IVertexConsumer consumer) {
+    public void putIntoBakedQuadBuilder(IVertexConsumer consumer, TextureAtlasSprite tex) {
         Vertex transformed = getTransformedVertex(new MatrixStack().getLast());
         Tuple4f positionBuffer = new Vector4f();
         transformed.getPosition(positionBuffer);
@@ -68,21 +69,21 @@ public class Point {
         transformed.getUV(uvBuffer);
 
         VertexFormat vertexFormat = consumer.getVertexFormat();
-        for (VertexFormatElement element : vertexFormat.getElements()) {
-            int e = element.getIndex();
+        for (int e = 0; e < vertexFormat.getElements().size(); ++e) {
+            VertexFormatElement element = vertexFormat.getElements().get(e);
             switch (element.getUsage()) {
                 case POSITION:
-                    consumer.put(e, positionBuffer.x, positionBuffer.z, -positionBuffer.y, positionBuffer.w);
+                    consumer.put(e, positionBuffer.x, positionBuffer.y, positionBuffer.z, positionBuffer.w);
                     break;
                 case NORMAL:
-                    consumer.put(e, normalBuffer.x, normalBuffer.z, -normalBuffer.y, 0);
+                    consumer.put(e, normalBuffer.x, normalBuffer.y, normalBuffer.z, 0);
                     break;
                 case COLOR:
                     consumer.put(e, 1, 1, 1, 1);
                     break;
                 case UV:
                     if (element.getIndex() == 0) {
-                        consumer.put(e, uvBuffer.x, uvBuffer.y, 0, 1);
+                        consumer.put(e, tex.getInterpolatedU(uvBuffer.x * 16), tex.getInterpolatedV(uvBuffer.y * 16), 0, 1);
                         break;
                     }
                     // FALLTHROUGH

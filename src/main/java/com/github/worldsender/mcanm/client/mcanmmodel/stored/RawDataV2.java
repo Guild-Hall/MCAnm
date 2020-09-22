@@ -36,6 +36,11 @@ public class RawDataV2 implements IVersionSpecificData {
     }
 
     @Override
+    public int getVersion() {
+        return 2;
+    }
+
+    @Override
     public void visitBy(IModelVisitor visitor) {
         for (ModelPartV2 part : parts) {
             IPartVisitor partVisitor = visitor.visitPart(part.name);
