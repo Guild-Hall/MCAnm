@@ -3576,12 +3576,4 @@ public class Matrix4f {
         this.m33 = m33;
     }
 
-    public void mul(javax.vecmath.Matrix4f matrix, Matrix4f matr) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    public void set(javax.vecmath.Matrix4f matrix) {
-        
-    }
 }

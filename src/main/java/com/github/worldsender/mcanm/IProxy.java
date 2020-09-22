@@ -1,17 +1,19 @@
 package com.github.worldsender.mcanm;
 
+import com.github.worldsender.mcanm.client.ClientResourceLocation;
 import com.github.worldsender.mcanm.common.resource.EmbeddedResourceLocation;
 import com.github.worldsender.mcanm.common.resource.IResourceLocation;
-import com.github.worldsender.mcanm.common.resource.MinecraftResourceLocation;
+
 import net.minecraft.util.ResourceLocation;
 
-public interface Proxy {
-    void preInit();
-
-    void init();
+public interface IProxy {
+    public static interface IClientProxy extends IProxy {
+    }
+    public static interface IServerProxy extends IProxy {
+    }
 
     /**
-     * On a client, this will return a {@link MinecraftResourceLocation} that will get reloaded when a new texture pack
+     * On a client, this will return a {@link ClientResourceLocation} that will get reloaded when a new texture pack
      * is switched on. On the server, this returns a {@link EmbeddedResourceLocation} using the {@link ClassLoader} of
      * the calling class.
      *

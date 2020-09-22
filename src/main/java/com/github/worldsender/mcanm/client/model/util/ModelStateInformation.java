@@ -1,12 +1,16 @@
 package com.github.worldsender.mcanm.client.model.util;
 
-import com.github.worldsender.mcanm.client.model.IModelStateInformation;
-import com.github.worldsender.mcanm.common.animation.IAnimation;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import com.github.worldsender.mcanm.client.model.IModelStateInformation;
+import com.github.worldsender.mcanm.common.animation.IAnimation;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class ModelStateInformation implements IModelStateInformation {
     /**
      * A suitable {@link Predicate} to return in {@link #getPartPredicate(float)} to render all parts without exception.

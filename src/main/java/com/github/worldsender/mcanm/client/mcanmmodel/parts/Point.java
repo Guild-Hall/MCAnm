@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.github.worldsender.mcanm.client.IRenderPass;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.BoneBinding;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
-import com.github.worldsender.mcanm.client.renderer.ITesselator;
 import com.github.worldsender.mcanm.common.skeleton.IBone;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
 import com.github.worldsender.mcanm.common.util.math.Point4f;
@@ -16,12 +16,16 @@ import com.github.worldsender.mcanm.common.util.math.Tuple4f;
 import com.github.worldsender.mcanm.common.util.math.Vector2f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
 import com.github.worldsender.mcanm.common.util.math.Vector4f;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 
+@OnlyIn(Dist.CLIENT)
 public class Point {
     protected final Vertex vert;
 
@@ -45,19 +49,17 @@ public class Point {
 
     /**
      * Renders this point, already transformed
-     *
-     * @param bones the models bones
      */
-    public void render(ITesselator renderer) {
-        getTransformedVertex().render(renderer);
-    }
+	public void render(IVertexBuilder buffer, IRenderPass renderPass) {
+        getTransformedVertex(renderPass.getActiveMatrixStack().getLast()).render(buffer, renderPass);
+	}
 
-    protected Vertex getTransformedVertex() {
+    protected Vertex getTransformedVertex(MatrixStack.Entry globalMatrix) {
         return vert;
     }
 
-    public void putIntoBakedQuadBuilder(UnpackedBakedQuad.Builder builder, TextureAtlasSprite sprite) {
-        Vertex transformed = getTransformedVertex();
+    public void putIntoBakedQuadBuilder(IVertexConsumer consumer) {
+        Vertex transformed = getTransformedVertex(new MatrixStack().getLast());
         Tuple4f positionBuffer = new Vector4f();
         transformed.getPosition(positionBuffer);
         Tuple3f normalBuffer = new Vector3f();
@@ -65,32 +67,27 @@ public class Point {
         Tuple2f uvBuffer = new Vector2f();
         transformed.getUV(uvBuffer);
 
-        VertexFormat vertexFormat = builder.getVertexFormat();
-        int elementCount = vertexFormat.getElementCount();
-        for (int e = 0; e < elementCount; e++) {
-            VertexFormatElement element = vertexFormat.getElement(e);
+        VertexFormat vertexFormat = consumer.getVertexFormat();
+        for (VertexFormatElement element : vertexFormat.getElements()) {
+            int e = element.getIndex();
             switch (element.getUsage()) {
                 case POSITION:
-                    builder.put(e, positionBuffer.x, positionBuffer.z, -positionBuffer.y, positionBuffer.w);
+                    consumer.put(e, positionBuffer.x, positionBuffer.z, -positionBuffer.y, positionBuffer.w);
                     break;
                 case NORMAL:
-                    builder.put(e, normalBuffer.x, normalBuffer.z, -normalBuffer.y, 0);
-                    break;
-                case UV:
-                    if (element.getIndex() != 0)
-                        break;
-                    builder.put(
-                            e,
-                            sprite.getInterpolatedU(uvBuffer.x * 16),
-                            sprite.getInterpolatedV(uvBuffer.y * 16),
-                            0,
-                            1);
+                    consumer.put(e, normalBuffer.x, normalBuffer.z, -normalBuffer.y, 0);
                     break;
                 case COLOR:
-                    builder.put(e, 1, 1, 1, 1);
+                    consumer.put(e, 1, 1, 1, 1);
                     break;
+                case UV:
+                    if (element.getIndex() == 0) {
+                        consumer.put(e, uvBuffer.x, uvBuffer.y, 0, 1);
+                        break;
+                    }
+                    // FALLTHROUGH
                 default:
-                    builder.put(e);
+                    consumer.put(e);
             }
         }
     }
@@ -119,12 +116,13 @@ public class Point {
         }
 
         @Override
-        protected Vertex getTransformedVertex() {
+        protected Vertex getTransformedVertex(MatrixStack.Entry globalMatrix) {
             Vertex base = this.vert;
             Vertex transformed = setupTransformed();
             for (Binding bind : this.binds) {
                 bind.addTransformed(base, transformed);
             }
+            transformed.globalTransform(globalMatrix);
             return transformed;
         }
 

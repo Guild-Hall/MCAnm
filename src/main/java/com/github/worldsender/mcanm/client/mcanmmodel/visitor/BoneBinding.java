@@ -1,12 +1,16 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.visitor;
 
-import com.github.worldsender.mcanm.client.mcanmmodel.stored.RawDataV1;
-import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+import com.github.worldsender.mcanm.client.mcanmmodel.stored.RawDataV1;
+import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class BoneBinding {
     /**
      * To be interpreted as unsigned

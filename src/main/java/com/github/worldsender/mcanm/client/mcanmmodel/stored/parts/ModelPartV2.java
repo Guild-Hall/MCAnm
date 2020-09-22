@@ -1,11 +1,15 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.stored.parts;
 
-import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
-import com.github.worldsender.mcanm.common.Utils;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
+import com.github.worldsender.mcanm.common.Utils;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class ModelPartV2 {
     public String name;
     /**

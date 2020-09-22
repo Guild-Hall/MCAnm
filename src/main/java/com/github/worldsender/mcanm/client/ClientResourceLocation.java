@@ -1,22 +1,29 @@
-package com.github.worldsender.mcanm.common.resource;
-
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+package com.github.worldsender.mcanm.client;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class MinecraftResourceLocation extends ResourceLocationAdapter {
+import com.github.worldsender.mcanm.common.resource.IResource;
+import com.github.worldsender.mcanm.common.resource.ResourceAdapter;
+import com.github.worldsender.mcanm.common.resource.ResourceLocationAdapter;
+
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
+public class ClientResourceLocation extends ResourceLocationAdapter {
     private final ResourceLocation loc;
-    private final MinecraftResourcePool pool;
+    private final ClientResourcePool pool;
     /**
      * Warning: You should probably use {@link MinecraftResourcePool#instance#makeResourceLocation(ResourceLocation)}
      * else the resource won't listen to resource pack reloads.
      *
      * @param loc
      */
-    public MinecraftResourceLocation(ResourceLocation loc) {
-        this(MinecraftResourcePool.instance, loc);
+    public ClientResourceLocation(ResourceLocation loc) {
+        this(ClientResourcePool.instance, loc);
     }
 
     /**
@@ -25,7 +32,7 @@ public class MinecraftResourceLocation extends ResourceLocationAdapter {
      *
      * @param loc
      */
-    public MinecraftResourceLocation(MinecraftResourcePool pool, ResourceLocation loc) {
+    public ClientResourceLocation(ClientResourcePool pool, ResourceLocation loc) {
         this.loc = Objects.requireNonNull(loc);
         this.pool = Objects.requireNonNull(pool);
     }
@@ -56,10 +63,10 @@ public class MinecraftResourceLocation extends ResourceLocationAdapter {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof MinecraftResourceLocation)) {
+        if (!(obj instanceof ClientResourceLocation)) {
             return false;
         }
-        MinecraftResourceLocation other = (MinecraftResourceLocation) obj;
+        ClientResourceLocation other = (ClientResourceLocation) obj;
         if (loc == null) {
             return other.loc == null;
         } else return loc.equals(other.loc);
@@ -67,7 +74,7 @@ public class MinecraftResourceLocation extends ResourceLocationAdapter {
 
     private /*static*/ class MinecraftResource extends ResourceAdapter {
         public MinecraftResource(ResourceLocation resLoc, IResourceManager manager) throws IOException {
-            super(MinecraftResourceLocation.this, manager.getResource(resLoc).getInputStream());
+            super(ClientResourceLocation.this, manager.getResource(resLoc).getInputStream());
         }
     }
 }

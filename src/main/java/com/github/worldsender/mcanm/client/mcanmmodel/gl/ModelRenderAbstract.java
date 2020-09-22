@@ -1,24 +1,33 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.gl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
+
 import com.github.worldsender.mcanm.MCAnm;
 import com.github.worldsender.mcanm.client.IRenderPass;
 import com.github.worldsender.mcanm.client.mcanmmodel.parts.IPart;
 import com.github.worldsender.mcanm.client.mcanmmodel.parts.PartBuilder;
-import com.github.worldsender.mcanm.client.mcanmmodel.visitor.*;
+import com.github.worldsender.mcanm.client.mcanmmodel.visitor.IMaterialVisitor;
+import com.github.worldsender.mcanm.client.mcanmmodel.visitor.IModelVisitable;
+import com.github.worldsender.mcanm.client.mcanmmodel.visitor.IModelVisitor;
+import com.github.worldsender.mcanm.client.mcanmmodel.visitor.IPartVisitor;
+import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
 import com.github.worldsender.mcanm.client.model.IModelStateInformation;
 import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
+
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
-
+@OnlyIn(Dist.CLIENT)
 public abstract class ModelRenderAbstract<P extends IPart> implements IModelRenderData {
     private final ISkeleton skeleton;
     private final Function<PartBuilder, P> buildingFunc;
@@ -62,15 +71,23 @@ public abstract class ModelRenderAbstract<P extends IPart> implements IModelRend
     @Override
     public List<BakedQuad> getAsBakedQuads(
             IModelStateInformation currentPass,
-            Map<String, TextureAtlasSprite> slotToTex,
-            VertexFormat format) {
+            Map<String, TextureAtlasSprite> slotToTex) {
         List<BakedQuad> quads = new ArrayList<>();
         setup(currentPass);
         for (IPart part : this.parts) {
             if (currentPass.shouldRenderPart(part.getName()))
-                part.getAsBakedQuads(slotToTex, format, quads);
+                part.getAsBakedQuads(slotToTex, quads);
         }
         return quads;
+    }
+
+    @Override
+    public Set<String> getTextureSlots() {
+        Set<String> slots = new HashSet<>();
+        for(IPart part : this.parts) {
+            slots.addAll(part.getTextureSlots());
+        }
+        return slots;
     }
 
     private class ModelVisitor implements IModelVisitor {

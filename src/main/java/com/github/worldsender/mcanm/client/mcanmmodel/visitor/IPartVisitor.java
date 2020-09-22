@@ -2,6 +2,10 @@ package com.github.worldsender.mcanm.client.mcanmmodel.visitor;
 
 import java.util.Arrays;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public interface IPartVisitor {
     void visitTesselationPoint(TesselationPoint point);
 

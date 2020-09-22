@@ -1,5 +1,10 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.stored;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.github.worldsender.mcanm.client.mcanmmodel.stored.parts.HeaderV1;
 import com.github.worldsender.mcanm.client.mcanmmodel.stored.parts.Material;
 import com.github.worldsender.mcanm.client.mcanmmodel.stored.parts.ModelPartV1;
@@ -14,11 +19,10 @@ import com.github.worldsender.mcanm.common.skeleton.visitor.IBoneVisitor;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitable;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitor;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class RawDataV1 implements IVersionSpecificData, ISkeletonVisitable {
     public static final int MAX_NBR_BONEBINDINGS = 4;
     /**

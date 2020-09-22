@@ -4,18 +4,34 @@ import com.github.worldsender.mcanm.client.model.util.RenderPassInformation;
 import com.github.worldsender.mcanm.client.renderer.IAnimatedObject;
 import com.github.worldsender.mcanm.common.CommonLoader;
 import com.github.worldsender.mcanm.common.animation.IAnimation;
-import net.minecraft.entity.passive.EntityPig;
+
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import java.util.Optional;
 
-public class CubeEntity extends EntityPig implements IAnimatedObject {
-    public static final IAnimation animation = CommonLoader
-            .loadAnimation(new ResourceLocation("mcanm:models/Cube/idle.mcanm"));
+public class CubeEntity extends PigEntity implements IAnimatedObject {
+    public static final IAnimation animation;
 
-    public CubeEntity(World w) {
-        super(w);
+    private static final ResourceLocation ID_CUBE = new ResourceLocation("mcanm:cube");
+    public static final EntityType<CubeEntity> ENTITY_TYPE;
+
+    static {
+        animation = CommonLoader.loadAnimation(new ResourceLocation("mcanm:models/cube/idle.mcanm"));
+        ENTITY_TYPE = EntityType.Builder
+            .create(CubeEntity::new, EntityClassification.MISC)
+            .disableSerialization()
+            .immuneToFire()
+            .size(1, 1)
+            .build(ID_CUBE.toString());
+        ENTITY_TYPE.setRegistryName(ID_CUBE);
+    }
+
+    public CubeEntity(EntityType<? extends CubeEntity> entityType, World w) {
+        super(entityType, w);
     }
 
     @Override

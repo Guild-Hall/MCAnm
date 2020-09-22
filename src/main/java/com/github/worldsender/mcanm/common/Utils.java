@@ -36,11 +36,11 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.MalformedInputException;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnmappableCharacterException;
 import java.util.Arrays;
 
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.vector.Quaternion;
 
 import com.github.worldsender.mcanm.common.util.math.Matrix4f;
 import com.github.worldsender.mcanm.common.util.math.Quat4f;
@@ -178,7 +178,7 @@ public class Utils {
      * @return a new direct int buffer
      */
     public static IntBuffer directIntBuffer(int size) {
-        return GLAllocation.createDirectIntBuffer(size);
+        return GLAllocation.createDirectByteBuffer(size << 2).asIntBuffer();
     }
 
     /**
@@ -254,7 +254,7 @@ public class Utils {
             throw new IllegalStateException("GL Error: Created Shader is 0. Can't proceed.");
         }
         ByteBuffer shaderSource = getShaderSource(is);
-        glShaderSource(shaderName, shaderSource);
+        glShaderSource(shaderName, StandardCharsets.UTF_8.decode(shaderSource));
         glCompileShader(shaderName);
         if (glGetShaderi(shaderName, GL_COMPILE_STATUS) == GL_FALSE) {
             int errorLength = glGetShaderi(shaderName, GL_INFO_LOG_LENGTH);

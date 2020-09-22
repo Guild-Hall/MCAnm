@@ -1,14 +1,18 @@
 package com.github.worldsender.mcanm.client;
 
+import java.util.Objects;
+
 import com.github.worldsender.mcanm.MCAnm;
 import com.github.worldsender.mcanm.client.mcanmmodel.ModelMCMD;
 import com.github.worldsender.mcanm.common.CommonLoader;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
 import com.github.worldsender.mcanm.common.util.CallResolver;
+
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.Objects;
-
+@OnlyIn(Dist.CLIENT)
 public class ClientLoader {
     /**
      * Loads a .mcmd model from the given {@link ResourceLocation} and binds it to the skeleton. Note that while the raw
@@ -26,7 +30,7 @@ public class ClientLoader {
     public static ModelMCMD loadModel(ResourceLocation resLoc, ISkeleton skeleton) {
         Objects.requireNonNull(skeleton);
         ClassLoader loader = CallResolver.INSTANCE.getCallingClass().getClassLoader();
-        ModelMCMD model = new ModelMCMD(MCAnm.proxy.getSidedResource(resLoc, loader), skeleton);
+        ModelMCMD model = new ModelMCMD(MCAnm.getSidedProxy().getSidedResource(resLoc, loader), skeleton);
         return model;
     }
 }

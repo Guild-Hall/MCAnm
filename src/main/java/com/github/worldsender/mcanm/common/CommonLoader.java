@@ -24,7 +24,7 @@ public class CommonLoader {
      */
     public static SkeletonMCSKL loadSkeleton(ResourceLocation resLoc) {
         ClassLoader context = CallResolver.INSTANCE.getCallingClass().getClassLoader();
-        return new SkeletonMCSKL(MCAnm.proxy.getSidedResource(resLoc, context));
+        return new SkeletonMCSKL(MCAnm.getSidedProxy().getSidedResource(resLoc, context));
     }
 
     /**
@@ -43,7 +43,7 @@ public class CommonLoader {
     @Deprecated
     public static LegacyModelAsSkeleton loadLegacySkeleton(ResourceLocation resLoc) {
         ClassLoader context = CallResolver.INSTANCE.getCallingClass().getClassLoader();
-        return new LegacyModelAsSkeleton(MCAnm.proxy.getSidedResource(resLoc, context));
+        return new LegacyModelAsSkeleton(MCAnm.getSidedProxy().getSidedResource(resLoc, context));
     }
 
     /**
@@ -57,6 +57,6 @@ public class CommonLoader {
      */
     public static StoredAnimation loadAnimation(ResourceLocation resLoc) {
         ClassLoader context = CallResolver.INSTANCE.getCallingClass().getClassLoader();
-        return new StoredAnimation(MCAnm.proxy.getSidedResource(resLoc, context));
+        return new StoredAnimation(MCAnm.getSidedProxy().getSidedResource(resLoc, context));
     }
 }

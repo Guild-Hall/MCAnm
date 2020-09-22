@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[${forgeversion},)"
+issueTrackerURL="http://github.com/WorldSEnder/MCAnm/issues"
+showAsResourcePack=false
+
+[[mods]]
+    modId="${archivesBaseName}"
+    version="${shortVersion}"
+    displayName="${longname}"
+    # updateJSONURL="minecraftforge.net/versions.json"
+    # displayURL="minecraftforge.net"
+    logoFile="logo.png"
+    credits="Blender Foundation, ZeuX"
+    authors="WorldSEnder"
+    description='''
+    Developed by WorldSEnder during the making of the Monster Hunter Frontier Craft mod to serve as a basis for animated models.
+    '''
+
+    [[dependencies.${archivesBaseName}]]
+    modId="forge"
+    mandatory=true
+    versionRange="[${forgeversion},)"
+    ordering="NONE"
+    side="BOTH"
+
+    [[dependencies.${archivesBaseName}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[${mcversion}]"
+    ordering="NONE"
+    side="BOTH"

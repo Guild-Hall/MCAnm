@@ -1,5 +1,8 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.stored;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
 import com.github.worldsender.mcanm.client.mcanmmodel.stored.parts.Material;
 import com.github.worldsender.mcanm.client.mcanmmodel.stored.parts.ModelPartV2;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.IMaterialVisitor;
@@ -7,9 +10,10 @@ import com.github.worldsender.mcanm.client.mcanmmodel.visitor.IModelVisitor;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.IPartVisitor;
 import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
 
-import java.io.DataInputStream;
-import java.io.IOException;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class RawDataV2 implements IVersionSpecificData {
 
     private ModelPartV2[] parts;

@@ -1,42 +1,27 @@
 package com.github.worldsender.mcanm.client.config;
 
 import com.github.worldsender.mcanm.Reference;
-import net.minecraftforge.common.config.ConfigElement;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.client.config.IConfigElement;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 
-import java.io.File;
-import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 
 public class MCAnmConfiguration {
-
-    private Configuration config;
-    private Property enableReload;
-
-    public MCAnmConfiguration(File loadFile) {
-        config = new Configuration(loadFile);
-        config.load();
-        enableReload = config.get(Configuration.CATEGORY_GENERAL, Reference.config_reload_enabled, true)
-                .setLanguageKey(Reference.gui_config_reload_enabled);
-        save();
+    public static Pair<MCAnmConfiguration, ForgeConfigSpec> createConfigSpec() {
+        Pair<MCAnmConfiguration, ForgeConfigSpec> builder = new ForgeConfigSpec.Builder().configure(MCAnmConfiguration::new);
+        return builder;
     }
 
-    public void onConfigChange(@SuppressWarnings("unused") OnConfigChangedEvent occe) {
-        save();
-    }
+    private BooleanValue enableReload;
 
-    public void save() {
-        if (config.hasChanged())
-            config.save();
+    public MCAnmConfiguration(ForgeConfigSpec.Builder builder) {
+        enableReload = builder.comment("Enable reloading of models when the resource manager is reloaded")
+               .translation(Reference.gui_config_reload_enabled)
+               .define(Reference.config_reload_enabled, true);
     }
 
     public boolean isReloadEnabled() {
-        return this.enableReload.getBoolean();
-    }
-
-    public void addPropertiesToDisplayList(List<IConfigElement> list) {
-        list.add(new ConfigElement(enableReload));
+        return enableReload.get().booleanValue();
     }
 }

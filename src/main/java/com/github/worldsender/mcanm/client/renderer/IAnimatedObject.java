@@ -5,8 +5,11 @@ import com.github.worldsender.mcanm.client.model.IRenderPassInformation;
 import com.github.worldsender.mcanm.client.model.util.RenderPassInformation;
 import com.github.worldsender.mcanm.client.renderer.entity.RenderAnimatedModel;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
-import net.minecraft.entity.EntityLiving;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * An animatable type that is typically rendered with a {@link RenderAnimatedModel} or a //TODO: RenderMHFCModelTile<br>
@@ -14,24 +17,20 @@ import net.minecraft.util.ResourceLocation;
  *
  * @author WorldSEnder
  */
+@OnlyIn(Dist.CLIENT)
 public interface IAnimatedObject {
     /**
      * An animator that can be used in
      * {@link RenderAnimatedModel#fromResLocation(IEntityAnimator, ResourceLocation, ISkeleton, float)} when the
      * animated entity implements the {@link IAnimatedObject} interface.
      */
-    static <T extends EntityLiving & IAnimatedObject> IEntityAnimator<T> ANIMATOR_ADAPTER() {
+    static <T extends Entity & IAnimatedObject> IEntityAnimator<T> ANIMATOR_ADAPTER() {
         return new IEntityAnimator<T>() {
             @Override
             public IRenderPassInformation preRenderCallback(
                     T entity,
                     RenderPassInformation buffer,
-                    float partialTick,
-                    float uLimbSwing,
-                    float interpolatedSwing,
-                    float uRotfloat,
-                    float headYaw,
-                    float interpolatedPitch) {
+                    float partialTick) {
                 return IAnimatedObject.class.cast(entity).preRenderCallback(partialTick, buffer);
             }
         };

@@ -1,10 +1,14 @@
 package com.github.worldsender.mcanm.client.model.util;
 
+import java.util.Arrays;
+
 import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.animation.IAnimation.BoneTransformation;
 
-import java.util.Arrays;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class Animations {
     /**
      * A wrapper to chain animations together. If a position for bone &lt;bone&gt; is not given by the firstChoice, it

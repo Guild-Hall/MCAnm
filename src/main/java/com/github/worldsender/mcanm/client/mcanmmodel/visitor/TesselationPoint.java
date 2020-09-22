@@ -2,11 +2,16 @@ package com.github.worldsender.mcanm.client.mcanmmodel.visitor;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+
 import com.github.worldsender.mcanm.common.Utils;
 import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
 import com.github.worldsender.mcanm.common.util.math.Vector2f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class TesselationPoint {
     public Vector3f coords;
     public Vector3f normal;

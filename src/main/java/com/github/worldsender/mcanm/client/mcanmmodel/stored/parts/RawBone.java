@@ -7,6 +7,10 @@ import com.github.worldsender.mcanm.common.Utils;
 import com.github.worldsender.mcanm.common.util.math.Quat4f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class RawBone {
     public String name;
     public Quat4f rotation;

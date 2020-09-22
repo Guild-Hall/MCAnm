@@ -2,6 +2,10 @@ package com.github.worldsender.mcanm.client.mcanmmodel.stored.parts;
 
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class ModelPartV1 {
     public String name;
     /**

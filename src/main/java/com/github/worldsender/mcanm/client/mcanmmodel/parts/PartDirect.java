@@ -1,27 +1,48 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.parts;
 
-import com.github.worldsender.mcanm.client.IRenderPass;
-import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
-import com.github.worldsender.mcanm.client.model.ModelLoader;
-import com.github.worldsender.mcanm.client.renderer.DrawElementsTesselator;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
-
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.IntStream;
 
+import com.github.worldsender.mcanm.client.IRenderPass;
+import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
+import com.github.worldsender.mcanm.common.util.math.Tuple3f;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
+import org.lwjgl.opengl.GL30;
+
+import net.minecraft.client.renderer.RenderState;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
+
+@OnlyIn(Dist.CLIENT)
 public class PartDirect implements IPart {
+    private static RenderType getPartRenderType(ResourceLocation texture) {
+        RenderType.State renderState = RenderType.State.getBuilder()
+            .texture(new RenderState.TextureState(texture, false, false))
+            // .transparency(new RenderState.TransparencyState(false))
+            .diffuseLighting(new RenderState.DiffuseLightingState(true))
+            .lightmap(new RenderState.LightmapState(true))
+            .overlay(new RenderState.OverlayState(true))
+            .build(true);
+        return RenderType.makeType("entity_solid_tris", DefaultVertexFormats.ENTITY, GL30.GL_TRIANGLES, 256, true, false, renderState);
+    }
+
     private final String textureSlot;
     private final String name;
     private final String textureSlotWithOct;
     private final Point[] pointsList;
     private final int[] indices;
-    private final DrawElementsTesselator directTesselator;
 
     public PartDirect(PartBuilder builder) {
         Point[] points = new Point[builder.pointList.size()];
@@ -41,46 +62,54 @@ public class PartDirect implements IPart {
         this.name = Objects.requireNonNull(builder.name, "A name is required");
         this.textureSlot = Objects.requireNonNull(builder.textureName, "texture name required");
         this.textureSlotWithOct = "#" + textureSlot;
-        directTesselator = new DrawElementsTesselator(pointsList.length, indices);
         // Required for the stupid item rendering...
-        this.indices = IntStream.range(0, indices.length).map(i -> indices[i] & 0xFFFF).toArray();
+        this.indices = IntStream.range(0, indices.length).map(i -> indices[i]).toArray();
     }
 
     @Override
     public void render(IRenderPass currentPass) {
         ResourceLocation texture = currentPass.getActualResourceLocation(textureSlot);
-        currentPass.bindTexture(texture);
-
-        directTesselator.startDrawing();
-        for (Point p : this.pointsList) {
-            p.render(directTesselator);
+        RenderType renderType = getPartRenderType(texture);
+        IVertexBuilder buffer = currentPass.getRenderTypeBuffer().getBuffer(renderType);
+        for (int i = 0; i < indices.length; i += 3) {
+            Point point1 = pointsList[indices[i]];
+            Point point2 = pointsList[indices[i + 1]];
+            Point point3 = pointsList[indices[i + 2]];
+            point1.render(buffer, currentPass);
+            point2.render(buffer, currentPass);
+            point3.render(buffer, currentPass);
         }
-        directTesselator.draw();
     }
 
     @Override
-    public void getAsBakedQuads(Map<String, TextureAtlasSprite> slotToTex, VertexFormat format, List<BakedQuad> out) {
+    public void getAsBakedQuads(Map<String, TextureAtlasSprite> slotToTex, List<BakedQuad> out) {
         TextureAtlasSprite tex = retrieveSprite(slotToTex);
         for (int i = 0; i < indices.length; i += 3) {
             Point point1 = pointsList[indices[i]];
             Point point2 = pointsList[indices[i + 1]];
             Point point3 = pointsList[indices[i + 2]];
-            UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
-            point1.putIntoBakedQuadBuilder(builder, tex);
-            point2.putIntoBakedQuadBuilder(builder, tex);
-            point3.putIntoBakedQuadBuilder(builder, tex);
-            point1.putIntoBakedQuadBuilder(builder, tex);
-            builder.setTexture(tex);
+            BakedQuadBuilder builder = new BakedQuadBuilder(tex);
+
+            Tuple3f normal = new Tuple3f();
+            point1.vert.getNormal(normal);
+            builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
+
+            point1.putIntoBakedQuadBuilder(builder);
+            point2.putIntoBakedQuadBuilder(builder);
+            point3.putIntoBakedQuadBuilder(builder);
+            point1.putIntoBakedQuadBuilder(builder);
+
             out.add(builder.build());
         }
     }
 
     private TextureAtlasSprite retrieveSprite(Map<String, TextureAtlasSprite> slotToTex) {
-        TextureAtlasSprite tex = slotToTex.get(textureSlotWithOct);
-        if (tex != null) {
-            return tex;
-        }
-        return slotToTex.get(ModelLoader.MISSING_SLOT_NAME);
+        return slotToTex.get(textureSlotWithOct);
+    }
+
+    @Override
+    public Set<String> getTextureSlots() {
+        return Collections.singleton(textureSlotWithOct);
     }
 
     @Override

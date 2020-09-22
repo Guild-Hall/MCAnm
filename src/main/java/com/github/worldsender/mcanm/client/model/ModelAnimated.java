@@ -2,11 +2,14 @@ package com.github.worldsender.mcanm.client.model;
 
 import com.github.worldsender.mcanm.client.IRenderPass;
 import com.github.worldsender.mcanm.client.mcanmmodel.IModel;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.model.TextureOffset;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.Entity;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.Model;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * A general purpose model that should fulfill most of your needs. It is possible to use an {@link IEntityAnimator} to
@@ -14,9 +17,9 @@ import net.minecraft.entity.Entity;
  *
  * @author WorldSEnder
  */
-public class ModelAnimated extends ModelBase {
+@OnlyIn(Dist.CLIENT)
+public class ModelAnimated extends Model {
     private IModel model;
-    private IRenderPass renderPass;
 
     /**
      * This constructor just puts the model into itself. Nothing is checked
@@ -24,6 +27,7 @@ public class ModelAnimated extends ModelBase {
      * @param model the model to render
      */
     public ModelAnimated(IModel model) {
+        super(RenderType::getEntityCutoutNoCull);
         this.model = model; // No null-checks, getters could be overridden
         // Useless piece of .... sklsdalsafhkjasd
         // So we don't get problems with arrows in our entity.
@@ -33,29 +37,14 @@ public class ModelAnimated extends ModelBase {
         argggghhhh.addBox(0, 0, 0, 1, 1, 1);
     }
 
-    /**
-     * Renders the underlying model.
-     */
     @Override
-    public void render(
-            Entity entity,
-            float uLimbSwing,
-            float interpolatedSwing,
-            float uRotfloat,
-            float headYaw,
-            float interpolatedPitch,
-            float size) {
-        GlStateManager.pushMatrix();
-
-        getModel().render(renderPass);
-
-        GlStateManager.popMatrix();
+    public void render(MatrixStack matrixStack, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn,
+            float red, float green, float blue, float alpha) {
+        throw new IllegalStateException("unused, don't use render to render these kinds of models, use #renderWithPass");
     }
 
-    // Will not use this method
-    @Override
-    public TextureOffset getTextureOffset(String boxName) {
-        return new TextureOffset(0, 0);
+    public void renderWithPass(IRenderPass renderPass) {
+        getModel().render(renderPass);
     }
 
     /**
@@ -66,9 +55,5 @@ public class ModelAnimated extends ModelBase {
      */
     protected IModel getModel() {
         return this.model;
-    }
-
-    public void setRenderPass(IRenderPass renderPass) {
-        this.renderPass = renderPass;
     }
 }

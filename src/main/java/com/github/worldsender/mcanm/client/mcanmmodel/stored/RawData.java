@@ -1,5 +1,10 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.stored;
 
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.UUID;
+
 import com.github.worldsender.mcanm.MCAnm;
 import com.github.worldsender.mcanm.client.mcanmmodel.gl.IModelRenderData;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.IModelVisitable;
@@ -10,10 +15,8 @@ import com.github.worldsender.mcanm.common.resource.IResource;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitable;
 import com.github.worldsender.mcanm.common.util.ResourceCache;
 
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.util.UUID;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Represents the model data right after being loaded. No optimizations or offset has happened yet. This is the raw data
@@ -22,6 +25,7 @@ import java.util.UUID;
  *
  * @author WorldSEnder
  */
+@OnlyIn(Dist.CLIENT)
 public class RawData implements IModelVisitable {
     public static final long MAGIC_NUMBER = Utils.asciiToMagicNumber("MHFC MDL");
 

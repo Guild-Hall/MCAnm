@@ -1,5 +1,13 @@
 package com.github.worldsender.mcanm.client.mcanmmodel;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
 import com.github.worldsender.mcanm.client.IRenderPass;
 import com.github.worldsender.mcanm.client.mcanmmodel.gl.IModelRenderData;
 import com.github.worldsender.mcanm.client.mcanmmodel.gl.ModelRenderDataGLArray;
@@ -9,11 +17,9 @@ import com.github.worldsender.mcanm.client.model.IModelStateInformation;
 import com.github.worldsender.mcanm.common.resource.IResourceLocation;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
 import com.github.worldsender.mcanm.common.util.ReloadableData;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 
-import java.util.*;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 /**
  * Represents a model that is more abstract than boxes. The format also offers animating the model through bones and a
@@ -30,7 +36,6 @@ public class ModelMCMD extends ReloadableData<IModelVisitable> implements IModel
     private static final DataLoader LOADING_FUNC;
 
     static {
-        // TODO: Decide depending on OpenGL capabilities?
         LOADING_FUNC = ModelRenderDataGLArray::new;
     }
 
@@ -68,11 +73,14 @@ public class ModelMCMD extends ReloadableData<IModelVisitable> implements IModel
         model.ifPresent(m -> m.render(renderPass));
     }
 
+    public Set<String> getTextureSlots() {
+        return model.map(IModelRenderData::getTextureSlots).orElse(Collections.emptySet());
+    }
+
     public List<BakedQuad> getAsBakedQuads(
             IModelStateInformation currentPass,
-            Map<String, TextureAtlasSprite> slotToTex,
-            VertexFormat format) {
-        return model.map(m -> m.getAsBakedQuads(currentPass, slotToTex, format)).orElse(Collections.emptyList());
+            Map<String, TextureAtlasSprite> slotToTex) {
+        return model.map(m -> m.getAsBakedQuads(currentPass, slotToTex)).orElse(Collections.emptyList());
     }
 
     /**

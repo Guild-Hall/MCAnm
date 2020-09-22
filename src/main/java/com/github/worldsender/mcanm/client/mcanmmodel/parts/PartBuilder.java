@@ -1,15 +1,19 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.parts;
 
-import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
-import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
-import com.google.common.collect.Iterables;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
+import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
+import com.google.common.collect.Iterables;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class PartBuilder {
     /*package */ ByteBuf indexBuf;
     /*package */ String name;
