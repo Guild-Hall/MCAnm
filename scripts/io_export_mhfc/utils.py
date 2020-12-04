@@ -189,7 +189,7 @@ class Reporter(object):
         return cls._stack[-1]
 
     @static_access
-    def warning(self, message, *args, **wargs):
+    def warning(self, message="", *args, **wargs):
         """When something happened that can be recovered from but isn't
         conformant never-the-less
         """
@@ -200,7 +200,7 @@ class Reporter(object):
         self._report.append(formatted, level=LogLevel.WARNING)
 
     @static_access
-    def info(self, message, *args, **wargs):
+    def info(self, message="", *args, **wargs):
         """A useful information for the user
         """
         self = Reporter._get_reporter(self)
@@ -210,7 +210,7 @@ class Reporter(object):
         self._report.append(formatted, level=LogLevel.INFO)
 
     @static_access
-    def debug(self, message, *args, **wargs):
+    def debug(self, message="", *args, **wargs):
         """Debug output, only output during debug mode
         """
         self = Reporter._get_reporter(self)
@@ -220,7 +220,7 @@ class Reporter(object):
         self._report.append(formatted, level=LogLevel.DEBUG)
 
     @static_access
-    def error(self, message, *args, cause=None, **wargs):
+    def error(self, message="", *args, cause=None, **wargs):
         """When something happened that can't conform with the specification.
         Aka: the user's fault
         """
@@ -234,7 +234,7 @@ class Reporter(object):
             ReportedError.throw_from_exception(self, level=LogLevel.FATAL)
 
     @static_access
-    def fatal(self, message, *args, cause=None, **wargs):
+    def fatal(self, message="", *args, cause=None, **wargs):
         """
         When something happened that really shouldn't happen.
         Aka: my fault

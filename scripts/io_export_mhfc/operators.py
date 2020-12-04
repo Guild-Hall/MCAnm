@@ -10,7 +10,7 @@ from bpy.types import Operator
 from .export import export_mesh, export_skl, export_action, MeshExportOptions,\
     SkeletonExportOptions, ActionExportOptions
 from .imports import import_tabula, read_tcn
-from .properties import SceneProps, Preferences
+from .properties import ScenePropTypes, PreferenceTypes
 from .utils import Reporter, extract_safe, asset_to_dir
 
 
@@ -26,23 +26,23 @@ class ObjectExporter(Operator):
     bl_label = "Export MCMD"
 
     # Fileselector class uses this
-    directory = StringProperty(
+    directory: StringProperty(
         name="Dir name",
         description="The resource folder to export to",
         subtype='DIR_PATH')
-    model_path = Preferences.model_path
-    mod_id = Preferences.mod_id
-    proj_name = SceneProps.projectname
+    model_path: PreferenceTypes.model_path
+    mod_id: PreferenceTypes.mod_id
+    proj_name: ScenePropTypes.projectname
 
-    uuid = IntVectorProperty(
+    uuid: IntVectorProperty(
         name="UUID",
         description="A unique ID for this file",
         options={'HIDDEN'},
         default=(0, 0, 0, 0),
         size=4)
-    object = SceneProps.object
+    object: ScenePropTypes.object
 
-    version = EnumProperty(
+    version: EnumProperty(
         name="Version",
         description="Target version in Minecraft.",
         items=VERSIONS,
@@ -74,11 +74,14 @@ class ObjectExporter(Operator):
             if props.armature:
                 armature = extract_safe(
                     bpy.data.armatures, props.armature, "Armature {item} not in bpy.data.armatures")
-                if armature not in [mod.object.data for mod in obj.modifiers if mod.type == 'ARMATURE' and mod.object is not None]:
+                arm_active_as_mod = armature in [mod.object.data for mod in obj.modifiers if mod.type == 'ARMATURE' and mod.object is not None]
+                arm_active_as_parent = armature is obj.parent.data and obj.parent_type in ['ARMATURE', 'BONE']
+                if not (arm_active_as_mod or arm_active_as_parent):
                     Reporter.warning(
                         "Armature {arm} is not active on object {obj}", arm=props.armature, obj=self.object)
-            else:
-                armature = None
+            elif obj.parent_type == 'ARMATURE':
+                armature = obj.parent.data
+                Reporter.warning("Armature was guessed by using the parent object. Set one explicitly in the mesh property panel")
 
             opt = MeshExportOptions()
             opt.obj = obj
@@ -101,7 +104,7 @@ class ObjectExporter(Operator):
             self.report(
                 {'ERROR'}, "Active object must be a mesh not {}".format(context.object.type))
             return {'CANCELLED'}
-        prefs = context.user_preferences.addons[__package__].preferences
+        prefs = context.preferences.addons[__package__].preferences
         sceprops = context.scene.mcprops
         props = context.object.data.mcprops
 
@@ -121,8 +124,6 @@ class ObjectExporter(Operator):
             self.uv_layer = context.object.data.uv_layers.active.name
 
         self.artist = props.artist
-        self.default_group_name = props.default_group.name
-        self.default_img = props.default_group.image
 
         self.proj_name = sceprops.projectname
         self.uuid = sceprops.uuid
@@ -138,20 +139,20 @@ class AnimationExporter(Operator):
     bl_idname = "export_anim.mcanm"
     bl_label = "Export MCANM"
 
-    directory = StringProperty(
+    directory: StringProperty(
         name="Dir name",
         description="The resource folder to export to",
         subtype='DIR_PATH')
-    animation_path = Preferences.animation_path
-    mod_id = Preferences.mod_id
-    proj_name = SceneProps.projectname
+    animation_path: PreferenceTypes.animation_path
+    mod_id: PreferenceTypes.mod_id
+    proj_name: ScenePropTypes.projectname
 
-    skeleton = StringProperty(
+    skeleton: StringProperty(
         name="Armature",
         description="The armature this action is \"bound\" to",
         default=""
     )
-    action = StringProperty(
+    action: StringProperty(
         name="Action",
         description="The action to export"
     )
@@ -206,14 +207,14 @@ class AnimationExporter(Operator):
             return {'CANCELLED'}
         self.skeleton = context.object.name
         try:
-            self.action, props = AnimationExporter.guess_action(
+            self.action, _ = AnimationExporter.guess_action(
                 context.object)
         except ValueError as ex:
             self.report(
                 {'ERROR'}, "Guessing action from active armature failed: {err}".format(err=ex))
             return {'CANCELLED'}
 
-        prefs = context.user_preferences.addons[__package__].preferences
+        prefs = context.preferences.addons[__package__].preferences
         sceprops = context.scene.mcprops
 
         self.mod_id = prefs.mod_id
@@ -238,21 +239,21 @@ class SkeletonExporter(Operator):
     bl_idname = "export_arm.mcanm"
     bl_label = "Export MCSKL"
 
-    directory = StringProperty(
+    directory: StringProperty(
         name="Dir name",
         description="The resource folder to export to",
         subtype='DIR_PATH')
-    skeleton_path = Preferences.skeleton_path
-    mod_id = Preferences.mod_id
-    proj_name = SceneProps.projectname
+    skeleton_path: PreferenceTypes.skeleton_path
+    mod_id: PreferenceTypes.mod_id
+    proj_name: ScenePropTypes.projectname
 
-    uuid = IntVectorProperty(
+    uuid: IntVectorProperty(
         name="UUID",
         description="A unique ID for this file",
         options={'HIDDEN'},
         default=(0, 0, 0, 0),
         size=4)
-    skeleton = SceneProps.skeleton
+    skeleton: ScenePropTypes.skeleton
 
     @staticmethod
     def guess_action(obj):
@@ -301,7 +302,7 @@ class SkeletonExporter(Operator):
             return {'CANCELLED'}
         self.skeleton = context.object.name
 
-        prefs = context.user_preferences.addons[__package__].preferences
+        prefs = context.preferences.addons[__package__].preferences
         sceprops = context.scene.mcprops
 
         self.mod_id = prefs.mod_id
@@ -324,14 +325,14 @@ class SceneExporter(Operator):
     bl_idname = "export_scene.mcanm"
     bl_label = "Export Scene to Minecraft"
 
-    scene = StringProperty(
+    scene: StringProperty(
         name="Scene",
         description="The scene to export fully")
-    directory = Preferences.directory
-    model_path = Preferences.model_path
-    animation_path = Preferences.animation_path
-    skeleton_path = Preferences.skeleton_path
-    mod_id = Preferences.mod_id
+    directory: PreferenceTypes.directory
+    model_path: PreferenceTypes.model_path
+    animation_path: PreferenceTypes.animation_path
+    skeleton_path: PreferenceTypes.skeleton_path
+    mod_id: PreferenceTypes.mod_id
 
     def draw(self, context):
         layout = self.layout
@@ -376,7 +377,7 @@ class SceneExporter(Operator):
         return {'FINISHED'} if reporter.was_success() else {'CANCELLED'}
 
     def invoke(self, context, event):
-        prefs = context.user_preferences.addons[__package__].preferences
+        prefs = context.preferences.addons[__package__].preferences
         scene = context.scene
         self.scene = scene.name
 
@@ -395,15 +396,15 @@ class TabulaImport(Operator, ImportHelper):
     bl_label = "Import Tabula model (.tbl)"
 
     filename_ext = ".tbl"
-    filter_glob = StringProperty(default="*.tbl", options={'HIDDEN'})
-    filepath = StringProperty(name="File Path", default="")
+    filter_glob: StringProperty(default="*.tbl", options={'HIDDEN'})
+    filepath: StringProperty(name="File Path", default="")
 
-    only_poses = EnumProperty(items=[("poses", "Animations", "Import the contained animations"),
-                                     ("model", "Model", "Import the model from the file")],
-                              name="Import strategy",
-                              default={"poses", "model"},
-                              options={'ENUM_FLAG'})
-    scene = StringProperty(
+    only_poses: EnumProperty(items=[("poses", "Animations", "Import the contained animations"),
+                                    ("model", "Model", "Import the model from the file")],
+                             name="Import strategy",
+                             default={"poses", "model"},
+                             options={'ENUM_FLAG'})
+    scene: StringProperty(
         name="Scene to import into", default="", options={'HIDDEN'})
 
     def draw(self, context):
@@ -433,7 +434,7 @@ class TechneImport(Operator, ImportHelper):
     # ImportHelper mixin class uses this
     filename_ext = ".tcn"
 
-    filter_glob = StringProperty(
+    filter_glob: StringProperty(
         default="*.tcn",
         options={'HIDDEN'},
     )
@@ -442,7 +443,7 @@ class TechneImport(Operator, ImportHelper):
         with Reporter() as reporter:
             context.scene.render.engine = 'BLENDER_RENDER'
             context.scene.game_settings.material_mode = 'GLSL'
-            context.user_preferences.system.use_mipmaps = False
+            context.preferences.system.use_mipmaps = False
             read_tcn(context, self.filepath, self)
             reporter.info(
                 "Successfully imported the techne model from {path}", path=self.filepath)
@@ -451,165 +452,20 @@ class TechneImport(Operator, ImportHelper):
     # TODO: priority2 finish
 
 
-class AddRenderGroup(Operator):
-    """Adds a group of points.
-    """
-    bl_idname = "object.mc_group_add"
-    bl_label = "Add render group"
+classes = [
+    ObjectExporter,
+    AnimationExporter,
+    SkeletonExporter,
+    SceneExporter,
+    TabulaImport,
+    TechneImport,
+]
 
-    @classmethod
-    def poll(cls, context):
-        return context.object is not None and context.object.type == 'MESH'
+register_classes, unregister_classes = bpy.utils.register_classes_factory(classes)
 
-    def execute(self, context):
-        data = context.object.data
-        props = data.mcprops
-        groups = props.render_groups
-        props.active_render_group = len(groups)
-        g = groups.add()
-        g.name = "Default"
-        return {'FINISHED'}
+def register():
+    register_classes()
 
+def unregister():
+    unregister_classes()
 
-class RemoveRenderGroup(Operator):
-    """Removes the active render group.
-    """
-    bl_idname = "object.mc_group_remove"
-    bl_label = "Add render group"
-
-    @classmethod
-    def poll(cls, context):
-        return context.object is not None and context.object.type == 'MESH' and context.object.data.mcprops.active_render_group >= 0
-
-    def execute(self, context):
-        data = context.object.data
-        props = data.mcprops
-        groups = props.render_groups
-        group_idx = props.active_render_group
-        groups.remove(group_idx)
-        props.active_render_group = max(
-            0 if len(groups) > 0 else -1,
-            group_idx - 1)
-        if context.mode == 'EDIT_MESH':
-            bm = bmesh.from_edit_mesh(data)
-            if 'MCRenderGroupIndex' not in bm.faces.layers.int:
-                return {'FINISHED'}
-            g_layer = bm.faces.layers.int['MCRenderGroupIndex']
-            for face in bm.faces:
-                face_idx = face[g_layer]
-                if face_idx == group_idx + 1:
-                    face_idx = 0
-                elif face_idx > group_idx + 1:
-                    face_idx -= 1
-                face[g_layer] = face_idx
-            bmesh.update_edit_mesh(data)
-        else:
-            if 'MCRenderGroupIndex' not in data.polygon_layers_int:
-                return {'FINISHED'}
-            for face in data.polygon_layers_int['MCRenderGroupIndex'].data:
-                face_idx = face.value
-                if face_idx == group_idx + 1:
-                    face_idx = 0
-                elif face_idx > group_idx + 1:
-                    face_idx -= 1
-                face.value = face_idx
-        return {'FINISHED'}
-
-
-class AddFacesToGroup(Operator):
-    """Adds all selected faces to the current render group.
-    They can't be removed though: Ultimately no face should be without group
-    """
-    bl_idname = "object.mc_group_add_faces"
-    bl_label = "Assign"
-
-    @classmethod
-    def poll(cls, context):
-        if context.mode != 'EDIT_MESH' or context.object is None or context.object.type != 'MESH':
-            return False
-        props = context.object.data.mcprops
-        curr = props.active_render_group
-        return curr >= 0 and curr < len(props.render_groups)
-
-    def execute(self, context):
-        data = context.object.data
-        active_group = data.mcprops.active_render_group
-        bm = bmesh.from_edit_mesh(data)
-        if 'MCRenderGroupIndex' not in bm.faces.layers.int:
-            bm.faces.layers.int.new('MCRenderGroupIndex')
-        g_layer = bm.faces.layers.int['MCRenderGroupIndex']
-        for face in bm.faces:
-            if not face.select:
-                continue
-            # active_group + 1, because 0 means uninitialized
-            face[g_layer] = active_group + 1
-        bmesh.update_edit_mesh(data)
-        return {'FINISHED'}
-
-
-class SelectGroup(Operator):
-    """Selects all faces which belong to the current group
-    """
-    bl_idname = "object.mc_group_select_faces"
-    bl_label = "Select"
-
-    @classmethod
-    def poll(cls, context):
-        if context.mode != 'EDIT_MESH' or context.object is None or context.object.type != 'MESH':
-            return False
-        props = context.object.data.mcprops
-        curr = props.active_render_group
-        return curr >= 0 and curr < len(props.render_groups) and 'MCRenderGroupIndex' in context.object.data.polygon_layers_int
-
-    def execute(self, context):
-        data = context.object.data
-        active_group = data.mcprops.active_render_group
-        bm = bmesh.from_edit_mesh(data)
-        g_layer = bm.faces.layers.int['MCRenderGroupIndex']
-        for face in bm.faces:
-            face.select = (face[g_layer] == active_group + 1)
-        bmesh.update_edit_mesh(data)
-        return {'FINISHED'}
-
-
-class UpdateGroupsVisual(Operator):
-    """Updates the Blender-internal texture assignement
-    """
-    bl_idname = "object.mc_group_update_tex"
-    bl_label = "Update Textures"
-
-    mode = EnumProperty(
-        items=[	("ALL", "All Faces", "Updates all faces on the mesh"),
-                ("SELECTED", "Selected Faces", "Updates only selected faces")],
-        name="Mode",
-        default="ALL")
-
-    @classmethod
-    def poll(cls, context):
-        if context.mode != "EDIT_MESH":
-            return False
-        obj = context.object
-        if obj is None or obj.type != "MESH":
-            return False
-        data = obj.data
-        return obj.data.uv_layers.active is not None and 'MCRenderGroupIndex' in data.polygon_layers_int
-
-    def execute(self, context):
-        data = context.object.data
-        bm = bmesh.from_edit_mesh(data)
-        groups = data.mcprops.render_groups
-        g_lyr = bm.faces.layers.int['MCRenderGroupIndex']
-        tex_lyr = bm.faces.layers.tex.active
-        for face in bm.faces:
-            if self.mode == "SELECTED" and not face.select:
-                continue
-            idx = face[g_lyr] - 1
-            if idx < 0:
-                continue
-            if idx < len(groups) and groups[idx].image in bpy.data.images:
-                face[tex_lyr].image = bpy.data.images[groups[idx].image]
-            else:
-                face[g_lyr] = 0
-        bmesh.update_edit_mesh(data)
-        context.scene.render.engine = "BLENDER_RENDER"
-        return {'FINISHED'}

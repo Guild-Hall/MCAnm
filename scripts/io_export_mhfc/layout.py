@@ -3,8 +3,7 @@ import bpy
 from bpy.types import Panel, Menu, UIList, Header, UILayout
 
 from .operators import ObjectExporter, AnimationExporter, SkeletonExporter,\
-    AddRenderGroup, RemoveRenderGroup, AddFacesToGroup, SelectGroup,\
-    UpdateGroupsVisual, TechneImport, SceneExporter, TabulaImport
+    TechneImport, SceneExporter, TabulaImport
 
 
 class LayoutWrapper(object):
@@ -24,18 +23,18 @@ class LayoutWrapper(object):
                 sublayout = fn(*args, **wargs)
                 return LayoutWrapper(sublayout)
             return wrapped
-        if name in {"prop", "props_enum", "prop_menu_enum", "prop_enum",
-                    "prop_search", "template_ID", "template_ID_preview",
-                    "template_any_ID", "template_path_builder",
-                    "template_curve_mapping", "template_color_ramp",
-                    "template_icon_view", "template_histogram",
-                    "template_waveform", "template_vectorscope",
-                    "template_layers", "template_color_picker",
-                    "template_image", "template_movieclip",
-                    "template_track", "template_marker",
-                    "template_movieclip_information", "template_component_menu",
-                    "template_colorspace_settings",
-                    "template_colormanaged_view_settings"}:
+        elif name in {"prop", "props_enum", "prop_menu_enum", "prop_enum",
+                      "prop_search", "template_ID", "template_ID_preview",
+                      "template_any_ID", "template_path_builder",
+                      "template_curve_mapping", "template_color_ramp",
+                      "template_icon_view", "template_histogram",
+                      "template_waveform", "template_vectorscope",
+                      "template_layers", "template_color_picker",
+                      "template_image", "template_movieclip",
+                      "template_track", "template_marker",
+                      "template_movieclip_information", "template_component_menu",
+                      "template_colorspace_settings",
+                      "template_colormanaged_view_settings"}:
             def wrapped(data, prop, *args, **wargs):
                 wrapper = self
 
@@ -48,12 +47,11 @@ class LayoutWrapper(object):
 
                     def display(self):
                         row_layout = wrapper._layout.row()
-                        original_call = getattr(
-                            row_layout, name)(data, prop, *args, **wargs)
+                        original_call = getattr(row_layout, name)(data, prop, *args, **wargs)
                         errored = False
                         for pre, mess in self._tests:
                             if not pre(getattr(data, prop)):
-                                wrapper._layout.label(mess, icon="ERROR")
+                                wrapper._layout.label(text=mess, icon="ERROR")
                                 errored = True
                         if errored:
                             row_layout.label(icon="ERROR")
@@ -61,34 +59,16 @@ class LayoutWrapper(object):
 
                 return BoundArgs()
             return wrapped
-        prop = getattr(self._layout, name)
-        if callable(prop):
+        elif callable(getattr(self._layout, name)):
             def wrapped(*args, **wargs):
-                return prop(*args, **wargs)
+                return getattr(self._layout, name)(*args, **wargs)
             return wrapped
-        return prop
-
-
-class RenderGroupUIList(UIList):
-
-    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        if self.layout_type in {'DEFAULT', 'COMPACT'}:
-            if item:
-                row = layout.row()
-                row.prop(item, "name", text="", emboss=False, icon_value=icon)
-                if item.image not in bpy.data.images:
-                    row.label(icon="ERROR")
-            else:
-                layout.label(text="", translate=False, icon_value=icon)
-        # 'GRID' layout type should be as compact as possible (typically a single icon!).
-        elif self.layout_type in {'GRID'}:
-            layout.alignment = 'CENTER'
-            layout.label(text="", icon_value=icon)
+        return getattr(self._layout, name)
 
 
 class AnimationExportMenu(Menu):
     bl_label = "Export Action"
-    bl_idname = "animation.mc_export"
+    bl_idname = "MCANM_MT_ExportAction"
 
     def draw(self, context):
         layout = self.layout
@@ -106,7 +86,7 @@ class AnimationExportMenu(Menu):
 
 class AnimationExportHeader(Header):
     bl_label = "MCAnimation Export Menu"
-    bl_idname = "animation.mc_export"
+    bl_idname = "MCANM_HT_ExportAction"
     bl_space_type = "DOPESHEET_EDITOR"
 
     def draw(self, context):
@@ -116,7 +96,7 @@ class AnimationExportHeader(Header):
 
 class MeshDataPanel(Panel):
     # MC Panel under Object
-    bl_idname = "object.mc_meshdata"
+    bl_idname = "MCANM_PT_MeshData"
     bl_label = "Minecraft Animated"
     bl_region_type = "WINDOW"
     bl_space_type = "PROPERTIES"
@@ -134,56 +114,15 @@ class MeshDataPanel(Panel):
         layout.prop(props, 'artist', text="Artist name").display()
         layout.prop(props, 'armature', text="Armature", icon="ARMATURE_DATA")\
             .display()
-        layout.prop_search(
-            props, 'uv_layer', data, 'uv_layers', text="UV Layer", icon="GROUP_UVS")\
+        layout.prop_search(props, 'uv_layer', data, 'uv_layers', text="UV Layer", icon="GROUP_UVS")\
             .add_test(lambda uv: uv, "Select a UV map.")\
             .add_test(lambda uv: uv in data.uv_layers, "Invalid UV map")\
             .display()
-        box = layout.box()
-        box.label(text="Default group")
-        box.prop(props.default_group, 'name', text="Name")\
-            .add_test(lambda n: n, "Select a default group name.")\
-            .add_test(lambda n: n not in props.render_groups, "Name collision with existing group.")\
-            .display()
-        box.prop_search(props.default_group, 'image', bpy.data,
-                        'images', text="Texture", icon="IMAGE_DATA")\
-            .add_test(lambda img: img, "Select a default texture.")\
-            .add_test(lambda img: img in bpy.data.images, "Invalid image texture")\
-            .display()
-
-        layout.separator()
-        layout.label("Render Groups")
-        row = layout.row()
-        row.template_list(
-            listtype_name='RenderGroupUIList',
-            dataptr=props,
-            propname='render_groups',
-            active_dataptr=props,
-            active_propname='active_render_group',
-            rows=2,
-            type='DEFAULT',
-        )
-        col = row.column(align=True)
-        col.operator(AddRenderGroup.bl_idname, text="", icon='ZOOMIN')
-        col.operator(RemoveRenderGroup.bl_idname, text="", icon='ZOOMOUT')
-        groups = props.render_groups
-        active_idx = props.active_render_group
-        if active_idx >= 0 and active_idx < len(groups):
-            active_g = groups[active_idx]
-            layout.prop_search(active_g, 'image', bpy.data, 'images', text="Image", icon="IMAGE_DATA")\
-                .add_test(lambda img: img, "Select an imagetexture for active group")\
-                .add_test(lambda img: img in bpy.data.images, "Invalid image texture")\
-                .display()
-        if context.mode == 'EDIT_MESH':
-            row = layout.row()
-            row.operator(AddFacesToGroup.bl_idname)
-            row.operator(SelectGroup.bl_idname)
-            layout.operator_menu_enum(UpdateGroupsVisual.bl_idname, 'mode')
 
 
 class SceneDataPanel(Panel):
     # MC Panel under Object
-    bl_idname = "scene.mcdata"
+    bl_idname = "MCANM_PT_SceneData"
     bl_label = "Minecraft Animated"
     bl_region_type = "WINDOW"
     bl_space_type = "PROPERTIES"
@@ -215,12 +154,21 @@ def import_func(self, context):
     self.layout.operator(
         TabulaImport.bl_idname, text="Tabula Models (.tbl)")
 
+classes = [
+    AnimationExportMenu,
+    AnimationExportHeader,
+    MeshDataPanel,
+    SceneDataPanel
+]
+register_classes, unregister_classes = bpy.utils.register_classes_factory(classes)
 
 def register():
-    bpy.types.INFO_MT_file_export.append(export_func)
-    bpy.types.INFO_MT_file_import.append(import_func)
-
+    bpy.types.TOPBAR_MT_file_export.append(export_func)
+    bpy.types.TOPBAR_MT_file_import.append(import_func)
+    register_classes()
 
 def unregister():
-    bpy.types.INFO_MT_file_export.remove(export_func)
-    bpy.types.INFO_MT_file_import.remove(import_func)
+    unregister_classes()
+    bpy.types.TOPBAR_MT_file_export.remove(export_func)
+    bpy.types.TOPBAR_MT_file_import.remove(import_func)
+

@@ -149,35 +149,49 @@ class Point(object):
             binds=self.bindings)
 
 
-class Material(object):
+def guess_image_location(material):
+    if not material.use_nodes:
+        return None
+    texture = next((t for t in material.node_tree.nodes if t.type == 'TEX_IMAGE'), None)
+    return texture.image.name
 
-    def __init__(self, options, group):
-        try:
-            image = bpy.data.images[group.image]
-        except KeyError:
-            Reporter.error("Material with an invalid image ({img})",
-                           name=self.name, img=group.image)
-        self.img_location = bpy.path.ensure_ext(image.name, '.png')[:-4]
 
-    def __hash__(self, *args, **kwargs):
-        return hash(self.img_location)
-
-    def __eq__(self, other):
-        return self.img_location == other.img_location
+class MaterialV1(object):
+    def __init__(self, options, material):
+        self.material = material
+        self.img_location = guess_image_location(material)
 
     def dump(self, writer):
-        writer.write_string(self.img_location)
+        if not self.img_location:
+            Reporter.error("Couldn't determine image to use for {mat}", mat=self.material)
+        written = bpy.path.ensure_ext(self.img_location, '.png')[:-4]
+        writer.write_string(written)
+
+
+class MaterialV2(object):
+    def __init__(self, options, material):
+        self.material = material
+        self.material_name = material.name
+    
+    def __hash__(self):
+        return hash(self.material_name)
+    
+    def __eq__(self, other):
+        return self.material == other.material
+    
+    def dump(self, writer):
+        writer.write_string(self.material_name)
 
 
 class Part(object):
 
-    def __init__(self, group, options, material_resolve):
+    def __init__(self, material, options, material_resolve):
         """
-        group Group: can be None
-                in case of None, it is the default group
+        material Material: can be None
+                in case of None, it is a default material
         """
-        self.name = group.name
-        self.texture = material_resolve(group)
+        self.name = material.name if material else "default"
+        self.material_ref = material_resolve(material)
         # maps vertices to (point, list-index) pair-list
         self.point_map = defaultdict(list)
         # a full list of all points
@@ -224,7 +238,7 @@ class Part(object):
                 "(Part) too many tris in part {name}", name=self.name)
         writer.write_packed(">2H", p_len, tris)
         writer.write_string(self.name)
-        self.texture.dump(writer)
+        self.material_ref.dump(writer)
         for point in points:
             point.dump(writer)
         writer.write_packed(">{idxs}H".format(idxs=idxs_len), *idxs)
@@ -366,18 +380,12 @@ class MeshAbstract(object):
         # never none
         arm_vgroup_idxs = [] if sorted_bones is None else [
             obj.vertex_groups.find(bone.name) for bone in sorted_bones]
-        g_layer = None
-        if 'MCRenderGroupIndex' in bmesh.faces.layers.int:
-            g_layer = bmesh.faces.layers.int['MCRenderGroupIndex']
-        groups = mesh.mcprops.render_groups
         for face in bmesh.faces:
-            g_idx = face[g_layer] - 1 if g_layer is not None else -1
-            group = groups[g_idx] if g_idx >= 0 and g_idx < len(
-                groups) else mesh.mcprops.default_group
-            if group not in self.part_dict:
-                self.part_dict[group] = Part(
-                    group, options, resolve_mat)
-            self.part_dict[group].append_face(
+            g_idx = face.material_index
+            material = mesh.materials[g_idx] if mesh.materials else None
+            if g_idx not in self.part_dict:
+                self.part_dict[g_idx] = Part(material, options, resolve_mat)
+            self.part_dict[g_idx].append_face(
                 face, uv_layer, deform_layer, arm_vgroup_idxs)
         if len(self.part_dict) > 0xFF:
             Reporter.error("Too many parts")
@@ -386,7 +394,7 @@ class MeshAbstract(object):
 class MeshV1(MeshAbstract):
 
     def __init__(self, options, bmesh):
-        super().__init__(options, bmesh, lambda g: Material(options, g))
+        super().__init__(options, bmesh, lambda g: MaterialV1(options, g))
         sorted_bones = self.sorted_bones
         self.bones = ([] if sorted_bones is None else
                       [Bone(bone) for bone in sorted_bones])
@@ -421,7 +429,7 @@ class MeshV2(MeshAbstract):
     def __init__(self, options, bmesh):
         self.mat_dict = defaultdict(lambda: ByteIndex(len(self.mat_dict)))
         super().__init__(
-            options, bmesh, lambda g: self.mat_dict[Material(options, g)])
+            options, bmesh, lambda g: self.mat_dict[MaterialV2(options, g)])
 
     def dump(self, writer):
         part_dict = self.part_dict
@@ -468,8 +476,7 @@ class ActionV1(object):
         armature = options.armature
         action = options.action
         offset = action.mcprops.offset
-        bone_data_re = re.compile(
-            "pose\.bones\[\"(.*)\"\]\.(rotation_quaternion|location|scale)")
+        bone_data_re = re.compile(R"pose\.bones\[\"(.*)\"\]\.(rotation_quaternion|location|scale)")
         bone_dict = defaultdict(lambda: ([None] * 3, [None] * 4, [None] * 3))
         armBones = sort_bones(armature)
         self.curve_count = 0
@@ -521,7 +528,7 @@ class MeshExportOptions(object):
     version = None
 
 
-def export_mesh(context, options):
+def export_mesh(context, options: MeshExportOptions):
     filepath = options.filepath
     # Write file header
     bitmask = 0xFFFFFFFF
@@ -542,8 +549,7 @@ def export_mesh(context, options):
             MeshClass = known_mesh_exporters[options.version]
             model = MeshClass(options, bm)
         except (KeyError, NotImplementedError):
-            Reporter.fatal(
-                "Version {v} is not implemented yet", v=options.version)
+            Reporter.fatal("Version {v} is not implemented yet", v=options.version)
         # No more error (apart from IO) should happen now
         with Writer(filepath) as writer:
             writer.write_bytes(b'MHFC MDL')

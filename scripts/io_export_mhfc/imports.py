@@ -156,7 +156,6 @@ def import_tabula4(tblzip, jsonmodel, animations_only, scene):
 
         def make_cube(cube, to_global):
             identifier = cube['identifier']
-            name = cube['name']
 
             position = Position(cube['position'])  # Rotation point
             scale = Scale(cube['scale'])
@@ -220,7 +219,7 @@ def import_tabula(filepath, scene, animations_only):
             import_fns[version](tabula, model, animations_only, scene)
         except (KeyError, NotImplementedError) as e:
             Reporter.fatal(
-                "tabula version {v} is not (yet) supported".format(v=version))
+                "tabula version {v} is not (yet) supported".format(v=version), cause=e)
 
 
 class ElementFactory(object):
@@ -368,9 +367,7 @@ class Model(Element):
         mesh = bpy.data.meshes.new(self.name)
         bm = bmesh.new()
         uv = bm.loops.layers.uv.new('UVLayer')
-        tex = bm.faces.layers.tex.new('UVLayer')
-        mc_loop = bm.faces.layers.int.new('MCRenderGroupIndex')
-        for shape_nbr, shape in enumerate(self.shapes):
+        for shape in self.shapes:
             # points is a list of lists of points (representing a list of
             # faces)
             points, idx_uvs = shape.apply(True)
@@ -391,9 +388,7 @@ class Model(Element):
                     uvco = self.uv_scale * uvco
                     uvco[1] = 1 - uvco[1]
                     loop[uv].uv = uvco
-                bface[tex].image = self.img
-                if mc_loop is not None:
-                    bface[mc_loop] = shape_nbr + 1
+                bface.material_index = 0
         bm.verts.index_update()
         bm.faces.index_update()
         bm.to_mesh(mesh)
@@ -402,13 +397,12 @@ class Model(Element):
         props = mesh.mcprops
         props.name = self.name
         props.uv_layer = uv.name
+        mat = bpy.data.materials.new(f"Material {self.name}")
+        mesh.materials.append(mat)
         if self.img is not None:
-            props.default_group.image = self.img.name
-        for shape in self.shapes:
-            group = props.render_groups.add()
-            group.name = shape.name
-            if self.img is not None:
-                group.image = self.img.name
+            # TODO: set the image?
+            # mat.image = self.img.name ????
+            pass
         return obj
 
 
@@ -556,7 +550,7 @@ class Shape(Element):
                          for idx, uv in face[::-1]] for face in idx_uvs]
         return points, idx_uvs
 
-    def template_shape(self):
+    def template_shape(self, size):
         """
         Templates the shape at 0, 0, 0.
         """

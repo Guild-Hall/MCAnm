@@ -18,14 +18,15 @@
 
 import bpy
 
-from . import properties, layout, operators
+from . import properties, layout
+from . import operators
 
 bl_info = {
     "name": "Export: Minecraft Model (.mcmd)",
     "description": "Export monsters and objects to Minecraft",
     "author": "Martin Molzer",
-    "version": (0, 7),
-    "blender": (2, 75, 0),
+    "version": (0, 8, 1),
+    "blender": (2, 90, 0),
     "location": "File > Export > Minecraft Animated (.mcmd)",
     "warning": "",
     "wiki_url": "",
@@ -33,19 +34,18 @@ bl_info = {
     "category": "Import-Export",
 }
 
-
 def register():
-    bpy.utils.register_module(__name__)
     # + add scene props
+    operators.register()
     properties.register()
     layout.register()
 
-
 def unregister():
-    bpy.utils.unregister_module(__name__)
     # + remove scene props
+    operators.unregister()
     properties.unregister()
     layout.unregister()
 
 if __name__ == "__main__":
     register()
+

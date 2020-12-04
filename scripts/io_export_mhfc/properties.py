@@ -51,8 +51,7 @@ def update_default_ifnot(prop, default):
     return update
 
 
-class Preferences(AddonPreferences):
-    bl_idname = __package__
+class PreferenceTypes():
 
     mod_id = StringProperty(
         name="Mod ID",
@@ -62,7 +61,7 @@ class Preferences(AddonPreferences):
         options={'HIDDEN'})
     directory = StringProperty(
         name="Resource Folder",
-        description="The resource folder of your mod, most likely 'C:\path\to\mod\src\main\resources\'",
+        description=R"The resource folder of your mod, most likely 'C:\path\to\mod\src\main\resources\'",
         subtype='DIR_PATH',
         options={'HIDDEN'})
     model_path = StringProperty(
@@ -98,6 +97,16 @@ class Preferences(AddonPreferences):
 #             'tex_path', "{modid}:textures/models/{modelname}/{texname}.png"),
 #         options={'HIDDEN'})
 
+
+class Preferences(AddonPreferences):
+    bl_idname = __package__
+
+    mod_id: PreferenceTypes.mod_id
+    directory: PreferenceTypes.directory
+    model_path: PreferenceTypes.model_path
+    skeleton_path: PreferenceTypes.skeleton_path
+    animation_path: PreferenceTypes.animation_path
+
     def draw(self, context):
         layout = self.layout
         layout.prop(self, 'mod_id')
@@ -107,43 +116,44 @@ class Preferences(AddonPreferences):
         layout.prop(self, 'animation_path')
 
 
-class RenderGroups(PropertyGroup):
-    image = StringProperty(
-        name="Image",
-        description="The image-texture of this group")
-
+class ScenePropTypes():
+    projectname = StringProperty(
+        name="Project Name",
+        description="The name of your model. ",
+        subtype='FILE_NAME',
+        options=set()
+    )
+    object = StringProperty(
+        name="Main model",
+        description="The mesh to export",
+        options=set()
+    )
+    skeleton = StringProperty(
+        name="Armature",
+        description="The armature to export",
+    )
 
 class SceneProps(PropertyGroup):
-    isuuidset = BoolProperty(
+    isuuidset: BoolProperty(
         name="isUUIDset",
         description="Set to true if scene data is initialized. DON'T TOUCH THIS UNLESS YOU ARE SURE WHAT YOU DO.",
         default=False,
         options={'HIDDEN'})
-    uuid = IntVectorProperty(
+    uuid: IntVectorProperty(
         name="UUID",
         description="An unique ID for this file. Read-only",
         options={'HIDDEN'},
         default=(0, 0, 0, 0),
         size=4,
         get=get_ifnot_gen('uuid', gen_rand, 'isuuidset'))
-    export_tex = BoolProperty(
+    export_tex: BoolProperty(
         name="Export Textures",
         description="Whether to export textures or not",
         default=False,
         options={'HIDDEN'})
-    projectname = StringProperty(
-        name="Project Name",
-        description="The name of your model. ",
-        subtype='FILE_NAME',
-        options=set())
-    object = StringProperty(
-        name="Main model",
-        description="The mesh to export",
-        options=set())
-    skeleton = StringProperty(
-        name="Armature",
-        description="The armature to export",
-    )
+    projectname: ScenePropTypes.projectname
+    object: ScenePropTypes.object
+    skeleton: ScenePropTypes.skeleton
 
     @classmethod
     def register(cls):
@@ -163,30 +173,22 @@ def collect_armatures(self, context):
 
 
 class MeshProps(PropertyGroup):
-    armature = EnumProperty(
+    armature: EnumProperty(
         name="Armature",
         description="The armature that defines animations.",
         items=collect_armatures,
         options=set())
-    uv_layer = StringProperty(
+    uv_layer: StringProperty(
         name="UV Layer",
         description="The uv layer for texture mappings",
         options=set())
-    artist = StringProperty(
+    artist: StringProperty(
         name="Artist name",
         description="Your name",
         options=set())
-    render_groups = CollectionProperty(
-        type=RenderGroups,
-        name="Render Groups")
-    active_render_group = IntProperty(
+    active_render_group: IntProperty(
         name="Active Render Group",
         default=-1)
-    default_group = PointerProperty(
-        type=RenderGroups,
-        name="Default Render Group",
-        description="The group all faces are in if not in a valid group",
-        options=set())
 
     @classmethod
     def register(cls):
@@ -198,15 +200,15 @@ class MeshProps(PropertyGroup):
 
 
 class ActionProps(PropertyGroup):
-    artist = StringProperty(
+    artist: StringProperty(
         name="Artist name",
         description="Your name",
         options=set())
-    scene = StringProperty(
+    scene: StringProperty(
         name="Scene",
         description="The scene this action belongs to",
         default='')
-    offset = IntProperty(
+    offset: IntProperty(
         name="Frame offset",
         description="The initial offset of the animation in frames",
         default=0,
@@ -222,7 +224,7 @@ class ActionProps(PropertyGroup):
 
 
 class ArmatureProps(PropertyGroup):
-    artist = StringProperty(
+    artist: StringProperty(
         name="Artist name",
         description="Your name",
         options=set())
@@ -243,10 +245,20 @@ def load_handler(_):
         for scene in bpy.data.scenes:
             scene.mcprops.isuuidset = False
 
+classes = [
+    SceneProps,
+    MeshProps,
+    ActionProps,
+    ArmatureProps,
+    Preferences
+]
+register_classes, unregister_classes = bpy.utils.register_classes_factory(classes)
 
 def register():
     bpy.app.handlers.load_post.append(load_handler)
-
+    register_classes()
 
 def unregister():
+    unregister_classes()
     bpy.app.handlers.load_post.remove(load_handler)
+
