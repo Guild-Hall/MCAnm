@@ -74,7 +74,7 @@ public class RawDataV1 implements IVersionSpecificData, ISkeletonVisitable {
                 throw new ModelFormatException(
                         String.format("ParentIndex (%d) has to be smaller than nbrBones (%d).", parentIndex, nbrBones));
             }
-            bone.parent = (byte) parentIndex;
+            bone.parent = parentIndex;
         }
     }
 

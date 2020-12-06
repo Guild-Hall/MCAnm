@@ -14,7 +14,7 @@ public class RawBone {
     /**
      * Parent of this bone as array index. A value of 0xFF means no parent
      */
-    public byte parent;
+    public int parent;
 
     public static RawBone readBoneFrom(DataInputStream dis) throws IOException {
         RawBone bone = new RawBone();

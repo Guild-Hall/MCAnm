@@ -36,7 +36,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         super(resLoc, readFunc, RawData.MISSING_DATA);
     }
 
-    private static int doBFSSingleBone(byte[] parents, int index, List<List<Integer>> layers, int[] layerNumbers) {
+    private static int doBFSSingleBone(int[] parents, int index, List<List<Integer>> layers, int[] layerNumbers) {
         if (index == 0xFF)
             return -1;
         if (layerNumbers[index] != -1)
@@ -63,7 +63,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
      * @param src the bone
      * @return indices in an order that is breadth first.
      */
-    private static int[] doBFSBoneOrdering(byte[] parents) {
+    private static int[] doBFSBoneOrdering(int[] parents) {
         List<List<Integer>> layers = new ArrayList<>();
         int[] layerNumber = new int[parents.length];
         Arrays.fill(layerNumber, -1);
@@ -129,7 +129,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
     }
 
     private class SkeletonVisitor implements ISkeletonVisitor {
-        private List<Byte> parentIndices = new ArrayList<>();
+        private List<Integer> parentIndices = new ArrayList<>();
         private List<Supplier<Bone>> boneSuppliers = new ArrayList<>();
         private Bone[] bones = null;
 
@@ -137,15 +137,15 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         public IBoneVisitor visitBone(String name) {
             assert parentIndices.size() == boneSuppliers.size();
             final int boneIndex = parentIndices.size();
-            parentIndices.add(boneIndex, (byte) 0xFF);
+            parentIndices.add(boneIndex, -1);
             boneSuppliers.add(boneIndex, null);
 
             return new IBoneVisitor() {
-                private byte parentIndex = -1;
+                private int parentIndex = -1;
                 private BoneBuilder builder = new BoneBuilder(name);
 
                 @Override
-                public void visitParent(byte parentIndex) {
+                public void visitParent(int parentIndex) {
                     parentIndices.set(boneIndex, parentIndex);
                     this.parentIndex = parentIndex;
                 }
@@ -175,7 +175,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         public void visitEnd() {
             assert parentIndices.size() == boneSuppliers.size();
             int size = boneSuppliers.size();
-            byte[] parentList = ArrayUtils.toPrimitive(parentIndices.toArray(ArrayUtils.EMPTY_BYTE_OBJECT_ARRAY));
+            int[] parentList = ArrayUtils.toPrimitive(parentIndices.toArray(new Integer[0]));
             int[] breadthFirstOrdering = doBFSBoneOrdering(parentList);
 
             AbstractSkeleton.this.bonesByIndex = bones = new Bone[size];

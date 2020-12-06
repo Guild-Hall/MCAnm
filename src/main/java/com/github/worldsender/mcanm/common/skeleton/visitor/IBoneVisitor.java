@@ -4,7 +4,7 @@ import com.github.worldsender.mcanm.common.util.math.Quat4f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
 
 public interface IBoneVisitor {
-    void visitParent(byte parentIndex);
+    void visitParent(int parentIndex);
 
     void visitLocalOffset(Vector3f headPosition);
 
