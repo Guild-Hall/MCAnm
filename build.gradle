@@ -21,6 +21,7 @@ repositories {
     // Put remote maven repositories here
 }
 
+// === Start workaround ForgeGradle not loading resources
 // We will combine the outputs into one directory, so that it shows up as one entry on the classpath
 // This is necessary to load resources with runClient
 task combinedSource(type: Sync) {
@@ -33,6 +34,7 @@ sourceSets {
         runtimeClasspath = files(combinedSource.outputs) + project.configurations.runtimeClasspath
     }
 }
+// === End workaround
 
 minecraft {
     runs {

@@ -1,6 +1,7 @@
 import bpy
 
 from bpy.types import Panel, Menu, UIList, Header, UILayout
+from functools import wraps
 
 from .operators import ObjectExporter, AnimationExporter, SkeletonExporter,\
     TechneImport, SceneExporter, TabulaImport
@@ -19,6 +20,7 @@ class LayoutWrapper(object):
         if name in {"row", "column", "column_flow", "box", "split"}:
             fn = getattr(self._layout, name)
 
+            @wraps(fn)
             def wrapped(*args, **wargs):
                 sublayout = fn(*args, **wargs)
                 return LayoutWrapper(sublayout)
@@ -35,6 +37,7 @@ class LayoutWrapper(object):
                       "template_movieclip_information", "template_component_menu",
                       "template_colorspace_settings",
                       "template_colormanaged_view_settings"}:
+            # @wraps(getattr(UILayout, name))
             def wrapped(data, prop, *args, **wargs):
                 wrapper = self
 
@@ -60,8 +63,10 @@ class LayoutWrapper(object):
                 return BoundArgs()
             return wrapped
         elif callable(getattr(self._layout, name)):
+            prop = getattr(self._layout, name)
+            @wraps(prop)
             def wrapped(*args, **wargs):
-                return getattr(self._layout, name)(*args, **wargs)
+                return prop(*args, **wargs)
             return wrapped
         return getattr(self._layout, name)
 

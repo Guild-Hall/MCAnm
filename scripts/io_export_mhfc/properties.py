@@ -165,7 +165,7 @@ class SceneProps(PropertyGroup):
 
 
 def collect_armatures(self, context):
-    t = []
+    t = [('', '', '')]
     for arm in bpy.data.armatures:
         name = arm.name
         t.append((name, name, ''))
