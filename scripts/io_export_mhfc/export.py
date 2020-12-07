@@ -198,7 +198,7 @@ class Part(object):
         self.points = []
         self.indices = []
 
-    def append_face(self, face, uv_layer, deform_layer, arm_vgroup_idxs):
+    def append_tri(self, tri_loops, uv_layer, deform_layer, arm_vgroup_idxs):
         """
         uv_layer LLayerItem: Can't be None, the uv_layer we export
         deform_layer VLayerItem: Can be None, indicates that no bindings
@@ -208,7 +208,7 @@ class Part(object):
         """
         def key_from_loop(l):
             return l.vert.index
-        for loop in face.loops:
+        for loop in tri_loops:
             key = key_from_loop(loop)
             # append points or reuse existant one's
             new_point = Point(loop, uv_layer, deform_layer, arm_vgroup_idxs)
@@ -363,7 +363,7 @@ def sort_bones(arm):
 
 class MeshAbstract(object):
 
-    def __init__(self, options, bmesh, resolve_mat):
+    def __init__(self, options, bm, resolve_mat):
         obj = options.obj
         mesh = obj.data
         # the armature to that object
@@ -371,22 +371,22 @@ class MeshAbstract(object):
         # for each material we make one part
         self.part_dict = {}
         # checked
-        uv_layer = bmesh.loops.layers.uv[options.uv_layer.name]
+        uv_layer = bm.loops.layers.uv[options.uv_layer.name]
         # could be None
-        deform_layer = bmesh.verts.layers.deform.active
+        deform_layer = bm.verts.layers.deform.active
         # sorted bones
         self.sorted_bones = sort_bones(arm)
         sorted_bones = self.sorted_bones
         # never none
         arm_vgroup_idxs = [] if sorted_bones is None else [
             obj.vertex_groups.find(bone.name) for bone in sorted_bones]
-        for face in bmesh.faces:
-            g_idx = face.material_index
+        for abc in bm.calc_loop_triangles():
+            g_idx = abc[0].face.material_index
             material = mesh.materials[g_idx] if mesh.materials else None
             if g_idx not in self.part_dict:
                 self.part_dict[g_idx] = Part(material, options, resolve_mat)
-            self.part_dict[g_idx].append_face(
-                face, uv_layer, deform_layer, arm_vgroup_idxs)
+            self.part_dict[g_idx].append_tri(
+                abc, uv_layer, deform_layer, arm_vgroup_idxs)
         if len(self.part_dict) > 0xFF:
             Reporter.error("Too many parts")
 
@@ -544,7 +544,7 @@ def export_mesh(context, options: MeshExportOptions):
             bm = bmesh.new()
             stack.callback(bm.free)
             bm.from_mesh(mesh)
-        bmesh.ops.triangulate(bm, faces=bm.faces)
+        # bmesh.ops.triangulate(bm, faces=bm.faces)
         try:
             MeshClass = known_mesh_exporters[options.version]
             model = MeshClass(options, bm)
