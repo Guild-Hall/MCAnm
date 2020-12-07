@@ -1,6 +1,5 @@
 package com.github.worldsender.mcanm.client.mcanmmodel.gl;
 
-import com.github.worldsender.mcanm.MCAnm;
 import com.github.worldsender.mcanm.client.IRenderPass;
 import com.github.worldsender.mcanm.client.mcanmmodel.parts.IPart;
 import com.github.worldsender.mcanm.client.mcanmmodel.parts.PartBuilder;
@@ -8,6 +7,8 @@ import com.github.worldsender.mcanm.client.mcanmmodel.visitor.*;
 import com.github.worldsender.mcanm.client.model.IModelStateInformation;
 import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -53,7 +54,7 @@ public abstract class ModelRenderAbstract<P extends IPart> implements IModelRend
             if (currentPass.shouldRenderPart(part.getName()))
                 part.render(currentPass);
         }
-        if (MCAnm.isDebug) {
+        if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
             this.skeleton.debugDraw(Tessellator.getInstance());
         }
     }

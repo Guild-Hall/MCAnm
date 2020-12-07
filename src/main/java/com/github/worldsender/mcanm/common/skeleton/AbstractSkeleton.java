@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.opengl.GL11;
 
 import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.resource.IResource;
@@ -23,8 +24,11 @@ import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitor;
 import com.github.worldsender.mcanm.common.util.ReloadableData;
 import com.github.worldsender.mcanm.common.util.math.Quat4f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
+import com.github.worldsender.mcanm.common.util.math.Vector4f;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable> implements ISkeleton {
 
@@ -110,22 +114,21 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
 
     @Override
     public void debugDraw(Tessellator tess) {
-        return;
-        /*
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_DEPTH_TEST);
-        tess.getWorldRenderer().begin(GL_LINES, new VertexFormat().addElement(VertexFormatElement.EnumUsage.UV));
-        startDrawing(GL_LINES);
-        glColor4f(0f, 0f, 0f, 1f);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glLineWidth(4.0f);
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        GL11.glColor4f(0f, 0f, 0f, 1f);
         for (Bone bone : bonesBreadthFirst) {
             Vector4f tail = bone.getTail();
             Vector4f head = bone.getHead();
-            tess.addVertex(tail.x, tail.z, -tail.y);
-            tess.addVertex(head.x, head.z, -head.y);
+            buffer.pos(tail.x, tail.z, -tail.y).endVertex();
+            buffer.pos(head.x, head.z, -head.y).endVertex();
         }
         tess.draw();
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_TEXTURE_2D);*/
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
     private class SkeletonVisitor implements ISkeletonVisitor {

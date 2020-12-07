@@ -3,9 +3,15 @@ package com.github.worldsender.mcanm.client.mcanmmodel.parts;
 import com.github.worldsender.mcanm.client.IRenderPass;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
 import com.github.worldsender.mcanm.client.model.ModelLoader;
-import com.github.worldsender.mcanm.client.renderer.DrawElementsTesselator;
+
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
@@ -21,7 +27,6 @@ public class PartDirect implements IPart {
     private final String textureSlotWithOct;
     private final Point[] pointsList;
     private final int[] indices;
-    private final DrawElementsTesselator directTesselator;
 
     public PartDirect(PartBuilder builder) {
         Point[] points = new Point[builder.pointList.size()];
@@ -41,7 +46,6 @@ public class PartDirect implements IPart {
         this.name = Objects.requireNonNull(builder.name, "A name is required");
         this.textureSlot = Objects.requireNonNull(builder.textureName, "texture name required");
         this.textureSlotWithOct = "#" + textureSlot;
-        directTesselator = new DrawElementsTesselator(pointsList.length, indices);
         // Required for the stupid item rendering...
         this.indices = IntStream.range(0, indices.length).map(i -> indices[i] & 0xFFFF).toArray();
     }
@@ -51,11 +55,28 @@ public class PartDirect implements IPart {
         ResourceLocation texture = currentPass.getActualResourceLocation(textureSlot);
         currentPass.bindTexture(texture);
 
-        directTesselator.startDrawing();
-        for (Point p : this.pointsList) {
-            p.render(directTesselator);
+        Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buffer = tess.getBuffer();
+        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
+        for (int i = 0; i < indices.length; i += 3) {
+            Point point1 = pointsList[indices[i]];
+            Point point2 = pointsList[indices[i + 1]];
+            Point point3 = pointsList[indices[i + 2]];
+            Point.renderTriangle(point1, point2, point3, buffer);
         }
-        directTesselator.draw();
+        tess.draw();
+
+        if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
+            GL11.glColor3f(0.0f, 0.2f, 0.8f);
+            GL11.glLineWidth(2.0f);
+            // Draw normals
+            buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+            for (int i = 0; i < pointsList.length; i += 3) {
+                pointsList[i].debugRender(buffer);
+            }
+            tess.draw();
+            GL11.glColor3f(1, 1, 1);
+        }
     }
 
     @Override

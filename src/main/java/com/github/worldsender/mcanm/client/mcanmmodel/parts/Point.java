@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.BoneBinding;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.TesselationPoint;
-import com.github.worldsender.mcanm.client.renderer.ITesselator;
 import com.github.worldsender.mcanm.common.skeleton.IBone;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
 import com.github.worldsender.mcanm.common.util.math.Point4f;
@@ -17,6 +16,7 @@ import com.github.worldsender.mcanm.common.util.math.Vector2f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
 import com.github.worldsender.mcanm.common.util.math.Vector4f;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -43,13 +43,12 @@ public class Point {
         return new Point(data.coords, data.normal, data.texCoords);
     }
 
-    /**
-     * Renders this point, already transformed
-     *
-     * @param bones the models bones
-     */
-    public void render(ITesselator renderer) {
-        getTransformedVertex().render(renderer);
+    public static void renderTriangle(Point p1, Point p2, Point p3, BufferBuilder buffer) {
+        Vertex.renderTriangle(p1.getTransformedVertex(), p2.getTransformedVertex(), p3.getTransformedVertex(), buffer);
+    }
+
+    public void debugRender(BufferBuilder renderer) {
+        getTransformedVertex().debugRender(renderer);
     }
 
     protected Vertex getTransformedVertex() {

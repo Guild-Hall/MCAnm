@@ -45,7 +45,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
             // Debug connection for development
-            jvmArgs += ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5006"]
+            jvmArgs += ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5016"]
 
             mods {
                 mcanm {
@@ -60,7 +60,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
             // Debug connection for development
-            jvmArgs += ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5006"]
+            jvmArgs += ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5017"]
 
             mods {
                 mcanm {
