@@ -3,7 +3,7 @@ package com.github.worldsender.mcanm.common.skeleton.parts;
 import java.util.Objects;
 
 import com.github.worldsender.mcanm.common.Utils;
-import com.github.worldsender.mcanm.common.animation.IAnimation;
+import com.github.worldsender.mcanm.common.animation.IPose;
 import com.github.worldsender.mcanm.common.animation.IAnimation.BoneTransformation;
 import com.github.worldsender.mcanm.common.skeleton.IBone;
 import com.github.worldsender.mcanm.common.util.math.Matrix4f;
@@ -75,13 +75,12 @@ public class Bone implements IBone {
      * Sets up this bone for the following calls to {@link #getLocalToWorld()}, {@link #getTransformGlobal()} and
      * {@link #getTransformITGlobal()}.
      *
-     * @param anim     the animation being executed
-     * @param frame    the frame in the animation
-     * @param subFrame the subframe
+     * @param pose
+     *                 the pose in which the skeleton should be
      */
-    public void setTransformation(IAnimation anim, float frame) {
+    public void setTransformation(IPose pose) {
         transformCache.matrix.set(identity);
-        anim.storeCurrentTransformation(this.name, frame, transformCache);
+        pose.storeCurrentTransformation(this.name, transformCache);
         // transform = transformCache.matrix;
 
         transformedGlobalToGlobal.setIdentity();

@@ -5,6 +5,7 @@ import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Objects;
@@ -59,8 +60,8 @@ public class RenderPassInformation extends ModelStateInformation implements IRen
      * Resets this information to be reused.
      */
     @Override
-    public void reset() {
-        super.reset();
+    public void reset(Object cacheHolder) {
+        super.reset(cacheHolder);
         this.setTextureTransform(Optional.empty());
     }
 

@@ -1,12 +1,10 @@
 package com.github.worldsender.mcanm.client.model;
 
-import com.github.worldsender.mcanm.common.animation.IAnimation;
+import com.github.worldsender.mcanm.common.animation.IPose;
 
 public interface IModelStateInformation {
 
-    IAnimation getAnimation();
-
-    float getFrame();
+    IPose getModelPose();
 
     boolean shouldRenderPart(String part);
 

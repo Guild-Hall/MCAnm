@@ -5,7 +5,7 @@ import com.github.worldsender.mcanm.client.mcanmmodel.parts.IPart;
 import com.github.worldsender.mcanm.client.mcanmmodel.parts.PartBuilder;
 import com.github.worldsender.mcanm.client.mcanmmodel.visitor.*;
 import com.github.worldsender.mcanm.client.model.IModelStateInformation;
-import com.github.worldsender.mcanm.common.animation.IAnimation;
+import com.github.worldsender.mcanm.common.animation.IPose;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
 
 import net.minecraft.client.Minecraft;
@@ -35,16 +35,15 @@ public abstract class ModelRenderAbstract<P extends IPart> implements IModelRend
      * Sets up all bones for the following draw call. It is assumed that the bones are present in a breadth-first order
      * so that applying a transformation to a bone can already access the transformed parent of this bone
      *
-     * @param anim     the animation currently executed
-     * @param frame    the frame in the animation
-     * @param subFrame the subframe in the animation
+     * @param anim
+     *                 the pose currently executed
      */
-    private void setupBones(IAnimation anim, float frame) {
-        skeleton.setup(anim, frame);
+    private void setupBones(IPose anim) {
+        skeleton.setup(anim);
     }
 
     public void setup(IModelStateInformation currAnimation) {
-        setupBones(currAnimation.getAnimation(), currAnimation.getFrame());
+        setupBones(currAnimation.getModelPose());
     }
 
     @Override

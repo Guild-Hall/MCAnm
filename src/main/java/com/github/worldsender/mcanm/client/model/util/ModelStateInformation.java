@@ -2,9 +2,12 @@ package com.github.worldsender.mcanm.client.model.util;
 
 import com.github.worldsender.mcanm.client.model.IModelStateInformation;
 import com.github.worldsender.mcanm.common.animation.IAnimation;
+import com.github.worldsender.mcanm.common.animation.IPose;
+import com.github.worldsender.mcanm.common.animation.IAnimation.BoneTransformation;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.WeakHashMap;
 import java.util.function.Predicate;
 
 public class ModelStateInformation implements IModelStateInformation {
@@ -27,18 +30,90 @@ public class ModelStateInformation implements IModelStateInformation {
         public boolean storeCurrentTransformation(String bone, float frame, BoneTransformation transform) {
             return false;
         }
-
     };
 
+    public static final IPose POSE_BIND_POSE = new IPose() {
+        public boolean storeCurrentTransformation(String bone, BoneTransformation transform) {
+            return false;
+        };
+    };
+
+    private static class AnimationAsPose implements IPose {
+        private IAnimation animation;
+        private float frame;
+
+        public AnimationAsPose() {
+            reset();
+        }
+
+        private void reset() {
+            animation = BIND_POSE;
+            frame = 0.0F;
+        }
+
+        public void setAnimation(IAnimation anim) {
+            this.animation = Objects.requireNonNull(anim);
+        }
+
+        public void setFrame(float frame) {
+            this.frame = frame;
+        }
+
+        @Override
+        public boolean storeCurrentTransformation(String bone, BoneTransformation transform) {
+            return this.animation.storeCurrentTransformation(bone, this.frame, transform);
+        }
+    }
+
+    private static class PoseHolder {
+        private static WeakHashMap<Object, AnimationAsPose> POSE_PER_ENTITY;
+        static {
+            POSE_PER_ENTITY = new WeakHashMap<>();
+        }
+
+        private static AnimationAsPose getPoseFor(Object e) {
+            return POSE_PER_ENTITY.computeIfAbsent(e, ee -> new AnimationAsPose());
+        }
+
+        private AnimationAsPose animProxy = getPoseFor(null);
+        private IPose usedPose = POSE_BIND_POSE;
+
+        public void useAnimationHolder(Object e) {
+            this.animProxy = getPoseFor(e);
+        }
+
+        public void useAnimation(IAnimation animation) {
+            this.animProxy.setAnimation(animation);
+            this.usedPose = animProxy;
+        }
+
+        public void useAnimationFrame(float frame) {
+            this.animProxy.setFrame(frame);
+            this.usedPose = animProxy;
+        }
+
+        void usePose(IPose pose) {
+            this.usedPose = Objects.requireNonNull(pose);
+        }
+
+        public IPose getUsedPose() {
+            return usedPose;
+        }
+    }
+
     private Predicate<String> partPredicate;
-    private float frame;
-    private IAnimation animation;
+    private PoseHolder pose = new PoseHolder();
 
     public ModelStateInformation() {
         this.reset();
     }
 
     public void reset() {
+        reset(null);
+    }
+
+    public void reset(Object cacheHolder) {
+        this.pose.useAnimationHolder(cacheHolder);
         this.setFrame(0F).setAnimation(Optional.empty()).setPartPredicate(Optional.empty());
     }
 
@@ -48,32 +123,16 @@ public class ModelStateInformation implements IModelStateInformation {
     }
 
     /**
-     * Returns the current Frame in the animation. This is not inside the {@link IAnimation} so that each object/entity
-     * can decide on its own. Should include the current subframe for smoother transitions.
-     *
-     * @return the current frame
-     */
-    @Override
-    public float getFrame() {
-        return frame;
-    }
-
-    /**
      * @param frame the frame to set
      */
     public ModelStateInformation setFrame(float frame) {
-        this.frame = frame;
+        this.pose.useAnimationFrame(frame);
         return this;
     }
 
-    /**
-     * Gets the animation to play. If you return null here the model will be displayed in bind pose.
-     *
-     * @return the current animation
-     */
     @Override
-    public IAnimation getAnimation() {
-        return animation;
+    public IPose getModelPose() {
+        return this.pose.getUsedPose();
     }
 
     /**
@@ -84,7 +143,16 @@ public class ModelStateInformation implements IModelStateInformation {
     }
 
     public ModelStateInformation setAnimation(IAnimation animation) {
-        this.animation = Objects.requireNonNull(animation);
+        this.pose.useAnimation(animation);
+        return this;
+    }
+
+    public ModelStateInformation setPose(Optional<IPose> pose) {
+        return this.setPose(pose.orElse(POSE_BIND_POSE));
+    }
+
+    public ModelStateInformation setPose(IPose pose) {
+        this.pose.usePose(pose);
         return this;
     }
 

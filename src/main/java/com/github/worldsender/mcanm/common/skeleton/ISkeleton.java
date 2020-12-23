@@ -1,18 +1,14 @@
 package com.github.worldsender.mcanm.common.skeleton;
 
-import com.github.worldsender.mcanm.common.animation.IAnimation;
+import com.github.worldsender.mcanm.common.animation.IPose;
+
 import net.minecraft.client.renderer.Tessellator;
 
 public interface ISkeleton {
     ISkeleton EMPTY = new ISkeleton() {
 
         @Override
-        public void setup(IAnimation animation, float frame) {
-        }
-
-        @Override
-        public IBone getBoneByName(String bone) {
-            return IBone.STATIC_BONE;
+        public void setup(IPose pose) {
         }
 
         @Override
@@ -25,14 +21,12 @@ public interface ISkeleton {
         }
     };
 
-    IBone getBoneByName(String bone);
-
     IBone getBoneByIndex(int index);
 
     /**
      * Sets up the Skeleton for the animation given
      */
-    void setup(IAnimation animation, float frame);
+    void setup(IPose pose);
 
     /**
      * Added for debug, don't actually use this, especially when on the server
@@ -40,10 +34,4 @@ public interface ISkeleton {
      * @param tess
      */
     void debugDraw(Tessellator tess);
-
-    @Override
-    boolean equals(Object obj);
-
-    @Override
-    int hashCode();
 }

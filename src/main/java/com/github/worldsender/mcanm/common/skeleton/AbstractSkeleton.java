@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
-import com.github.worldsender.mcanm.common.animation.IAnimation;
+import com.github.worldsender.mcanm.common.animation.IPose;
 import com.github.worldsender.mcanm.common.resource.IResource;
 import com.github.worldsender.mcanm.common.resource.IResourceLocation;
 import com.github.worldsender.mcanm.common.skeleton.parts.Bone;
@@ -95,20 +95,14 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
     }
 
     @Override
-    public IBone getBoneByName(String boneName) {
-        IBone bone = bonesByName.get(boneName);
-        return bone == null ? IBone.STATIC_BONE : bone;
-    }
-
-    @Override
     public IBone getBoneByIndex(int index) {
         return index < 0 || index >= bonesByIndex.length ? IBone.STATIC_BONE : bonesByIndex[index];
     }
 
     @Override
-    public void setup(IAnimation animation, float frame) {
+    public void setup(IPose pose) {
         for (Bone bone : bonesBreadthFirst) {
-            bone.setTransformation(animation, frame);
+            bone.setTransformation(pose);
         }
     }
 

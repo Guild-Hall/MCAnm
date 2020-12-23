@@ -3,7 +3,8 @@ package com.github.worldsender.mcanm.client.model.util;
 import com.github.worldsender.mcanm.client.IRenderPass;
 import com.github.worldsender.mcanm.client.model.IEntityRender;
 import com.github.worldsender.mcanm.client.model.IRenderPassInformation;
-import com.github.worldsender.mcanm.common.animation.IAnimation;
+import com.github.worldsender.mcanm.common.animation.IPose;
+
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 
@@ -24,13 +25,8 @@ public class RenderPass<T extends EntityLiving> implements IRenderPass {
     }
 
     @Override
-    public IAnimation getAnimation() {
-        return userInfo.getAnimation();
-    }
-
-    @Override
-    public float getFrame() {
-        return userInfo.getFrame();
+    public IPose getModelPose() {
+        return userInfo.getModelPose();
     }
 
     @Override

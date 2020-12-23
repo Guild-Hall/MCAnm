@@ -83,7 +83,7 @@ public class RenderAnimatedModel<T extends EntityLiving> extends RenderLiving<T>
             float headYaw,
             float interpolatedPitch,
             float scaleFactor) {
-        userPassCache.reset();
+        userPassCache.reset(entity);
         IRenderPassInformation currentPass = getAnimator().preRenderCallback(
                 entity,
                 userPassCache,
