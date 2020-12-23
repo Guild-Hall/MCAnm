@@ -3,7 +3,6 @@ package com.github.worldsender.mcanm.common.animation.parts;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import com.github.worldsender.mcanm.common.Utils;
 import com.github.worldsender.mcanm.common.animation.IAnimation.BoneTransformation;
 import com.github.worldsender.mcanm.common.animation.StoredAnimation;
 import com.github.worldsender.mcanm.common.animation.parts.AnimatedValue.AnimatedValueBuilder;
@@ -57,7 +56,7 @@ public class AnimatedTransform {
         r.normalize();
         Vector3f s = scaleBuffer.get();
         s.set(scale_x.getValueAt(frame), scale_y.getValueAt(frame), scale_z.getValueAt(frame));
-        Utils.fromRTS(r, t, s, transform.matrix);
+        transform.setTransformation(t, r, s);
     }
 
     public static class AnimatedTransformBuilder {

@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
+import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.animation.IPose;
 import com.github.worldsender.mcanm.common.resource.IResource;
 import com.github.worldsender.mcanm.common.resource.IResourceLocation;
@@ -22,6 +23,7 @@ import com.github.worldsender.mcanm.common.skeleton.visitor.IBoneVisitor;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitable;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitor;
 import com.github.worldsender.mcanm.common.util.ReloadableData;
+import com.github.worldsender.mcanm.common.util.math.Matrix4f;
 import com.github.worldsender.mcanm.common.util.math.Quat4f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
 import com.github.worldsender.mcanm.common.util.math.Vector4f;
@@ -32,12 +34,81 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable> implements ISkeleton {
 
-    private Bone[] bonesBreadthFirst;
-    private Bone[] bonesByIndex;
-    private Map<String, Bone> bonesByName;
+    private static interface BoneManipulation {
+        String layerName();
 
-    public AbstractSkeleton(IResourceLocation resLoc, Function<IResource, ISkeletonVisitable> readFunc) {
-        super(resLoc, readFunc, RawData.MISSING_DATA);
+        void apply(IPose pose);
+    }
+
+    /**
+     * Apply pose position
+     */
+    private class ApplyPose implements BoneManipulation {
+        private Bone bone;
+        private IAnimation.BoneTransformation transformationCache;
+
+        public ApplyPose(Bone bone) {
+            this.bone = Objects.requireNonNull(bone);
+            this.transformationCache = new IAnimation.BoneTransformation();
+        }
+
+        @Override
+        public String layerName() {
+            return "pose(" + bone.name + ")";
+        }
+
+        @Override
+        public void apply(IPose pose) {
+            pose.storeCurrentTransformation(bone.name, this.transformationCache);
+            Matrix4f transformMat = this.transformationCache.getMatrix();
+            Matrix4f boneTransformMat = bone.globalToTransformedGlobal;
+            boneTransformMat.mul(transformMat, bone.globalToLocal);
+            boneTransformMat.mul(bone.localToGlobal, boneTransformMat);
+        }
+    }
+
+    /**
+     * Apply Parenting
+     */
+    private class ApplyParenting implements BoneManipulation {
+        private Bone child, parent;
+
+        public ApplyParenting(Bone child, Bone parent) {
+            this.child = Objects.requireNonNull(child);
+            this.parent = Objects.requireNonNull(parent);
+        }
+
+        @Override
+        public String layerName() {
+            return "\"" + child.name + "\".parent = \"" + parent.name + "\"";
+        }
+
+        @Override
+        public void apply(IPose pose) {
+            child.globalToTransformedGlobal.mul(parent.globalToTransformedGlobal, child.globalToTransformedGlobal);
+        }
+    }
+
+    private class RecomputeNormalTransform implements BoneManipulation {
+        private Bone bone;
+
+        public RecomputeNormalTransform(Bone bone) {
+            this.bone = Objects.requireNonNull(bone);
+        }
+
+        @Override
+        public String layerName() {
+            return "normals(" + bone.name + ")";
+        }
+
+        @Override
+        public void apply(IPose pose) {
+            Matrix4f pointMat = this.bone.globalToTransformedGlobal;
+            Matrix4f normalMat = this.bone.globalToTransformedGlobalNormal;
+            pointMat.getRotationScale(normalMat);
+            normalMat.invert();
+            normalMat.transpose();
+        }
     }
 
     private static int doBFSSingleBone(int[] parents, int index, List<List<Integer>> layers, int[] layerNumbers) {
@@ -84,9 +155,18 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         return breadthFirst;
     }
 
+    private Bone[] bonesByIndex;
+    private Map<String, Bone> bonesByName;
+    private List<BoneManipulation> animationOrder;
+
+    public AbstractSkeleton(IResourceLocation resLoc, Function<IResource, ISkeletonVisitable> readFunc) {
+        super(resLoc, readFunc, RawData.MISSING_DATA);
+    }
+
     @Override
     protected void preInit(Object... args) {
         bonesByName = new HashMap<>();
+        animationOrder = new ArrayList<>();
     }
 
     @Override
@@ -101,8 +181,8 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
 
     @Override
     public void setup(IPose pose) {
-        for (Bone bone : bonesBreadthFirst) {
-            bone.setTransformation(pose);
+        for (BoneManipulation boneMod : animationOrder) {
+            boneMod.apply(pose);
         }
     }
 
@@ -114,7 +194,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
         GL11.glColor4f(0f, 0f, 0f, 1f);
-        for (Bone bone : bonesBreadthFirst) {
+        for (Bone bone : bonesByIndex) {
             Vector4f tail = bone.getTail();
             Vector4f head = bone.getHead();
             buffer.pos(tail.x, tail.z, -tail.y).endVertex();
@@ -176,15 +256,36 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
             int[] breadthFirstOrdering = doBFSBoneOrdering(parentList);
 
             AbstractSkeleton.this.bonesByIndex = bones = new Bone[size];
-            AbstractSkeleton.this.bonesBreadthFirst = new Bone[size];
             AbstractSkeleton.this.bonesByName.clear();
 
             for (int i = 0; i < size; i++) {
                 // We have to make the bone breadth first because the supplier accesses its parent bones
                 int index = breadthFirstOrdering[i];
                 Bone b = Objects.requireNonNull(boneSuppliers.get(index).get());
-                bonesBreadthFirst[i] = bonesByIndex[index] = b;
+                bonesByIndex[index] = b;
                 bonesByName.put(b.name, b);
+            }
+
+            List<BoneManipulation> animationOrder = AbstractSkeleton.this.animationOrder;
+            animationOrder.clear();
+
+            // add modifiers that copy the pose
+            for (int i = 0; i < size; i++) {
+                animationOrder.add(new ApplyPose(bones[i]));
+            }
+            // add parenting modifiers
+            for (int i = 0; i < size; i++) {
+                int index = breadthFirstOrdering[i];
+                Bone bone = bones[index];
+                if (parentList[index] < 0) {
+                    continue;
+                }
+                Bone parent = bones[parentList[index]];
+                animationOrder.add(new ApplyParenting(bone, parent));
+            }
+            // finally recompute normals
+            for (int i = 0; i < size; i++) {
+                animationOrder.add(new RecomputeNormalTransform(bones[i]));
             }
         }
     }

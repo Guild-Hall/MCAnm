@@ -11,14 +11,6 @@ public interface IBone {
         }
 
         @Override
-        public void transformToLocal(Matrix4f matrix) {
-        }
-
-        @Override
-        public void transformFromLocal(Matrix4f matrix) {
-        }
-
-        @Override
         public void transform(Point4f position) {
         }
 
@@ -26,16 +18,6 @@ public interface IBone {
         public void transform(Matrix4f matrix) {
         }
     };
-
-    /**
-     * Transforms the matrix given by the transformation currently acted out by the specified bone. Assumes that the
-     * matrix describes a transformation relative to the bone's origin.
-     *
-     * @param position the position to transform
-     */
-    void transformFromLocal(Matrix4f matrix);
-
-    void transformToLocal(Matrix4f matrix);
 
     /**
      * Transforms the matrix given by the transformation currently acted out by the specified bone. The matrix describes

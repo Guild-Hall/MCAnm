@@ -222,7 +222,8 @@ public enum ModelLoader implements ICustomModelLoader {
             if (!transformation.isPresent()) {
                 return false;
             }
-            transform.matrix.set(transformation.get().getMatrix());
+            TRSRTransformation trsrTransform = transformation.get();
+            transform.setTransformation(trsrTransform.getMatrix());
             return true;
         }
     }

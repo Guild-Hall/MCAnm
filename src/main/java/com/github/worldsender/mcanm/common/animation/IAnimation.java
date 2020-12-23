@@ -32,7 +32,7 @@ public interface IAnimation {
      */
     class BoneTransformation {
         public static final BoneTransformation identity = new BoneTransformation();
-        public final Matrix4f matrix;
+        private final Matrix4f matrix;
 
         public BoneTransformation() {
             this(null, null, null);
@@ -49,7 +49,16 @@ public interface IAnimation {
                 translation = new Vector3f();
             if (scale == null)
                 scale = identityScale();
-            this.matrix = Utils.fromRTS(quat, translation, scale, new Matrix4f());
+            this.matrix = new Matrix4f();
+            setTransformation(translation, quat, scale);
+        }
+
+        public void setTransformation(Vector3f translation, Quat4f quat, Vector3f scale) {
+            Utils.fromRTS(quat, translation, scale, this.matrix);
+        }
+
+        public void setTransformation(javax.vecmath.Matrix4f mat) {
+            this.matrix.set(mat);
         }
 
         private static Vector3f identityScale() {

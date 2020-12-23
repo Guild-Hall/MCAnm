@@ -848,7 +848,15 @@ public class Matrix4f {
       m1.m00 = m00; m1.m01 = m01; m1.m02 = m02; 
       m1.m10 = m10; m1.m11 = m11; m1.m12 = m12; 
       m1.m20 = m20; m1.m21 = m21; m1.m22 = m22; 
-    }  
+    }
+
+    public final void getRotationScale(Matrix4f m1) 
+    { 
+      m1.m00 = m00; m1.m01 = m01; m1.m02 = m02; m1.m03 = 0;
+      m1.m10 = m10; m1.m11 = m11; m1.m12 = m12; m1.m13 = 0;
+      m1.m20 = m20; m1.m21 = m21; m1.m22 = m22; m1.m23 = 0;
+      m1.m30 = 0; m1.m31 = 0; m1.m32 = 0; m1.m33 = 1;
+    }
 
    /**
      * Performs an SVD normalization of this matrix to calculate
