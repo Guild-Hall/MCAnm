@@ -62,12 +62,11 @@ class Bone(object):
         if bone is None:
             Reporter.fatal("(Bone) bone is None")
         self.name = bone.name
-        mat = bone.matrix_local
+        matrix_parent = bone.matrix_local
         if bone.parent is not None:
-            # this is a little quick fix we have to do, don't ask me...
-            mat = bone.parent.matrix_local.inverted() * mat
-        self.quat = mat.to_quaternion()
-        self.translate = mat.translation
+            matrix_parent = bone.parent.matrix_local.inverted() @ matrix_parent
+        self.quat = matrix_parent.to_quaternion()
+        self.translate = matrix_parent.translation
 
     def dump(self, writer):
         q = self.quat
@@ -358,7 +357,7 @@ class BoneAction(object):
 
 
 def sort_bones(arm):
-    return None if arm is None else arm.bones
+    return [] if arm is None else arm.bones
 
 
 class MeshAbstract(object):
