@@ -111,7 +111,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         }
     }
 
-    private static int doBFSSingleBone(int[] parents, int index, List<List<Integer>> layers, int[] layerNumbers) {
+    private static int doBFSSingleBone(int[] parents, int index, int[] layerCount, int[] layerNumbers) {
         if (index == 0xFF)
             return -1;
         if (layerNumbers[index] != -1)
@@ -119,15 +119,10 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         // Determine parent
         int parent = parents[index] & 0xFF;
         // Determine layer in tree and handle parent first
-        int layerNbr = doBFSSingleBone(parents, parent, layers, layerNumbers) + 1;
+        int layerNbr = doBFSSingleBone(parents, parent, layerCount, layerNumbers) + 1;
         // Else handle
         layerNumbers[index] = layerNbr;
-        // Get layer
-        if (layers.size() <= layerNbr)
-            layers.add(new ArrayList<Integer>());
-        List<Integer> layer = layers.get(layerNbr);
-        // Add current index
-        layer.add(index);
+        layerCount[layerNbr]++;
         return layerNbr;
     }
 
@@ -139,18 +134,27 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
      * @return indices in an order that is breadth first.
      */
     private static int[] doBFSBoneOrdering(int[] parents) {
-        List<List<Integer>> layers = new ArrayList<>();
-        int[] layerNumber = new int[parents.length];
-        Arrays.fill(layerNumber, -1);
+        int[] layerNumbers = new int[parents.length];
+        int[] layerCount = new int[parents.length];
+        Arrays.fill(layerNumbers, -1);
         for (int i = 0; i < parents.length; ++i) {
-            doBFSSingleBone(parents, i, layers, layerNumber);
+            doBFSSingleBone(parents, i, layerCount, layerNumbers);
         }
         int[] breadthFirst = new int[parents.length];
-        int i = 0;
-        for (List<Integer> layer : layers) {
-            for (int b : layer) {
-                breadthFirst[i++] = b;
-            }
+
+        // reuse layerCount for layer starts, compute prefix sums
+        int[] layerStart = layerCount;
+        for (int i = 0, start = 0; i < layerStart.length; i++) {
+            int tmpStart = start;
+            start += layerStart[i];
+            layerStart[i] = tmpStart;
+        }
+        // assign bones to indices
+        for (int b = 0; b < parents.length; b++) {
+            int layer = layerNumbers[b];
+            int layerStartIndex = layerStart[layer];
+            layerStart[layer]++;
+            breadthFirst[layerStartIndex] = b;
         }
         return breadthFirst;
     }
@@ -269,10 +273,16 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
             List<BoneManipulation> animationOrder = AbstractSkeleton.this.animationOrder;
             animationOrder.clear();
 
+            // each bone contains a local transformation, computed as
+            // b -> b.globalToLocal @ b.globalToTransformedGlobal @ b.localToGlobal
+
             // add modifiers that copy the pose
             for (int i = 0; i < size; i++) {
                 animationOrder.add(new ApplyPose(bones[i]));
             }
+            // after this "layer", the local transformation is what is keyframed
+            // and the blender doc calls "Local Space"
+
             // add parenting modifiers
             for (int i = 0; i < size; i++) {
                 int index = breadthFirstOrdering[i];
@@ -283,6 +293,9 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
                 Bone parent = bones[parentList[index]];
                 animationOrder.add(new ApplyParenting(bone, parent));
             }
+            // after this "layer", the local transformation is what the blender doc calls
+            // in "Local with Parent" space
+
             // finally recompute normals
             for (int i = 0; i < size; i++) {
                 animationOrder.add(new RecomputeNormalTransform(bones[i]));
