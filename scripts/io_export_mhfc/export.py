@@ -466,16 +466,50 @@ def collect_constraints(bones, options):
     class CopyConstraint(object):
         ID_Constraint_Copy = b"COPY"
 
-        def __init__(self, pbone, constraint):
-            if constraint.euler_order != "AUTO":
+        def __init__(self, pbone, c):
+            if c.euler_order != "AUTO":
                 Reporter.user_error("copy constraints only supports Order: Default")
-            if constraint.target != armature:
+            if c.target != armature:
                 Reporter.user_error("copy constraints support only targeting own armature")
-            self.bone_idx = bone_name_to_index[constraint.subtarget]
+            self.bone_idx = bone_name_to_index[pbone.name]
+            self.target_idx = bone_name_to_index[c.subtarget]
+            self.influence = c.influence
+            self.use_x, self.use_y, self.use_z = c.use_x, c.use_y, c.use_z
+            self.invert_x, self.invert_y, self.invert_z = c.invert_x, c.invert_y, c.invert_z
+            self.mix_mode = ({
+                "REPLACE": 0x0,
+                "BEFORE": 0x1,
+                "AFTER": 0x2,
+            }).get(c.mix_mode, None)
+            if self.mix_mode is None:
+                Reporter.user_error("mix mode {mode} is not supported", mode=c.mix_mode)
+            space_ids = {
+                "LOCAL": 0x0,
+                "LOCAL_WITH_PARENT": 0x1,
+                "POSE": 0x2,
+            }
+            self.owner_space = space_ids.get(c.owner_space, None)
+            if self.owner_space is None:
+                Reporter.user_error("owner space 'global' is not supported, use 'pose' perhaps")
+            self.target_space = space_ids.get(c.target_space, None)
+            if self.target_space is None:
+                Reporter.user_error("target space 'global' is not supported, use 'pose' perhaps")
 
         def dump(self, writer):
             writer.write_packed(">4B", *CopyConstraint.ID_Constraint_Copy)
-            pass
+            writer.write_packed(">2I", self.bone_idx, self.target_idx)
+            writer.write_packed(">f", self.influence)
+            option_bits = 0
+            option_bits += 0x1 * self.use_x
+            option_bits += 0x2 * self.use_y
+            option_bits += 0x4 * self.use_y
+            option_bits += 0x10 * self.invert_x
+            option_bits += 0x20 * self.invert_y
+            option_bits += 0x40 * self.invert_z
+            writer.write_packed(">B", option_bits)
+            writer.write_packed(">B", self.mix_mode)
+            writer.write_packed(">B", self.owner_space)
+            writer.write_packed(">B", self.target_space)
 
     def handle_copy_rot(pbone, constraint):
         constraint_list.append(CopyConstraint(pbone, constraint))
@@ -534,8 +568,11 @@ class SkeletonV2(SkeletonV1):
             (p if p is not None else 0xFFFFFFFF) for p in bone_parent_indices
         ]
         self.bone_constraints = collect_constraints(self.bones, options)
+        if len(self.bones) > 0xFFFFFFFF:
+            Reporter.error("Too many bones")
+        if len(self.bone_constraints) > 0xFFFFFFFF:
+            Reporter.error("Too many bone constraints")
 
-    
     def dump(self, writer):
         numbones = len(self.bones)
         writer.write_packed(">I", 2)
