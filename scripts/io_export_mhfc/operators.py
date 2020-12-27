@@ -8,15 +8,11 @@ from bpy.props import BoolProperty, CollectionProperty, EnumProperty, IntPropert
 from bpy.types import Operator
 
 from .export import export_mesh, export_skl, export_action, MeshExportOptions,\
-    SkeletonExportOptions, ActionExportOptions
+    SkeletonExportOptions, ActionExportOptions, MESH_VERSIONS, MESH_DEFAULT_VER,\
+    SKL_VERSIONS, SKL_DEFAULT_VER
 from .imports import import_tabula, read_tcn
 from .properties import ScenePropTypes, PreferenceTypes
 from .utils import Reporter, extract_safe, asset_to_dir
-
-
-VERSIONS = [("V1", "Version 1", "Version 1 of MD model files. Rev1_010814"),
-            ("V2", "Version 2", "Version 2 of MD model files. Rev1_300316")]
-DEFAULT_VER = "V2"
 
 
 class ObjectExporter(Operator):
@@ -44,9 +40,9 @@ class ObjectExporter(Operator):
 
     version: EnumProperty(
         name="Version",
-        description="Target version in Minecraft.",
-        items=VERSIONS,
-        default=DEFAULT_VER,
+        description="Target file version in Minecraft.",
+        items=MESH_VERSIONS,
+        default=MESH_DEFAULT_VER,
         options={'HIDDEN'})
 
     def draw(self, context):
@@ -63,7 +59,7 @@ class ObjectExporter(Operator):
             # Note: we have to export an object, because vertex-groups are on
             # the object, not the mesh
             if obj.type != 'MESH':
-                Reporter.error(
+                Reporter.user_error(
                     "Object {item} not a Mesh".format(item=self.object))
             mesh = obj.data
             modelpath = self.model_path.format(
@@ -179,7 +175,7 @@ class AnimationExporter(Operator):
             skeleton = extract_safe(
                 bpy.data.objects, self.skeleton, "Invalid skeleton: {item}, not in bpy.data.objects")
             if skeleton.type != 'ARMATURE':
-                Reporter.error(
+                Reporter.user_error(
                     "Skeleton {obj} is not an armature", obj=skeleton.name)
             armature = skeleton.data
             action = extract_safe(
@@ -255,6 +251,13 @@ class SkeletonExporter(Operator):
         size=4)
     skeleton: ScenePropTypes.skeleton
 
+    version: EnumProperty(
+        name="Version",
+        description="Target file version in Minecraft.",
+        items=SKL_VERSIONS,
+        default=SKL_DEFAULT_VER,
+        options={'HIDDEN'})
+
     @staticmethod
     def guess_action(obj):
         anim_data = obj.animation_data
@@ -268,7 +271,7 @@ class SkeletonExporter(Operator):
     def draw(self, context):
         layout = self.layout
         layout.prop(self, "proj_name")
-        # layout.prop(self, "version")
+        layout.prop(self, "version")
         layout.prop(self, "mod_id")
         layout.prop(self, "skeleton_path")
 
@@ -278,7 +281,7 @@ class SkeletonExporter(Operator):
                 bpy.data.objects, self.skeleton, "Invalid armature: {item}, not in bpy.data.objects")
             # the object, not the mesh
             if armature.type != 'ARMATURE':
-                Reporter.error(
+                Reporter.user_error(
                     "Object {item} not an Armature".format(item=self.skeleton))
             modelpath = self.skeleton_path.format(
                 modid=self.mod_id,
@@ -291,6 +294,7 @@ class SkeletonExporter(Operator):
                 self.directory,
                 asset_to_dir(modelpath))
             opts.uuid = self.uuid
+            opts.version = self.version
             export_skl(context, opts)
         reporter.print_report(self)
         return {'FINISHED'} if reporter.was_success() else {'CANCELLED'}

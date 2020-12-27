@@ -61,6 +61,7 @@ class Bone(object):
         """
         if bone is None:
             Reporter.fatal("(Bone) bone is None")
+        self.bone = bone
         self.name = bone.name
         matrix_parent = bone.matrix_local
         if bone.parent is not None:
@@ -356,10 +357,6 @@ class BoneAction(object):
         self.scale_z.dump(writer)
 
 
-def sort_bones(arm):
-    return [] if arm is None else arm.bones
-
-
 class MeshAbstract(object):
 
     def __init__(self, options, bm, resolve_mat):
@@ -445,27 +442,113 @@ class MeshV2(MeshAbstract):
         Reporter.info(summary)
 
 
+def sort_bones(arm):
+    return [] if arm is None else arm.bones
+
+
+def collect_bones(options):
+    sorted_bones = sort_bones(options.arm.data)
+
+    bones = [Bone(bone) for bone in sorted_bones]
+    bone_parents = [sorted_bones.find(b.parent.name)
+                            if b.parent is not None
+                            else None for b in sorted_bones]
+    return bones, bone_parents
+
+
+def collect_constraints(bones, options):
+    armature = options.arm
+    pose_data = options.arm.pose
+    bone_name_to_index = { b.bone.name: i for (i, b) in enumerate(bones) }
+    constraint_list = []
+
+
+    class CopyConstraint(object):
+        ID_Constraint_Copy = b"COPY"
+
+        def __init__(self, pbone, constraint):
+            if constraint.euler_order != "AUTO":
+                Reporter.user_error("copy constraints only supports Order: Default")
+            if constraint.target != armature:
+                Reporter.user_error("copy constraints support only targeting own armature")
+            self.bone_idx = bone_name_to_index[constraint.subtarget]
+
+        def dump(self, writer):
+            writer.write_packed(">4B", *CopyConstraint.ID_Constraint_Copy)
+            pass
+
+    def handle_copy_rot(pbone, constraint):
+        constraint_list.append(CopyConstraint(pbone, constraint))
+
+    def handle_inverse_kinematics(pbone, constraint):
+        Reporter.warning("inverse kinematics constraint not yet supported")
+
+    def handle_constraint(pbone, constraint):
+        with Reporter.in_context("On bone {bname}, constraint {cname}", bname=pbone.name, cname=constraint.name):
+            if constraint.mute:
+                return
+            if not constraint.is_valid:
+                Reporter.warning("constraint is not valid and has been skipped")
+                return
+            if constraint.type == "COPY_ROTATION":
+                handle_copy_rot(pbone, constraint)
+            elif constraint.type == "IK":
+                handle_inverse_kinematics(pbone, constraint)
+            else:
+                Reporter.user_error("unsupported constraint")
+
+    for b in bones:
+        pbone = pose_data.bones[b.bone.name]
+        for con in pbone.constraints:
+            handle_constraint(pbone, con)
+    return constraint_list
+
+
 class SkeletonV1(object):
 
     def __init__(self, options):
-        sorted_bones = sort_bones(options.arm.data)
-
-        self.bones = [Bone(bone) for bone in sorted_bones]
+        self.bones, bone_parent_indices = collect_bones(options)
+        self.bone_parent_indices = [
+            (p if p is not None else 0xFF) for p in bone_parent_indices
+        ]
         if len(self.bones) > 0xFF:
             Reporter.error("Too many bones")
-        self.bone_parents = [sorted_bones.find(b.parent.name) & 0xFF
-                             if b.parent is not None
-                             else 0xFF for b in sorted_bones]
 
     def dump(self, writer):
-        bones = self.bones
-        bone_parents = self.bone_parents
+        numbones = len(self.bones)
         writer.write_packed(">I", 1)
-        writer.write_packed(">B", len(bones))
-        for bone in bones:
+        writer.write_packed(">B", numbones)
+        for bone in self.bones:
             bone.dump(writer)
-        writer.write_packed(">{nums}B".format(nums=len(bones)), *bone_parents)
-        message = 'Exported {numbones} bones'.format(numbones=len(bones))
+        writer.write_packed(">{nums}B".format(nums=numbones), *self.bone_parent_indices)
+        message = 'Exported {numbones} bones'.format(numbones=numbones)
+        Reporter.info(message)
+
+
+class SkeletonV2(SkeletonV1):
+
+    def __init__(self, options):
+        super().__init__(options)
+        self.bones, bone_parent_indices = collect_bones(options)
+        self.bone_parent_indices = [
+            (p if p is not None else 0xFFFFFFFF) for p in bone_parent_indices
+        ]
+        self.bone_constraints = collect_constraints(self.bones, options)
+
+    
+    def dump(self, writer):
+        numbones = len(self.bones)
+        writer.write_packed(">I", 2)
+        writer.write_packed(">I", numbones)
+        for bone in self.bones:
+            bone.dump(writer)
+        writer.write_packed(">{nums}I".format(nums=numbones), *self.bone_parent_indices)
+        numconstraints = len(self.bone_constraints)
+        writer.write_packed(">I", numconstraints)
+        for constraint in self.bone_constraints:
+            constraint.dump(writer)
+        message = 'Exported {numbones} bones, with {numconstraints} constraints'.format(
+            numbones=numbones, numconstraints=numconstraints)
         Reporter.info(message)
 
 
@@ -513,8 +596,19 @@ class ActionV1(object):
         )
         Reporter.info(summary)
 
-known_mesh_exporters = {"V1": MeshV1,
-                        "V2": MeshV2}
+
+MESH_VERSIONS = [
+    ("V1", "Version 1", "Version 1 of MD model files. Rev1_010814"),
+    ("V2", "Version 2", "Version 2 of MD model files. Rev1_300316"),
+]
+MESH_DEFAULT_VER = "V2"
+
+
+known_mesh_exporters = {
+    "V1": MeshV1,
+    "V2": MeshV2,
+    None: MeshV2,
+}
 
 
 class MeshExportOptions(object):
@@ -561,6 +655,20 @@ def export_mesh(context, options: MeshExportOptions):
             model.dump(writer)
 
 
+SKL_VERSIONS = [
+    ("V1", "Version 1", "Version 1 of SKL model files. Rev1_010814"),
+    ("V2", "Version 2", "Version 2 of SKL model files. Rev1_241220"),
+]
+SKL_DEFAULT_VER = "V2"
+
+
+known_skel_exporters = {
+    "V1": SkeletonV1,
+    "V2": SkeletonV2,
+    None: SkeletonV2,
+}
+
+
 class SkeletonExportOptions(object):
     arm = None
 
@@ -575,7 +683,11 @@ def export_skl(context, options):
     uuid_vec = options.uuid
     filepath = options.filepath
     arm = options.arm
-    skeleton = SkeletonV1(options)
+    try:
+        SkeletonClass = known_skel_exporters[options.version]
+        skeleton = SkeletonClass(options)
+    except (KeyError, NotImplementedError):
+        Reporter.fatal("Version {v} is not implemented yet", v=options.version)
     with Writer(filepath) as writer:
         writer.write_bytes(b'MHFC SKL')
         writer.write_packed(">4I",

@@ -1,5 +1,6 @@
 # Logging: easier workflow with some utility methods to log and handle errors
 from collections import defaultdict, namedtuple
+import contextlib
 from enum import Enum
 import bpy
 import os
@@ -8,11 +9,11 @@ import traceback
 
 
 class LogLevel(Enum):
+    FATAL = 'fatal'
+    ERROR = 'error'
     DEBUG = 'debug'
     INFO = 'info'
     WARNING = 'warning'
-    ERROR = 'error'
-    FATAL = 'fatal'
 
     def is_fatal(self):
         return self == LogLevel.ERROR or self == LogLevel.FATAL
@@ -30,7 +31,7 @@ class LogLevel(Enum):
             return {'ERROR'}
 
 
-ReportItem = namedtuple('ReportItem', 'message etype value traceback')
+ReportItem = namedtuple('ReportItem', 'message etype value traceback context')
 
 
 class Report(object):
@@ -45,11 +46,12 @@ class Report(object):
         for level in other._reports:
             self._reports[level].extend(other._reports[level])
 
-    def append(self, message, level=LogLevel.INFO, cause=None):
+    def append(self, message, level=LogLevel.INFO, cause=None, context=None):
         if cause is None:
             cause = sys.exc_info()
         etype, val, trace = cause
-        self._reports[level].append(ReportItem(message, etype, val, trace))
+        context = context or []
+        self._reports[level].append(ReportItem(message, etype, val, trace, context))
         return self
 
     def get_items(self, level):
@@ -62,14 +64,22 @@ class Report(object):
         return False
 
     def print_report(self, op):
-        for level in self._reports:
+        ## Iteration order is important here
+        for level in LogLevel:
             op_level = level.get_bl_report_level()
-            for item in self.get_items(level):
-                op.report(op_level, str(item.message))
-                if level.is_fatal():
-                    formatted = traceback.format_exception(
+            report_items = self.get_items(level)
+            if not report_items:
+                continue
+            for item in report_items:
+                full_message = [str(item.message)]
+                full_message += [str(c) for c in item.context]
+                if level.is_fatal() and item.value is not None:
+                    formatted_exc = traceback.format_exception(
                         item.etype, item.value, item.traceback)
-                    op.report(op_level, ''.join(formatted))
+                    full_message += formatted_exc
+                op.report(op_level, '\n'.join(full_message))
+            if level.is_fatal():
+                break
 
 
 class ReportedError(RuntimeError):
@@ -88,7 +98,7 @@ class ReportedError(RuntimeError):
         return self._target is None or self._target is candidate
 
     @classmethod
-    def throw_from_exception(cls, reporter, level=LogLevel.ERROR, exc=None):
+    def throw_from_exception(cls, reporter, level=LogLevel.ERROR, exc=None, context=None):
         """Constructs a ReportedError from the current exception handling context.
         """
         if exc is None:
@@ -96,7 +106,7 @@ class ReportedError(RuntimeError):
         _, exc_value, _ = exc
         message = "An error occured: " + str(exc_value)
         reported = cls(message, target=reporter)
-        reported.report.append(message, level=level, cause=exc)
+        reported.report.append(message, level=level, cause=exc, context=context)
         raise reported from exc_value
 
 
@@ -119,6 +129,7 @@ class Reporter(object):
     fatal exceptions
     """
     _stack = []
+    _context = []
 
     _report = None
     _caught = None
@@ -160,13 +171,14 @@ class Reporter(object):
             if isinstance(exc_value, ReportedError):
                 # Allows for nesting of multiple reporters
                 if exc_value.is_aimed_at(self):
-                    self._report.extend(exc_value.report)
+                    if not exc_value.is_aimed_at(None):
+                        self._report.extend(exc_value.report)
                     return True  # Catch it, was ours
                 else:
                     exc_value.report.extend(self._report)
                     return False  # Pass it on, to another reporter
             if self._should_catch(exc_type):
-                self._report.append(exc_value, level=LogLevel.ERROR, cause=exc)
+                self._add_report(exc_value, level=LogLevel.ERROR, cause=exc)
                 return True
             return False
         finally:
@@ -174,6 +186,20 @@ class Reporter(object):
             if self._bl_op is not None:
                 self.print_report(self._bl_op)
             assert(Reporter._stack.pop() is self)
+
+    def _add_report(self, message, level, cause=None):
+        self._report.append(message, level, cause, Reporter._context.copy())
+
+    @static_access
+    @contextlib.contextmanager
+    def in_context(self, message="", *args, **kwargs):
+        formatted = message.format(*args, **kwargs)
+        Reporter._context.append(formatted)
+        try:
+            yield
+        finally:
+            popped_msg = Reporter._context.pop()
+            assert(popped_msg is formatted)
 
     def rebind_bl_op(self, op):
         """Binds a Blender op that will be reported to when this Reporter __exit__s
@@ -197,7 +223,7 @@ class Reporter(object):
         if self is None:
             return
         formatted = message.format(*args, **wargs)
-        self._report.append(formatted, level=LogLevel.WARNING)
+        self._add_report(formatted, level=LogLevel.WARNING)
 
     @static_access
     def info(self, message="", *args, **wargs):
@@ -207,7 +233,7 @@ class Reporter(object):
         if self is None:
             return
         formatted = message.format(*args, **wargs)
-        self._report.append(formatted, level=LogLevel.INFO)
+        self._add_report(formatted, level=LogLevel.INFO)
 
     @static_access
     def debug(self, message="", *args, **wargs):
@@ -217,8 +243,19 @@ class Reporter(object):
         if self is None:
             return
         formatted = message.format(*args, **wargs)
-        self._report.append(formatted, level=LogLevel.DEBUG)
+        self._add_report(formatted, level=LogLevel.DEBUG)
 
+    @static_access
+    def user_error(self, message="", *args, cause=None, **wargs):
+        """Debug output, only output during debug mode
+        """
+        self = Reporter._get_reporter(self)
+        if self is None:
+            return
+        formatted = message.format(*args, **wargs)
+        self._add_report(formatted, level=LogLevel.ERROR, cause=cause)
+        ReportedError.throw_from_exception(None, level=LogLevel.ERROR, context=Reporter._context.copy()) 
+    
     @static_access
     def error(self, message="", *args, cause=None, **wargs):
         """When something happened that can't conform with the specification.
@@ -231,7 +268,7 @@ class Reporter(object):
         try:
             raise RuntimeError(formatted) from cause
         except RuntimeError:
-            ReportedError.throw_from_exception(self, level=LogLevel.FATAL)
+            ReportedError.throw_from_exception(self, level=LogLevel.ERROR, context=Reporter._context.copy())
 
     @static_access
     def fatal(self, message="", *args, cause=None, **wargs):
@@ -248,7 +285,7 @@ class Reporter(object):
         try:
             raise RuntimeError(message) from cause
         except RuntimeError:
-            ReportedError.throw_from_exception(self, level=LogLevel.FATAL)
+            ReportedError.throw_from_exception(self, level=LogLevel.FATAL, context=Reporter._context.copy())
 
     def print_report(self, op):
         self._report.print_report(op)
@@ -257,7 +294,7 @@ class Reporter(object):
         return not self._report.contains_fatal()
 
 
-def extract_safe(collection, key, mess_on_fail, *args, on_fail=Reporter.error, **wargs):
+def extract_safe(collection, key, mess_on_fail, *args, on_fail=Reporter.user_error, **wargs):
     """Ensures that the item is in the collection by reporting an error with
     the specified message if not.
     Calls on_fail when it fails to extract the element with the formatted message and
@@ -299,17 +336,17 @@ def asset_to_dir(assetstr):
     error is reported
     """
     if not assetstr:
-        Reporter.error("Asset-String can't be empty")
+        Reporter.user_error("Asset-String can't be empty")
     *resourceDomains, resourcePath = assetstr.split(':')
     if not resourceDomains:
         resourceDomains = ["minecraft"]
     if len(resourceDomains) > 1:
-        Reporter.error(
+        Reporter.user_error(
             "Asset-String {loc} can't contain more than one ':'".format(loc=assetstr))
     domain = resourceDomains[0].lower()
     path = resourcePath.lower()
     if not domain or not path:
-        Reporter.error(
+        Reporter.user_error(
             "Asset-String {loc}: Splitted string mustn't be empty".format(loc=assetstr))
     return "assets/{mod}/{file}".format(mod=domain, file=path)
 
