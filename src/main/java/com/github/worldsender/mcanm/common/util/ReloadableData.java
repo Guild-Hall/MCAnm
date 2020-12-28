@@ -1,6 +1,7 @@
 package com.github.worldsender.mcanm.common.util;
 
 import com.github.worldsender.mcanm.MCAnm;
+import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
 import com.github.worldsender.mcanm.common.resource.IResource;
 import com.github.worldsender.mcanm.common.resource.IResourceLocation;
 import net.minecraft.util.ResourceLocation;
@@ -53,18 +54,15 @@ public abstract class ReloadableData<D> {
 
     }
 
-    private D getData() {
-        try {
-            return loader.apply(reloadLocation.open());
-        } catch (IOException ioe) {
-            MCAnm.logger().error("Failed loading data from " + reloadLocation.getResourceName(), ioe);
-            return defaultData;
-        }
-    }
-
     private void reload(IResourceLocation dummy) {
         assert dummy == reloadLocation;
-        loadData(getData());
+        try {
+            D data = loader.apply(reloadLocation.open());
+            loadData(data);
+        } catch (IOException | ModelFormatException mfe) {
+            MCAnm.logger().error("Failed loading data from " + reloadLocation.getResourceName(), mfe);
+            loadData(defaultData);
+        }
     }
 
     protected abstract void loadData(D data);
