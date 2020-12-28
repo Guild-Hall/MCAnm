@@ -465,10 +465,12 @@ def collect_constraints(bones, options):
         ID_Constraint_Copy_Rot = b"CPYR"
 
         def __init__(self, pbone, c):
-            if c.euler_order != "AUTO":
-                Reporter.user_error("copy constraints only supports Order: Default")
             if c.target != armature:
                 Reporter.user_error("copy constraints support only targeting own armature")
+            if c.euler_order != 'XYZ' and c.euler_order != 'AUTO':
+                Reporter.user_error("copy constraints only support euler order: XYZ")
+            if c.euler_order != 'XYZ' and pbone.rotation_mode not in ('QUATERNION', 'AXIS_ANGLE', 'XYZ'):
+                Reporter.user_error("copy constraints only support euler order: XYZ, but the bone uses " + pbone.rotation_mode)  
             self.bone_idx = bone_name_to_index[pbone.name]
             self.target_idx = bone_name_to_index[c.subtarget]
             self.influence = c.influence
