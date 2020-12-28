@@ -1,4 +1,4 @@
-package com.github.worldsender.mcanm.client.mcanmmodel.stored.parts;
+package com.github.worldsender.mcanm.common.skeleton.stored.parts;
 
 import java.io.DataInputStream;
 import java.io.IOException;

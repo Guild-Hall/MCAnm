@@ -1,7 +1,7 @@
 package com.github.worldsender.mcanm.common.skeleton.stored;
 
-import com.github.worldsender.mcanm.client.mcanmmodel.stored.parts.RawBone;
 import com.github.worldsender.mcanm.common.exceptions.ModelFormatException;
+import com.github.worldsender.mcanm.common.skeleton.stored.parts.RawBone;
 import com.github.worldsender.mcanm.common.skeleton.visitor.IBoneVisitor;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitor;
 
