@@ -314,7 +314,8 @@ def extract_safe(collection, key, mess_on_fail, *args, on_fail=Reporter.user_err
     """
     try:
         return collection[key]
-    except KeyError as e:
+    except KeyError:
+        e = sys.exc_info()
         return on_fail(mess_on_fail.format(*args, coll=collection, item=key, **wargs), cause=e)
 
 

@@ -463,8 +463,8 @@ def collect_constraints(bones, options):
     constraint_list = []
 
 
-    class CopyConstraint(object):
-        ID_Constraint_Copy = b"COPY"
+    class CopyRotationConstraint(object):
+        ID_Constraint_Copy_Rot = b"CPYR"
 
         def __init__(self, pbone, c):
             if c.euler_order != "AUTO":
@@ -496,7 +496,7 @@ def collect_constraints(bones, options):
                 Reporter.user_error("target space 'global' is not supported, use 'pose' perhaps")
 
         def dump(self, writer):
-            writer.write_packed(">4B", *CopyConstraint.ID_Constraint_Copy)
+            writer.write_packed(">4B", *CopyRotationConstraint.ID_Constraint_Copy_Rot)
             writer.write_packed(">2I", self.bone_idx, self.target_idx)
             writer.write_packed(">f", self.influence)
             option_bits = 0
@@ -512,7 +512,7 @@ def collect_constraints(bones, options):
             writer.write_packed(">B", self.target_space)
 
     def handle_copy_rot(pbone, constraint):
-        constraint_list.append(CopyConstraint(pbone, constraint))
+        constraint_list.append(CopyRotationConstraint(pbone, constraint))
 
     def handle_inverse_kinematics(pbone, constraint):
         Reporter.warning("inverse kinematics constraint not yet supported")
