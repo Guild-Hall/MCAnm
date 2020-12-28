@@ -270,12 +270,11 @@ class Animation(object):
 
         def bezier_between(left, right):
             def wrapped(writer):
-                write_point(right.co)
                 writer.write_packed(">B", 10)
             return write_all(write_point(right.co),
                              wrapped,
-                             write_point(left.handle_left),
-                             write_point(right.handle_right))
+                             write_point(left.handle_right),
+                             write_point(right.handle_left))
 
         def constant_extrapolation(writer):
             writer.write_packed(">B", 16)
