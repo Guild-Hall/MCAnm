@@ -2,6 +2,8 @@ package com.github.worldsender.mcanm.common.skeleton.parts;
 
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+
 import com.github.worldsender.mcanm.common.Utils;
 import com.github.worldsender.mcanm.common.skeleton.IBone;
 import com.github.worldsender.mcanm.common.util.math.Matrix4f;
@@ -17,6 +19,7 @@ public class Bone implements IBone {
         identity.setIdentity();
     }
 
+    public final @Nullable Bone parent;
     public final String name;
     /** transform from bone-local coordinates to global coordinates */
     public final Matrix4f localToGlobal;
@@ -44,7 +47,8 @@ public class Bone implements IBone {
     /** for normals calculation, use this instead. */
     public final Matrix4f globalToTransformedGlobalNormal = new Matrix4f();
 
-    protected Bone(Matrix4f localMatrix, String name) {
+    protected Bone(Matrix4f localMatrix, String name, Bone parent) {
+        this.parent = parent;
         this.localToGlobal = new Matrix4f(localMatrix);
         this.globalToLocal = new Matrix4f(localMatrix);
         this.globalToLocal.invert();
@@ -167,7 +171,7 @@ public class Bone implements IBone {
             if (parent != null) {
                 localToGlobal.mul(parent.localToGlobal, localToGlobal);
             }
-            return new Bone(localToGlobal, name);
+            return new Bone(localToGlobal, name, parent);
         }
     }
 }

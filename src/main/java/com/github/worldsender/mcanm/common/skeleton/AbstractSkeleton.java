@@ -2,16 +2,18 @@ package com.github.worldsender.mcanm.common.skeleton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
+import com.github.worldsender.mcanm.MCAnm;
 import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.animation.IPose;
 import com.github.worldsender.mcanm.common.resource.IResource;
@@ -38,6 +40,12 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         String layerName();
 
         void apply(IPose pose);
+    }
+
+    private static interface BoneConstraint extends BoneManipulation {
+        int getControlledBoneIndex();
+
+        List<Integer> getConstraintDependencies();
     }
 
     /**
@@ -73,9 +81,9 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
     private class ApplyParenting implements BoneManipulation {
         private Bone child, parent;
 
-        public ApplyParenting(Bone child, Bone parent) {
+        public ApplyParenting(Bone child) {
             this.child = Objects.requireNonNull(child);
-            this.parent = Objects.requireNonNull(parent);
+            this.parent = Objects.requireNonNull(child.parent);
         }
 
         @Override
@@ -111,15 +119,53 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         }
     }
 
-    private static int doBFSSingleBone(int[] parents, int index, int[] layerCount, int[] layerNumbers) {
-        if (index == 0xFF)
-            return -1;
+    private class CopyRotationManip implements BoneConstraint {
+        private Bone target, controlled;
+        private CopyRotation rawConstraint;
+
+        public CopyRotationManip(CopyRotation rawConstraint, Bone[] bones) {
+            this.target = bones[rawConstraint.targetBoneIdx];
+            this.controlled = bones[rawConstraint.controlledBoneIdx];
+            this.rawConstraint = rawConstraint;
+        }
+
+        @Override
+        public String layerName() {
+            return "copyRot(" + target.name + " -> " + controlled.name + ")";
+        }
+
+        @Override
+        public int getControlledBoneIndex() {
+            return this.rawConstraint.controlledBoneIdx;
+        }
+
+        @Override
+        public List<Integer> getConstraintDependencies() {
+            return Arrays.asList(new Integer[] { this.rawConstraint.targetBoneIdx });
+        }
+
+        @Override
+        public void apply(IPose pose) {
+        }
+    }
+
+    private static int doBFSSingleBone(List<List<Integer>> parents, int index, int[] layerCount, int[] layerNumbers) {
+        if (layerNumbers[index] == -2) {
+            MCAnm.logger().debug("recursive dependency in parenting/constraints, results can be unpredictable");
+            return 0;
+        }
         if (layerNumbers[index] != -1)
             return layerNumbers[index];
+        // trap the index for the recursive calls
+        layerNumbers[index] = -2;
         // Determine parent
-        int parent = parents[index] & 0xFF;
-        // Determine layer in tree and handle parent first
-        int layerNbr = doBFSSingleBone(parents, parent, layerCount, layerNumbers) + 1;
+        List<Integer> parentsOfIndex = parents.get(index);
+        // Determine layer in tree and handle parents first
+        int layerNbr = 0;
+        for (int parent : parentsOfIndex) {
+            int parentLayer = doBFSSingleBone(parents, parent, layerCount, layerNumbers);
+            layerNbr = Math.max(layerNbr, parentLayer + 1);
+        }
         // Else handle
         layerNumbers[index] = layerNbr;
         layerCount[layerNbr]++;
@@ -133,14 +179,14 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
      * @param src the bone
      * @return indices in an order that is breadth first.
      */
-    private static int[] doBFSBoneOrdering(int[] parents) {
-        int[] layerNumbers = new int[parents.length];
-        int[] layerCount = new int[parents.length];
+    private static int[] doBFSBoneOrdering(List<List<Integer>> parents) {
+        int[] layerNumbers = new int[parents.size()];
+        int[] layerCount = new int[parents.size()];
         Arrays.fill(layerNumbers, -1);
-        for (int i = 0; i < parents.length; ++i) {
+        for (int i = 0; i < parents.size(); ++i) {
             doBFSSingleBone(parents, i, layerCount, layerNumbers);
         }
-        int[] breadthFirst = new int[parents.length];
+        int[] breadthFirst = new int[parents.size()];
 
         // reuse layerCount for layer starts, compute prefix sums
         int[] layerStart = layerCount;
@@ -150,7 +196,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
             layerStart[i] = tmpStart;
         }
         // assign bones to indices
-        for (int b = 0; b < parents.length; b++) {
+        for (int b = 0; b < parents.size(); b++) {
             int layer = layerNumbers[b];
             int layerStartIndex = layerStart[layer];
             layerStart[layer]++;
@@ -213,6 +259,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         private List<Integer> parentIndices = new ArrayList<>();
         private List<Supplier<Bone>> boneSuppliers = new ArrayList<>();
         private Bone[] bones = null;
+        private List<Supplier<BoneConstraint>> constraints = new ArrayList<>();
 
         @Override
         public IBoneVisitor visitBone(String name) {
@@ -256,15 +303,19 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         public void visitEnd() {
             assert parentIndices.size() == boneSuppliers.size();
             int size = boneSuppliers.size();
-            int[] parentList = ArrayUtils.toPrimitive(parentIndices.toArray(new Integer[0]));
-            int[] breadthFirstOrdering = doBFSBoneOrdering(parentList);
+            List<List<Integer>> parentList = parentIndices.stream().map(p -> {
+                if (p == -1)
+                    return Collections.<Integer>emptyList();
+                return Collections.singletonList(p);
+            }).collect(Collectors.toList());
+            int[] parentBFSOrdering = doBFSBoneOrdering(parentList);
 
             AbstractSkeleton.this.bonesByIndex = bones = new Bone[size];
             AbstractSkeleton.this.bonesByName.clear();
 
             for (int i = 0; i < size; i++) {
                 // We have to make the bone breadth first because the supplier accesses its parent bones
-                int index = breadthFirstOrdering[i];
+                int index = parentBFSOrdering[i];
                 Bone b = Objects.requireNonNull(boneSuppliers.get(index).get());
                 bonesByIndex[index] = b;
                 bonesByName.put(b.name, b);
@@ -283,15 +334,34 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
             // after this "layer", the local transformation is what is keyframed
             // and the blender doc calls "Local Space"
 
-            // add parenting modifiers
+            // Now, generate the read constraints
+            List<List<BoneConstraint>> boneConstraints = new ArrayList<>();
+            List<List<Integer>> modifierDeps = new ArrayList<>();
+            for (int i = 0; i < size; ++i) {
+                boneConstraints.add(new ArrayList<>());
+                modifierDeps.add(new ArrayList<>(parentList.get(i)));
+            }
+
+            for (Supplier<BoneConstraint> bCon : this.constraints) {
+                BoneConstraint con = bCon.get();
+                int controlledBoneIndex = con.getControlledBoneIndex();
+                boneConstraints.get(controlledBoneIndex).add(con);
+                modifierDeps.get(controlledBoneIndex).addAll(con.getConstraintDependencies());
+            }
+            int[] modifierBFSOrder = doBFSBoneOrdering(modifierDeps);
+
+            // add parenting modifiers & constraints. Have to be interleaved to generate correct
+            // transformations for children of constrained bones.
             for (int i = 0; i < size; i++) {
-                int index = breadthFirstOrdering[i];
+                int index = modifierBFSOrder[i];
                 Bone bone = bones[index];
-                if (parentList[index] < 0) {
-                    continue;
+
+                if (bone.parent != null) {
+                    // parentList consists of empty or singleton list.
+                    // man do I wish I could write doBFSBoneOrdering for any traversible container...
+                    animationOrder.add(new ApplyParenting(bone));
                 }
-                Bone parent = bones[parentList[index]];
-                animationOrder.add(new ApplyParenting(bone, parent));
+                animationOrder.addAll(boneConstraints.get(index));
             }
             // after this "layer", the local transformation is what the blender doc calls
             // in "Local with Parent" space
