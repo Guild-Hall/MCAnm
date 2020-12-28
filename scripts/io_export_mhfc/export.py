@@ -296,7 +296,6 @@ class Animation(object):
             self.write_all = lambda writer: writer.write_packed(">H", 0)
         else:
             points = [keyf for keyf in fcurve.keyframe_points]
-            extrapolation_mode = fcurve.extrapolation
 
             anim_len = len(points)
             if anim_len > 2**16 - 1:
@@ -314,7 +313,7 @@ class Animation(object):
                   for left, right in zip(points[:], points[1:])]
             )
             write_end = extract_safe(
-                extrapolations, extrapolation_mode,
+                extrapolations, fcurve.extrapolation,
                 "Unknown extrapolation mode {item}")
             self.write_all = write_all(write_tunein, write_seq, write_end)
 

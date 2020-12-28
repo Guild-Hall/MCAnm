@@ -67,22 +67,22 @@ public class AnimatedValue {
             }
             int nbrFrames = dis.readUnsignedShort();
             if (nbrFrames == 0) {
-                                    Vector2f point = new Vector2f(0, value.defaultValue);
-                                    value.splines.add(Spline.easeIn(Spline.EASE_IN_CONST, point, dis));
-                                    value.splines.add(Spline.easeOut(Spline.EASE_OUT_CONST, point, dis));
+                Vector2f point = new Vector2f(0, value.defaultValue);
+                value.splines.add(Spline.easeIn(Spline.EASE_IN_CONST, point, dis));
+                value.splines.add(Spline.easeOut(Spline.EASE_OUT_CONST, point, dis));
             } else {
                 Vector2f left = null;
-                                    Vector2f right = Spline.readPoint(dis);
-                                    byte easeIn = dis.readByte();
-                                    value.splines.add(Spline.easeIn(easeIn, right, dis));
-                                    for (int i = 1; i < nbrFrames; ++i) {
-                                            left = right;
-                                            right = Spline.readPoint(dis);
-                                            byte interpolation = dis.readByte();
-                                            value.splines.add(Spline.interpolating(interpolation, left, right, dis));
-                                    }
-                                    byte easeOut = dis.readByte();
-                                    value.splines.add(Spline.easeOut(easeOut, right, dis));
+                Vector2f right = Spline.readPoint(dis);
+                byte easeIn = dis.readByte();
+                value.splines.add(Spline.easeIn(easeIn, right, dis));
+                for (int i = 1; i < nbrFrames; ++i) {
+                    left = right;
+                    right = Spline.readPoint(dis);
+                    byte interpolation = dis.readByte();
+                    value.splines.add(Spline.interpolating(interpolation, left, right, dis));
+                }
+                byte easeOut = dis.readByte();
+                value.splines.add(Spline.easeOut(easeOut, right, dis));
             }
             return this;
         }
