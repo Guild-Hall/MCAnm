@@ -78,6 +78,10 @@ class ObjectExporter(Operator):
             elif obj.parent_type == 'ARMATURE':
                 armature = obj.parent.data
                 Reporter.warning("Armature was guessed by using the parent object. Set one explicitly in the mesh property panel")
+            else:
+                armature = next((mod.object.data for mod in obj.modifiers if mod.type == 'ARMATURE' and mod.object is not None), None)
+                if armature is not None:
+                    Reporter.error("Armature was guessed by using the modifiers. Set one explicitly in the mesh property panel")
 
             opt = MeshExportOptions()
             opt.obj = obj
