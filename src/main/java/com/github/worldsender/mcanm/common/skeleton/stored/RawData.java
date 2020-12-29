@@ -82,6 +82,8 @@ public class RawData implements ISkeletonVisitable {
         switch (version) {
             case 1:
                 return RawDataV1::loadFrom;
+            case 2:
+                return RawDataV2::loadFrom;
             default:
                 break;
         }

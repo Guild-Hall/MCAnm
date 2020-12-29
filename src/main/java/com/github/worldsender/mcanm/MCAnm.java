@@ -4,6 +4,8 @@ import com.github.worldsender.mcanm.client.config.MCAnmConfiguration;
 import com.github.worldsender.mcanm.server.ServerProxy;
 import com.github.worldsender.mcanm.test.CubeEntity;
 import com.github.worldsender.mcanm.test.CubeEntityV2;
+import com.github.worldsender.mcanm.test.CubeEntityRigged;
+
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -57,8 +59,10 @@ public class MCAnm {
         if (isDebug) {
             ResourceLocation ID_CUBE = new ResourceLocation("mcanm:cube");
             ResourceLocation ID_CUBE_V2 = new ResourceLocation("mcanm:cube2");
+            ResourceLocation ID_CUBE_RIGGED = new ResourceLocation("mcanm:cube_rigged");
             EntityRegistry.registerModEntity(ID_CUBE, CubeEntity.class, "Cube", 0, this, 80, 1, true);
             EntityRegistry.registerModEntity(ID_CUBE_V2, CubeEntityV2.class, "CubeV2", 1, this, 80, 1, true);
+            EntityRegistry.registerModEntity(ID_CUBE_RIGGED, CubeEntityRigged.class, "CubeV3", 2, this, 80, 1, true);
 
         }
         proxy.init();

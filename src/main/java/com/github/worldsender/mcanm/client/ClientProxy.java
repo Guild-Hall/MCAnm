@@ -1,5 +1,6 @@
 package com.github.worldsender.mcanm.client;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import com.github.worldsender.mcanm.MCAnm;
@@ -8,11 +9,13 @@ import com.github.worldsender.mcanm.client.model.IEntityAnimator;
 import com.github.worldsender.mcanm.client.model.ModelLoader;
 import com.github.worldsender.mcanm.client.renderer.entity.RenderAnimatedModel;
 import com.github.worldsender.mcanm.common.CommonLoader;
+import com.github.worldsender.mcanm.common.animation.IAnimation;
 import com.github.worldsender.mcanm.common.resource.IResourceLocation;
 import com.github.worldsender.mcanm.common.resource.MinecraftResourcePool;
 import com.github.worldsender.mcanm.common.skeleton.ISkeleton;
 import com.github.worldsender.mcanm.server.ServerProxy;
 import com.github.worldsender.mcanm.test.CubeEntity;
+import com.github.worldsender.mcanm.test.CubeEntityRigged;
 import com.github.worldsender.mcanm.test.CubeEntityV2;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -41,16 +44,20 @@ import net.minecraftforge.registries.GameData;
 //checking if this sustain server issues.
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends ServerProxy {
-    private static <T extends EntityLiving> IEntityAnimator<T> makeAnimator(String textureDir) {
+    private static <T extends EntityLiving> IEntityAnimator<T> makeAnimator(
+            String textureLoc,
+            Optional<IAnimation> animation,
+            float frameCount) {
         LoadingCache<String, ResourceLocation> cachedResourceLoc = CacheBuilder.newBuilder().maximumSize(100)
                 .build(new CacheLoader<String, ResourceLocation>() {
                     @Override
                     public ResourceLocation load(String key) {
-                        return new ResourceLocation(textureDir + key + ".png");
+                        return new ResourceLocation(textureLoc);
                     }
                 });
         IEntityAnimator<T> animator = (entity, buffer, partialTick, _1, _2, _3, _4, _5) -> {
-            return buffer.setTextureTransform(cachedResourceLoc::getUnchecked);
+            return buffer.setTextureTransform(cachedResourceLoc::getUnchecked).setAnimation(animation)
+                    .setFrame((entity.ticksExisted + partialTick) % frameCount);
         };
         return animator;
     }
@@ -91,11 +98,28 @@ public class ClientProxy extends ServerProxy {
 
             ResourceLocation model2Src = new ResourceLocation("mcanm:models/CubeV2/Cube.mcmd");
             IModel model2 = ClientLoader.loadModel(model2Src, ISkeleton.EMPTY);
-            IRenderFactory<CubeEntityV2> renderer2 = RenderAnimatedModel
-                    .fromModel(makeAnimator("mcanm:textures/models/Cube/Untitled.png"), model2, 1.0f);
+            IEntityAnimator<CubeEntityV2> ev2Animator = makeAnimator(
+                    "mcanm:textures/models/Cube/Untitled.png",
+                    Optional.empty(),
+                    1.f);
+            IRenderFactory<CubeEntityV2> renderer2 = RenderAnimatedModel.fromModel(ev2Animator, model2, 1.0f);
+
+            ResourceLocation skeleRiggedSrc = new ResourceLocation("mcanm:models/rigged/armature.mcskl");
+            ResourceLocation modelRiggedSrc = new ResourceLocation("mcanm:models/rigged/cube.mcmd");
+            ResourceLocation animRiggedSrc = new ResourceLocation("mcanm:models/rigged/armatureaction.mcanm");
+            ISkeleton skeletonRigged = CommonLoader.loadSkeleton(skeleRiggedSrc);
+            IAnimation riggedAnimation = CommonLoader.loadAnimation(animRiggedSrc);
+            IEntityAnimator<CubeEntityRigged> riggedAnimator = makeAnimator(
+                    "mcanm:textures/models/Cube/Untitled.png",
+                    Optional.of(riggedAnimation),
+                    100.f);
+            IModel modelRigged = ClientLoader.loadModel(modelRiggedSrc, skeletonRigged);
+            IRenderFactory<CubeEntityRigged> rendererRigged = RenderAnimatedModel
+                    .fromModel(riggedAnimator, modelRigged, 1.0f);
 
             RenderingRegistry.registerEntityRenderingHandler(CubeEntity.class, renderer);
             RenderingRegistry.registerEntityRenderingHandler(CubeEntityV2.class, renderer2);
+            RenderingRegistry.registerEntityRenderingHandler(CubeEntityRigged.class, rendererRigged);
 
             Item debug = new Item();
             debug.addPropertyOverride(new ResourceLocation("test"), new IItemPropertyGetter() {

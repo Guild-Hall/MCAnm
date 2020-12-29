@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -21,14 +22,19 @@ import com.github.worldsender.mcanm.common.resource.IResourceLocation;
 import com.github.worldsender.mcanm.common.skeleton.parts.Bone;
 import com.github.worldsender.mcanm.common.skeleton.parts.Bone.BoneBuilder;
 import com.github.worldsender.mcanm.common.skeleton.stored.RawData;
+import com.github.worldsender.mcanm.common.skeleton.stored.parts.CopyRotation;
+import com.github.worldsender.mcanm.common.skeleton.stored.parts.CopyRotation.CoordinateSystem;
+import com.github.worldsender.mcanm.common.skeleton.stored.parts.CopyRotation.MixMode;
 import com.github.worldsender.mcanm.common.skeleton.visitor.IBoneVisitor;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitable;
 import com.github.worldsender.mcanm.common.skeleton.visitor.ISkeletonVisitor;
 import com.github.worldsender.mcanm.common.util.ReloadableData;
+import com.github.worldsender.mcanm.common.util.math.EulerAngles;
 import com.github.worldsender.mcanm.common.util.math.Matrix4f;
 import com.github.worldsender.mcanm.common.util.math.Quat4f;
 import com.github.worldsender.mcanm.common.util.math.Vector3f;
 import com.github.worldsender.mcanm.common.util.math.Vector4f;
+import com.github.worldsender.mcanm.common.util.math.EulerAngles.EulerOrder;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -119,6 +125,9 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
         }
     }
 
+    // see https://developer.blender.org/diffusion/B/browse/master/source/blender/blenkernel/intern/constraint.c
+    // #BKE_constraints_solve
+    // #rotlike_evaluate
     private class CopyRotationManip implements BoneConstraint {
         private Bone target, controlled;
         private CopyRotation rawConstraint;
@@ -144,8 +153,142 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
             return Arrays.asList(new Integer[] { this.rawConstraint.targetBoneIdx });
         }
 
+        private void withRotQuat(Bone bone, CoordinateSystem coordinates, Consumer<? super Quat4f> continuation) {
+            Matrix4f buffer = new Matrix4f();
+            // store local transform in buffer
+            switch (coordinates) {
+            case LOCAL:
+                if (bone.parent != null) {
+                    // bone.globalToTransformedGlobal =
+                    //       bone.parent.globalToTransformedGlobal
+                    //     * bone.localToGlobal
+                    //     * localTransform
+                    //     * bone.globalToLocal
+                    // since we are only interested in the rotational part
+                    buffer.invert(bone.parent.globalToTransformedGlobal);
+                    buffer.mul(buffer, bone.globalToTransformedGlobal);
+                    buffer.mul(bone.globalToLocal, buffer);
+                    buffer.mul(buffer, bone.localToGlobal);
+                    break;
+                }
+                // fallthrough, in this case local_with_parent == local
+            case LOCAL_WITH_PARENT:
+                // bone.globalToTransformedGlobal =
+                //       bone.localToGlobal
+                //     * localTransform
+                //     * bone.globalToLocal
+                buffer.mul(bone.globalToLocal, bone.globalToTransformedGlobal);
+                buffer.mul(buffer, bone.localToGlobal);
+                break;
+            case POSE:
+                buffer.set(bone.globalToTransformedGlobal);
+                break;
+            default:
+                throw new IllegalArgumentException("coordinate shouldn't be null");
+            }
+            Quat4f rotQuat = new Quat4f();
+            Quat4f rotQuatCopy = new Quat4f();
+            buffer.get(rotQuat);
+            buffer.get(rotQuatCopy);
+            // call continuation
+            continuation.accept(rotQuat);
+            // What is left in rotQuat after the continuation will be placed into the matrix
+            // If it doesn't differ from what's already in there, skip this step
+            if (rotQuat.epsilonEquals(rotQuatCopy, 1e-8f)) {
+                return;
+            }
+            buffer.setRotation(rotQuat);
+            switch (coordinates) {
+            case LOCAL:
+                if (bone.parent != null) {
+                    // bone.globalToTransformedGlobal =
+                    //       bone.parent.globalToTransformedGlobal
+                    //     * bone.localToGlobal
+                    //     * localTransform
+                    //     * bone.globalToLocal
+                    // since we are only interested in the rotational part
+                    buffer.mul(buffer, bone.globalToLocal);
+                    buffer.mul(bone.localToGlobal, buffer);
+                    bone.globalToTransformedGlobal.mul(bone.parent.globalToTransformedGlobal, buffer);
+                    break;
+                }
+                // fallthrough, in this case local_with_parent == local
+            case LOCAL_WITH_PARENT:
+                // bone.globalToTransformedGlobal =
+                //       bone.localToGlobal
+                //     * localTransform
+                //     * bone.globalToLocal
+                buffer.mul(bone.localToGlobal, buffer);
+                bone.globalToTransformedGlobal.mul(buffer, bone.globalToLocal);
+                break;
+            case POSE:
+                bone.globalToTransformedGlobal.set(buffer);
+                break;
+            default:
+                throw new IllegalArgumentException("coordinate shouldn't be null");
+            }
+        }
+
+        private Quat4f applyOptions(Quat4f targetQuat, Quat4f controlledQuat) {
+            // restrict rotation to the selected axis and apply inversions
+            // For this, first calculate euler angles, then recalculate
+            // Euler-angle order is XYZ, so x_transformed = rotate_Z @ rotate_Y @ rotate X @ x_original
+            EulerAngles controlledEuler = new EulerAngles();
+            controlledEuler.fromQuaternion(controlledQuat, EulerOrder.XYZ);
+            EulerAngles targetEuler = new EulerAngles();
+            // copy controlled euler, so we chose the "correct" (closer) of the two options during conversion
+            targetEuler.set(controlledEuler);
+            targetEuler.fromQuaternion(targetQuat, EulerOrder.XYZ);
+            if (rawConstraint.invertX) {
+                targetEuler.x *= -1;
+            }
+            if (rawConstraint.invertY) {
+                targetEuler.y *= -1;
+            }
+            if (rawConstraint.invertZ) {
+                targetEuler.z *= -1;
+            }
+            switch (rawConstraint.mixMode) {
+            case REPLACE:
+                if (rawConstraint.useX) {
+                    controlledEuler.x = targetEuler.x;
+                }
+                if (rawConstraint.useY) {
+                    controlledEuler.y = targetEuler.y;
+                }
+                if (rawConstraint.useZ) {
+                    controlledEuler.z = targetEuler.z;
+                }
+                return controlledEuler.toQuaternion(new Quat4f(), EulerOrder.XYZ);
+            case AFTER:
+            case BEFORE:
+                if (!rawConstraint.useX) {
+                    targetEuler.x = 0;
+                }
+                if (!rawConstraint.useY) {
+                    targetEuler.y = 0;
+                }
+                if (!rawConstraint.useZ) {
+                    targetEuler.z = 0;
+                }
+                Quat4f result = targetEuler.toQuaternion(new Quat4f(), EulerOrder.XYZ);
+                boolean isBefore = rawConstraint.mixMode == MixMode.BEFORE;
+                result.mul(isBefore ? controlledQuat : result, isBefore ? result : controlledQuat);
+                return result;
+            default:
+            }
+            throw new IllegalArgumentException("mix mode shouldn't be null");
+        }
+
         @Override
         public void apply(IPose pose) {
+            withRotQuat(target, rawConstraint.targetSystem, targetQuat -> {
+                withRotQuat(controlled, rawConstraint.controlledSystem, controlledQuat -> {
+                    Quat4f computedQuat = applyOptions(targetQuat, controlledQuat);
+                    // write back into the controlled quat to set it when the continuation finishes
+                    controlledQuat.interpolate(controlledQuat, computedQuat, rawConstraint.influence);
+                });
+            });
         }
     }
 
@@ -297,6 +440,13 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
                     }
                 }
             };
+        }
+
+        @Override
+        public void visitCopyRotiation(CopyRotation copyConstraint) {
+            this.constraints.add(() -> {
+                return new CopyRotationManip(copyConstraint, AbstractSkeleton.this.bonesByIndex);
+            });
         }
 
         @Override
