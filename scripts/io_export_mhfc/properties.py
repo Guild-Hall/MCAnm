@@ -1,6 +1,7 @@
 import bpy
 import random
 import re
+import os
 
 from bpy.app.handlers import persistent
 from bpy.props import BoolProperty, CollectionProperty, EnumProperty, IntProperty,\
@@ -51,6 +52,14 @@ def update_default_ifnot(prop, default):
     return update
 
 
+def make_path_absolute_on_update(prop):
+    def update(self, context):
+        dirty_path = self[prop]
+        if dirty_path.startswith('//'):
+            self[prop] = os.path.abspath(bpy.path.abspath(dirty_path))
+    return update
+
+
 class PreferenceTypes():
 
     mod_id = StringProperty(
@@ -63,6 +72,7 @@ class PreferenceTypes():
         name="Resource Folder",
         description=R"The resource folder of your mod, most likely 'C:\path\to\mod\src\main\resources\'",
         subtype='DIR_PATH',
+        update=make_path_absolute_on_update('directory'),
         options={'HIDDEN'})
     model_path = StringProperty(
         name="Model Path",

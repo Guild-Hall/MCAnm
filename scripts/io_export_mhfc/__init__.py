@@ -25,7 +25,7 @@ bl_info = {
     "name": "Export: Minecraft Model (.mcmd)",
     "description": "Export monsters and objects to Minecraft",
     "author": "Martin Molzer",
-    "version": (0, 8, 1),
+    "version": (0, 8, 2),
     "blender": (2, 90, 0),
     "location": "File > Export > Minecraft Animated (.mcmd)",
     "warning": "",
