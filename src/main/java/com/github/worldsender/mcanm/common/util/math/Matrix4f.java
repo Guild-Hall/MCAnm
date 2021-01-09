@@ -1749,6 +1749,48 @@ public class Matrix4f {
     }
 
     /**
+     * Sets the value of this matrix to the Moore-Penrose pseudo matrix inverse of the passed (user declared) matrix m1.
+     * Computed based on a singular value decomposition.
+     * 
+     * @param m1
+     *             the matrix to be inverted
+     */
+    public final void pseudoInvert(Matrix4f m1) {
+      pseudoInvertGeneral(m1);
+    }
+
+    /**
+     * Inverts this matrix in place.
+     */
+    public final void pseudoInvert() {
+      pseudoInvertGeneral(this);
+    }
+
+    final void pseudoInvertGeneral(Matrix4f other) {
+      SingularValueDecomposition decomp = new SingularValueDecomposition(other);
+      Matrix4f sigma = decomp.getS();
+      final int R = decomp.getRank();
+      if (0 < R) {
+        sigma.m00 = 1 / sigma.m00;
+      }
+      if (1 < R) {
+        sigma.m11 = 1 / sigma.m11;
+      }
+      if (2 < R) {
+        sigma.m22 = 1 / sigma.m22;
+      }
+      if (3 < R) {
+        sigma.m33 = 1 / sigma.m33;
+      }
+
+      Matrix4f v = decomp.getV();
+      Matrix4f ut = decomp.getUT();
+
+      this.mul(v, sigma);
+      this.mul(this, ut);
+    }
+
+    /**
      * Given a 4x4 array "matrix0", this function replaces it with the 
      * LU decomposition of a row-wise permutation of itself.  The input 
      * parameters are "matrix0" and "dimen".  The array "matrix0" is also 

@@ -120,7 +120,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
             Matrix4f pointMat = this.bone.globalToTransformedGlobal;
             Matrix4f normalMat = this.bone.globalToTransformedGlobalNormal;
             pointMat.getRotationScale(normalMat);
-            normalMat.invert();
+            normalMat.pseudoInvert();
             normalMat.transpose();
         }
     }
@@ -165,7 +165,7 @@ public abstract class AbstractSkeleton extends ReloadableData<ISkeletonVisitable
                     //     * localTransform
                     //     * bone.globalToLocal
                     // since we are only interested in the rotational part
-                    buffer.invert(bone.parent.globalToTransformedGlobal);
+                    buffer.pseudoInvert(bone.parent.globalToTransformedGlobal);
                     buffer.mul(buffer, bone.globalToTransformedGlobal);
                     buffer.mul(bone.globalToLocal, buffer);
                     buffer.mul(buffer, bone.localToGlobal);
